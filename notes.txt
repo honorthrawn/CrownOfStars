@@ -1,0 +1,7 @@
+Crown of Stars
+pop limiteed by planet type
+when does pop grow -- have to feed people and it will grow automatically if enough food OR loveshack like stone age or OR enough surplus food like civ
+grid of sectors which may have a star.   
+Stars have planets
+each unit of poulation can be allocated to troops, research (comes later), organics, metals, radioactives
+eaxch population allocated gives a die d4 which determines random yield of resource
