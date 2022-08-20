@@ -9,10 +9,15 @@ import com.soywiz.korio.file.std.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.onClick
 import com.soywiz.korim.bitmap.*
+import com.soywiz.korim.text.*
+import com.soywiz.korma.geom.*
 
 class PlanetScene(val gs: GalaxyState) : Scene() {
 
     private lateinit var farmerReadout: Text
+    private lateinit var shipsReadout: Text
+    private lateinit var defenseReadout: Text
+    private lateinit var scienceReadout: Text
 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
@@ -44,89 +49,89 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
             alignTopToTopOf(planetImage, 12.0)
         }
 
-        var farmerReadoutString = "FARMING: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.farmers}"
+        text("BACK", 50.00,Colors.GOLD)
+        {
+            position(300, 0)
+            centerXOn(background)
+            onClick { sceneContainer.changeTo<PlanetsScene>() }
+            alignTopToTopOf(planetImage, 12.0)
+        }
 
-        uiVerticalStack(200.00, UI_DEFAULT_PADDING){
-            position(300.00, 0.00)
+        uiVerticalStack(400.00, UI_DEFAULT_PADDING){
+            position(000.00, 300.00)
             uiHorizontalStack {
-                text(" + ", 50.00,Colors.GOLD)
+                padding = 10.00
+                text(" ADD ", 50.00,Colors.GOLD)
                 {
                     onClick { onWorkerUp(WorkerType.FARMING) }
                 }
-                farmerReadout = text(farmerReadoutString, 50.00, Colors.CYAN)
-                text(" - ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD)
                 {
                     onClick { onWorkerDown(WorkerType.FARMING) }
                 }
+                farmerReadout = text("FARMING: 00", 50.00, Colors.CYAN)
             }
             uiHorizontalStack {
-                text(" + ", 50.00,Colors.GOLD)
+                padding = 10.00
+                text(" ADD ", 50.00,Colors.GOLD)
                 {
                     onClick { onWorkerUp(WorkerType.SHIPS) }
                 }
-                text("SHIPS:", 50.00, Colors.CYAN)
-                text(" - ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD)
                 {
                     onClick { onWorkerDown(WorkerType.SHIPS) }
                 }
+                shipsReadout = text("SHIPS:   00", 50.00, Colors.CYAN)
             }
             uiHorizontalStack {
-                text(" + ", 50.00,Colors.GOLD)
+                padding = 10.00
+                text(" ADD ", 50.00,Colors.GOLD)
                 {
                     onClick { onWorkerUp(WorkerType.DEFENSE) }
                 }
-                text("DEFENSE:", 50.00, Colors.CYAN)
-                text(" - ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD)
                 {
                     onClick { onWorkerDown(WorkerType.DEFENSE) }
                 }
+                defenseReadout = text("DEFENSE: 00", 50.00, Colors.CYAN)
             }
             uiHorizontalStack {
-                text(" + ", 50.00,Colors.GOLD)
+                padding = 10.00
+                text(" ADD ", 50.00,Colors.GOLD)
                 {
                     onClick { onWorkerUp(WorkerType.SCIENCE) }
                 }
-                text("SCIENCE:", 50.00, Colors.CYAN)
-                text(" - ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD)
                 {
                     onClick { onWorkerDown(WorkerType.SCIENCE) }
                 }
+                scienceReadout = text("SCIENCE: 00", 50.00, Colors.CYAN)
             }
         }
 
+        updateReadouts()
+    }
 
-         text("BACK", 50.00,Colors.GOLD)
-         {
-             position(width/2, 800.00)
-             centerXOn(background)
-             onClick { sceneContainer.changeTo<PlanetsScene>() }
-
-         }
-
-
-        //val buttonBgrnd = RoundRect(200.00, 100.00, 2.00, 2.00, Colors.WHITE)
-        //buttonBgrnd.position(400, 0)
-        //addChild(buttonBgrnd)
-        //text("Obama", 50.00, Colors.CYAN)
-        //{
-        //    centerXOn(buttonBgrnd)
-        //   centerYOn(buttonBgrnd)
-        //}
-
-
-
-}
+    private fun updateReadouts()
+    {
+        val farmerReadoutString = "FARMING: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.farmers}"
+        farmerReadout.text = farmerReadoutString
+        val shipsReadoutString = "SHIPS: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.shipbuilders}"
+        shipsReadout.text = shipsReadoutString
+        val defenseReadoutString = "DEFENSE: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.defworkers}"
+        defenseReadout.text = defenseReadoutString
+        val scienceReadoutString = "SCIENCE: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.scientists}"
+        scienceReadout.text = scienceReadoutString
+    }
 
     private fun onWorkerUp(workertype: WorkerType) {
         gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.increaseWorker(workertype)
-        var farmerReadoutString = "FARMING: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.farmers}"
-        farmerReadout.text = farmerReadoutString
+        updateReadouts()
     }
 
     private fun onWorkerDown(workertype: WorkerType) {
         gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.decreaseWorker(workertype)
-        var farmerReadoutString = "FARMING: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.farmers}"
-        farmerReadout.text = farmerReadoutString
+        updateReadouts()
     }
 
 

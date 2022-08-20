@@ -27,9 +27,9 @@ data class Planet(val star: String)
     var name: String = "VENUS"
     private var workerPool: UInt = 0u
     var farmers: UInt = 5u
-    private var shipbuilders: UInt = 0u
-    private var defworkers: UInt = 0u
-    private var scientists: UInt = 0u
+    var shipbuilders: UInt = 0u
+    var defworkers: UInt = 0u
+    var scientists: UInt = 0u
 
     fun roll(pos: Int)
     {
