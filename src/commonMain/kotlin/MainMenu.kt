@@ -15,7 +15,7 @@ class MainMenu(val gs: GalaxyState) : Scene() {
             position(0, 0)
             setSizeScaled(width, height)
         }
-        val font = resourcesVfs["fonts/Android.ttf"].readTtfFont()
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
         text("Crown of Stars", 60.00, Colors.GOLD, font)
         {
@@ -27,7 +27,7 @@ class MainMenu(val gs: GalaxyState) : Scene() {
         {
             position(width/2, 200.00)
             centerXOnStage()
-            onClick { gs.rollGalaxy(); sceneContainer.changeTo<PlanetsScene>() }
+            onClick { gs.rollGalaxy(); sceneContainer.changeTo<StarsScene>() }
         }
 
         text("Continue Game",50.00, Colors.WHITE, font)

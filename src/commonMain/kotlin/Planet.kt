@@ -25,7 +25,7 @@ data class Planet(val star: String)
 {
     var type: PlanetType = PlanetType.TOXIC
     var name: String = "VENUS"
-    private var workerPool: UInt = 0u
+    var workerPool: UInt = 0u
     var farmers: UInt = 5u
     var shipbuilders: UInt = 0u
     var defworkers: UInt = 0u

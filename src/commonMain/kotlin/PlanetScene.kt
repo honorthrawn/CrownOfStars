@@ -18,6 +18,7 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
     private lateinit var shipsReadout: Text
     private lateinit var defenseReadout: Text
     private lateinit var scienceReadout: Text
+    private lateinit var unassignedReadout: Text
 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
@@ -25,7 +26,7 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
             position(0, 0)
             setSizeScaled(width, height)
         }
-        val font = resourcesVfs["fonts/Android.ttf"].readTtfFont()
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
         println("Active player star: ${gs.activePlayerStar} active player planet: ${gs.activePlayerPlanet}")
 
@@ -49,7 +50,7 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
             alignTopToTopOf(planetImage, 12.0)
         }
 
-        text("BACK", 50.00,Colors.GOLD)
+        text("BACK", 50.00,Colors.GOLD, font)
         {
             position(300, 0)
             centerXOn(background)
@@ -61,51 +62,55 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
             position(000.00, 300.00)
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD)
+                text(" ADD ", 50.00,Colors.GOLD, font)
                 {
                     onClick { onWorkerUp(WorkerType.FARMING) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD, font)
                 {
                     onClick { onWorkerDown(WorkerType.FARMING) }
                 }
-                farmerReadout = text("FARMING: 00", 50.00, Colors.CYAN)
+                farmerReadout = text("FARMING: 00", 50.00, Colors.CYAN, font)
             }
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD)
+                text(" ADD ", 50.00,Colors.GOLD, font)
                 {
                     onClick { onWorkerUp(WorkerType.SHIPS) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD, font)
                 {
                     onClick { onWorkerDown(WorkerType.SHIPS) }
                 }
-                shipsReadout = text("SHIPS:   00", 50.00, Colors.CYAN)
+                shipsReadout = text("SHIPS:   00", 50.00, Colors.CYAN, font)
             }
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD)
+                text(" ADD ", 50.00,Colors.GOLD, font)
                 {
                     onClick { onWorkerUp(WorkerType.DEFENSE) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD, font)
                 {
                     onClick { onWorkerDown(WorkerType.DEFENSE) }
                 }
-                defenseReadout = text("DEFENSE: 00", 50.00, Colors.CYAN)
+                defenseReadout = text("DEFENSE: 00", 50.00, Colors.CYAN, font)
             }
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD)
+                text(" ADD ", 50.00,Colors.GOLD, font)
                 {
                     onClick { onWorkerUp(WorkerType.SCIENCE) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD)
+                text(" SUB ", 50.00, Colors.GOLD, font)
                 {
                     onClick { onWorkerDown(WorkerType.SCIENCE) }
                 }
-                scienceReadout = text("SCIENCE: 00", 50.00, Colors.CYAN)
+                scienceReadout = text("SCIENCE: 00", 50.00, Colors.CYAN, font)
+            }
+            uiHorizontalStack {
+                padding = 10.00
+                unassignedReadout= text("UNASSIGNED: 00", 50.00, Colors.GOLD, font)
             }
         }
 
@@ -122,6 +127,8 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
         defenseReadout.text = defenseReadoutString
         val scienceReadoutString = "SCIENCE: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.scientists}"
         scienceReadout.text = scienceReadoutString
+        val unassignedReadoutString = "UNASSIGNED: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.workerPool}"
+        unassignedReadout.text = unassignedReadoutString
     }
 
     private fun onWorkerUp(workertype: WorkerType) {

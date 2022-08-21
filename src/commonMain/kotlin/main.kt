@@ -31,6 +31,7 @@ object ConfigModule : Module() {
         mapPrototype { MainMenu(get()) }
         mapPrototype { PlanetsScene(get()) }
         mapPrototype { PlanetScene(get()) }
+        mapPrototype { StarsScene(get()) }
     }
 }
 

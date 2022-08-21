@@ -14,7 +14,7 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
         var startx = 200
         var starty = 600
 
-        val font = resourcesVfs["fonts/Android.ttf"].readTtfFont()
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
         for((i, planet) in gs.stars[0]!!.planets.values.withIndex())
         {
