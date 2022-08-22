@@ -11,12 +11,15 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
     private val direction = mutableListOf<Boolean>()
 
     override suspend fun SContainer.sceneInit() {
+
+        println("ACTIVE STAR: ${gs.activePlayerStar}")
+
         var startx = 200
         var starty = 600
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        for((i, planet) in gs.stars[0]!!.planets.values.withIndex())
+        for((i, planet) in gs.stars[gs.activePlayerStar]!!.planets.values.withIndex())
         {
             var fileName = when( planet.type) {
                 PlanetType.TOXIC -> "planets/planet1.png"
@@ -46,7 +49,7 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
             starty -= 200
           }
 
-        var fileName = when( gs.stars[0]!!.type) {
+        var fileName = when( gs.stars[gs.activePlayerStar]!!.type) {
             StarType.YELLOW -> "stars/Star cK gK eg9.bmp"
             StarType.BLUE -> "stars/Star B supeg5.bmp"
             StarType.RED -> "stars/Star M supeg5.bmp"
@@ -55,12 +58,19 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
             scale(0.5)
             position( width/2, 800.00)
         }
-        text( gs.stars[0]!!.name, 50.00, Colors.CYAN, font)
+        text( gs.stars[gs.activePlayerStar]!!.name, 50.00, Colors.CYAN, font)
         {
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
         }
 
+        text("BACK", 50.00,Colors.GOLD, font)
+        {
+            position(300, 0)
+            //centerXOn(background)
+            onClick { sceneContainer.changeTo<StarsScene>() }
+            //alignTopToTopOf(planetImage, 12.0)
+        }
 
     }
 
