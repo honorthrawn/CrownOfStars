@@ -49,8 +49,6 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
                 centerXOn(planetImage)
                 alignTopToTopOf(planetImage, 12.0)
             }
-
-            //startx += 50
             starty -= 200
           }
 

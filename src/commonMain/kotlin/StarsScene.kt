@@ -1,4 +1,3 @@
-import com.soywiz.klogger.*
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
@@ -8,11 +7,15 @@ import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
-import com.soywiz.korma.geom.vector.*
 
 class StarsScene(val gs: GalaxyState) : Scene() {
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
+        {
+            position(0, 0)
+            setSizeScaled(width, height)
+        }
         val star = resourcesVfs["stars/star1.png"].readBitmap()
         val cellSize = views.virtualWidth / 10.0
         val cellHeight = views.virtualHeight / 10.0

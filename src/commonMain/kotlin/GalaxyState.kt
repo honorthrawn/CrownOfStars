@@ -1,4 +1,3 @@
-import com.soywiz.korio.file.*
 import com.soywiz.korio.file.std.*
 import com.soywiz.korio.lang.*
 
@@ -12,9 +11,6 @@ class GalaxyState {
 
     suspend fun rollGalaxy()
     {
-        //val sol = Star("Sol")
-        //sol.roll()
-        //stars[0] = sol
         val starList = resourcesVfs["stars/starlist.txt"].readLines(UTF8)
         var nI = 0
         for(name in starList)
