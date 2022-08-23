@@ -110,7 +110,7 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
             }
             uiHorizontalStack {
                 padding = 10.00
-                unassignedReadout= text("UNASSIGNED: 00", 50.00, Colors.GOLD, font)
+                unassignedReadout= text("UNASSIGNED: 00", 50.00, Colors.CYAN, font)
             }
         }
 

@@ -18,6 +18,11 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
         var starty = 600
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
+        {
+            position(0, 0)
+            setSizeScaled(width, height)
+        }
 
         for((i, planet) in gs.stars[gs.activePlayerStar]!!.planets.values.withIndex())
         {
@@ -66,10 +71,9 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
 
         text("BACK", 50.00,Colors.GOLD, font)
         {
-            position(300, 0)
-            //centerXOn(background)
             onClick { sceneContainer.changeTo<StarsScene>() }
-            //alignTopToTopOf(planetImage, 12.0)
+            alignTopToTopOf(background, 12.0)
+            alignLeftToLeftOf(background, 12.0)
         }
 
     }
