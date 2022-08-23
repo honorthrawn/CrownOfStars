@@ -14,7 +14,7 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
 
         println("ACTIVE STAR: ${gs.activePlayerStar}")
 
-        var startx = 200
+        val startx = 200
         var starty = 600
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
@@ -26,7 +26,7 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
 
         for((i, planet) in gs.stars[gs.activePlayerStar]!!.planets.values.withIndex())
         {
-            var fileName = when( planet.type) {
+            val fileName = when( planet.type) {
                 PlanetType.TOXIC -> "planets/planet1.png"
                 PlanetType.OCEAN -> "planets/planet2.png"
                 PlanetType.TERRAN -> "planets/planet3.png"
@@ -52,7 +52,7 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
             starty -= 200
           }
 
-        var fileName = when( gs.stars[gs.activePlayerStar]!!.type) {
+        val fileName = when( gs.stars[gs.activePlayerStar]!!.type) {
             StarType.YELLOW -> "stars/Star cK gK eg9.bmp"
             StarType.BLUE -> "stars/Star B supeg5.bmp"
             StarType.RED -> "stars/Star M supeg5.bmp"
