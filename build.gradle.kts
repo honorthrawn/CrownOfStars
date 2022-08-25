@@ -6,8 +6,8 @@ plugins {
 }
 
 korge {
-    id = "com.honorthrawn.CrownOfStars"
-
+    id = "com.honorthrawn.CrownofStars"
+    name = "Crown of Stars"
 // To enable all targets at once
 
     targetAll()
