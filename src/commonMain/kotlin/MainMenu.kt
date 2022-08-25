@@ -32,7 +32,7 @@ class MainMenu(val gs: GalaxyState) : Scene() {
         {
             position(width/2, 300.00)
             centerXOnStage()
-            onClick { gs.load(); sceneContainer.changeTo<PlanetsScene>() }
+            onClick { gs.load(); sceneContainer.changeTo<StarsScene>() }
         }
 
         text("Quit Game",50.00, Colors.WHITE, font)

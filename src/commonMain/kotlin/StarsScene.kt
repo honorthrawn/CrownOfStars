@@ -48,6 +48,13 @@ class StarsScene(val gs: GalaxyState) : Scene() {
             }
             y += cellHeight
         }
+
+        text("NEXT TURN", 50.00,Colors.GOLD, font)
+        {
+            position(0.00, y + cellHeight)
+            onClick { gs.save() }
+
+        }
     }
 
     private suspend fun clickedSector(x: Int, y: Int)

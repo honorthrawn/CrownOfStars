@@ -1,3 +1,4 @@
+import kotlinx.serialization.Serializable
 import kotlin.random.*
 
 enum class PlanetType
@@ -20,7 +21,7 @@ enum class WorkerType
     SCIENCE
 }
 
-
+@Serializable
 data class Planet(val star: String)
 {
     var type: PlanetType = PlanetType.TOXIC

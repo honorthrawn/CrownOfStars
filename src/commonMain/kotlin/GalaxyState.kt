@@ -1,5 +1,7 @@
 import com.soywiz.korio.file.std.*
 import com.soywiz.korio.lang.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 
 class GalaxyState {
 
@@ -22,8 +24,19 @@ class GalaxyState {
         }
     }
 
-    fun load()
+    suspend fun load()
     {
+        val jsonIn = applicationDataVfs["galaxyState.json"].readString()
+        println(jsonIn)
+        val json = Json { prettyPrint = true }
+        stars = json.decodeFromString(jsonIn)
+    }
 
+    suspend fun save()
+    {
+        val json = Json { prettyPrint = true }
+        val jsonOut = json.encodeToString(stars)
+        println(jsonOut)
+        applicationDataVfs["galaxyState.json"].writeString(jsonOut)
     }
 }

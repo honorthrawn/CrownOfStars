@@ -1,3 +1,4 @@
+import kotlinx.serialization.Serializable
 import kotlin.random.*
 
 enum class StarType
@@ -7,6 +8,7 @@ enum class StarType
     RED
 }
 
+@Serializable
 data class Star(val name: String)
 {
     var type: StarType = StarType.YELLOW
