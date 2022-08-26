@@ -6,7 +6,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class MainMenu(val gs: GalaxyState) : Scene() {
+class MainMenu(val gs: GalaxyState, val es: EmpireState) : Scene() {
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
         {

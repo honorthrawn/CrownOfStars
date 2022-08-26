@@ -7,7 +7,7 @@ import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 import com.soywiz.korge.ui.*
 
-class PlanetScene(val gs: GalaxyState) : Scene() {
+class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
 
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
@@ -23,9 +23,9 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        println("Active player star: ${gs.activePlayerStar} active player planet: ${gs.activePlayerPlanet}")
+        println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.activePlayerPlanet}")
 
-        val fileName = when(gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.type) {
+        val fileName = when(gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.type) {
             PlanetType.TOXIC -> "planets/planet1.png"
             PlanetType.OCEAN -> "planets/planet2.png"
             PlanetType.TERRAN -> "planets/planet3.png"
@@ -39,7 +39,7 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
             position(0, 0)
         }
 
-        text( gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.name, 50.00, Colors.CYAN, font)
+        text( gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name, 50.00, Colors.CYAN, font)
         {
             centerXOn(planetImage)
             alignTopToTopOf(planetImage, 12.0)
@@ -114,25 +114,25 @@ class PlanetScene(val gs: GalaxyState) : Scene() {
 
     private fun updateReadouts()
     {
-        val farmerReadoutString = "FARMING: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.farmers}"
+        val farmerReadoutString = "FARMING: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.farmers}"
         farmerReadout.text = farmerReadoutString
-        val shipsReadoutString = "SHIPS: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.shipbuilders}"
+        val shipsReadoutString = "SHIPS: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.shipbuilders}"
         shipsReadout.text = shipsReadoutString
-        val defenseReadoutString = "DEFENSE: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.defworkers}"
+        val defenseReadoutString = "DEFENSE: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.defworkers}"
         defenseReadout.text = defenseReadoutString
-        val scienceReadoutString = "SCIENCE: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.scientists}"
+        val scienceReadoutString = "SCIENCE: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.scientists}"
         scienceReadout.text = scienceReadoutString
-        val unassignedReadoutString = "UNASSIGNED: ${gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.workerPool}"
+        val unassignedReadoutString = "UNASSIGNED: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.workerPool}"
         unassignedReadout.text = unassignedReadoutString
     }
 
     private fun onWorkerUp(workertype: WorkerType) {
-        gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.increaseWorker(workertype)
+        gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.increaseWorker(workertype)
         updateReadouts()
     }
 
     private fun onWorkerDown(workertype: WorkerType) {
-        gs.stars[gs.activePlayerStar]!!.planets[gs.activePlayerPlanet]!!.decreaseWorker(workertype)
+        gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.decreaseWorker(workertype)
         updateReadouts()
     }
 

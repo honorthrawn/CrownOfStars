@@ -16,10 +16,12 @@ object ConfigModule : Module() {
 
     override suspend fun AsyncInjector.configure() {
         mapInstance(GalaxyState())
-        mapPrototype { MainMenu(get()) }
-        mapPrototype { PlanetsScene(get()) }
-        mapPrototype { PlanetScene(get()) }
-        mapPrototype { StarsScene(get()) }
+        mapInstance(EmpireState())
+        mapInstance(PlayerState())
+        mapPrototype { MainMenu(get(),get()) }
+        mapPrototype { PlanetsScene(get(),get(),get()) }
+        mapPrototype { PlanetScene(get(),get(),get()) }
+        mapPrototype { StarsScene(get(),get(),get()) }
     }
 }
 

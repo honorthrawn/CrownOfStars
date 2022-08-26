@@ -8,7 +8,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class StarsScene(val gs: GalaxyState) : Scene() {
+class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
@@ -41,7 +41,15 @@ class StarsScene(val gs: GalaxyState) : Scene() {
                         StarType.BLUE -> starImage.colorMul = Colors.BLUE
                         StarType.RED -> starImage.colorMul = Colors.RED
                     }
-                    text(gs.stars[nI]!!.name, 10.00, Colors.WHITE, font)
+
+                    val textColor = when(gs.stars[nI]!!.getAllegiance())
+                    {
+                        Allegiance.Unoccupied -> Colors.WHITE
+                        Allegiance.Player -> Colors.CYAN
+                        Allegiance.Enemy -> Colors.RED
+                    }
+
+                    text(gs.stars[nI]!!.name, 10.00, textColor, font)
                 }
                 x += cellSize
                 nI++
@@ -59,6 +67,6 @@ class StarsScene(val gs: GalaxyState) : Scene() {
 
     private suspend fun clickedSector(x: Int, y: Int)
     {
-        gs.activePlayerStar = x * 10 + y; sceneContainer.changeTo<PlanetsScene>()
+        ps.activePlayerStar = x * 10 + y; sceneContainer.changeTo<PlanetsScene>()
     }
 }

@@ -1,3 +1,4 @@
+import com.soywiz.klogger.*
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.view.*
@@ -6,25 +7,24 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class PlanetsScene(val gs: GalaxyState) : Scene() {
+class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
 
     private val direction = mutableListOf<Boolean>()
 
     override suspend fun SContainer.sceneInit() {
-
-        println("ACTIVE STAR: ${gs.activePlayerStar}")
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        println("ACTIVE STAR: ${ps.activePlayerStar}")
 
         val startx = 200
         var starty = 600
 
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
         {
             position(0, 0)
             setSizeScaled(width, height)
         }
 
-        for((i, planet) in gs.stars[gs.activePlayerStar]!!.planets.values.withIndex())
+        for((i, planet) in gs.stars[ps.activePlayerStar]!!.planets.values.withIndex())
         {
             val fileName = when( planet.type) {
                 PlanetType.TOXIC -> "planets/planet1.png"
@@ -42,9 +42,16 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
             }
             direction.add(i, false)
             planetImage.addUpdater { updatePlanet(planetImage,i) }
-            planetImage.onClick { gs.activePlayerPlanet = i; sceneContainer.changeTo<PlanetScene>()  }
+            planetImage.onClick { planetClicked(i, font)  }
 
-            text( planet.name, 50.00, Colors.CYAN, font)
+            val planetTextColor = when(planet.ownerIndx)
+            {
+                Allegiance.Unoccupied -> Colors.WHITE
+                Allegiance.Player -> Colors.CYAN
+                Allegiance.Enemy -> Colors.RED
+            }
+
+            text( planet.name, 50.00, planetTextColor, font)
             {
                 centerXOn(planetImage)
                 alignTopToTopOf(planetImage, 12.0)
@@ -52,7 +59,7 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
             starty -= 200
           }
 
-        val fileName = when( gs.stars[gs.activePlayerStar]!!.type) {
+        val fileName = when( gs.stars[ps.activePlayerStar]!!.type) {
             StarType.YELLOW -> "stars/Star cK gK eg9.bmp"
             StarType.BLUE -> "stars/Star B supeg5.bmp"
             StarType.RED -> "stars/Star M supeg5.bmp"
@@ -61,7 +68,7 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
             scale(0.5)
             position( width/2, 800.00)
         }
-        text( gs.stars[gs.activePlayerStar]!!.name, 50.00, Colors.CYAN, font)
+        text( gs.stars[ps.activePlayerStar]!!.name, 50.00, Colors.CYAN, font)
         {
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
@@ -75,6 +82,20 @@ class PlanetsScene(val gs: GalaxyState) : Scene() {
         }
 
     }
+
+    private suspend fun Container.planetClicked(index: Int, font: Font)
+    {
+        if(gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndx == Allegiance.Player)
+        {
+            ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
+        }
+        //else
+        //{
+        //   text("NOT YOUR WORLD", 50.00, Colors.GOLD, font)
+        //}
+
+    }
+
 
     private fun updatePlanet(planet: Image, index: Int)
     {

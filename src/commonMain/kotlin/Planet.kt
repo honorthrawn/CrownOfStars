@@ -27,10 +27,11 @@ data class Planet(val star: String)
     var type: PlanetType = PlanetType.TOXIC
     var name: String = "VENUS"
     var workerPool: UInt = 0u
-    var farmers: UInt = 5u
+    var farmers: UInt = 0u
     var shipbuilders: UInt = 0u
     var defworkers: UInt = 0u
     var scientists: UInt = 0u
+    var ownerIndx: Allegiance = Allegiance.Unoccupied
 
     fun roll(pos: Int)
     {

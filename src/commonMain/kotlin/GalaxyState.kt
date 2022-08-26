@@ -6,11 +6,6 @@ import kotlinx.serialization.json.*
 class GalaxyState {
 
     var stars = mutableMapOf<Int, Star>()
-    //Index of the player's chosen star or 0 if none
-    var activePlayerStar = 0
-    //Index of the player's chosen planet or 0 if none
-    var activePlayerPlanet = 0
-
     suspend fun rollGalaxy()
     {
         val starList = resourcesVfs["stars/starlist.txt"].readLines(UTF8)
@@ -22,7 +17,18 @@ class GalaxyState {
             stars[nI] = newStar
             nI++
         }
+        //Player's starting world
+        stars[0]!!.planets[2]!!.type = PlanetType.TERRAN
+        stars[0]!!.planets[2]!!.ownerIndx = Allegiance.Player
+        stars[0]!!.planets[2]!!.farmers = 5u
+
+        //Backup to last star to be enemy starting world
+        nI-=2
+        stars[nI]!!.planets[2]!!.type = PlanetType.TERRAN
+        stars[nI]!!.planets[2]!!.ownerIndx = Allegiance.Enemy
+        stars[nI]!!.planets[2]!!.farmers = 5u
     }
+
 
     suspend fun load()
     {
