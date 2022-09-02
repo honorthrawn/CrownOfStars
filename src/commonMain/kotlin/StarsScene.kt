@@ -9,6 +9,10 @@ import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
 class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+    private lateinit var farmerReadout: Text
+    private lateinit var shipsReadout: Text
+    private lateinit var scienceReadout: Text
+
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
@@ -57,12 +61,42 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
             y += cellHeight
         }
 
+        val Ship = "SHIP: ${es.empires[0]!!.shipPoints}  "
+        val Research = "RESEARCH: ${es.empires[0]!!.researchPoints}  "
+        val Organic = "ORGANICS: ${es.empires[0]!!.organicPoints}  "
+
+        uiHorizontalStack {
+            position(0.00, y + cellHeight)
+            padding = 10.00
+            shipsReadout = text(Ship,50.00, Colors.CYAN, font)
+            farmerReadout = text(Organic,50.00, Colors.CYAN, font)
+            scienceReadout = text(Research,50.00, Colors.CYAN, font)
+        }
+
         text("NEXT TURN", 50.00,Colors.GOLD, font)
         {
-            position(0.00, y + cellHeight)
-            onClick { es.addProduction(gs); es.save(); gs.save() }
+            position(0.00, y +  2 * cellHeight)
+            onClick { nextTurn() }
 
         }
+    }
+
+    private suspend fun nextTurn()
+    {
+        es.addProduction(gs)
+        updateScreen()
+        es.save()
+        gs.save()
+    }
+
+    private fun updateScreen()
+    {
+        val Ship = "SHIP: ${es.empires[0]!!.shipPoints}"
+        val Research = "RESEARCH: ${es.empires[0]!!.researchPoints}"
+        val Organic = "ORGANICS: ${es.empires[0]!!.organicPoints}"
+        shipsReadout.text = Ship
+        farmerReadout.text = Organic
+        scienceReadout.text = Research
     }
 
     private suspend fun clickedSector(x: Int, y: Int)
