@@ -25,4 +25,5 @@ korge {
 
     serializationJson()
     //targetAndroidDirect()
+    bundle("https://github.com/korlibs/korlibs-bundle-source-extensions.git::text-terminal::8a6d8af9c5cbd7be3acccfac145d0671f4477588")
 }

@@ -27,7 +27,7 @@ data class Star(val name: String)
         }
     }
 
-    suspend fun getAllegiance(): Allegiance
+    fun getAllegiance(): Allegiance
     {
         //If any world in system is enemy held, count the system as enemy
         for( i in 1..numPlanets)

@@ -60,7 +60,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         text("NEXT TURN", 50.00,Colors.GOLD, font)
         {
             position(0.00, y + cellHeight)
-            onClick { gs.save() }
+            onClick { es.addProduction(gs); es.save(); gs.save() }
 
         }
     }

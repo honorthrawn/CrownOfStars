@@ -39,9 +39,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             position(0, 0)
         }
 
-        text( gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name, 50.00, Colors.CYAN, font)
+        val planet = "${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name} - ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.type} "
+
+        text( planet, 50.00, Colors.CYAN, font)
         {
-            centerXOn(planetImage)
+            //centerXOn(planetImage)
+            alignLeftToLeftOf(planetImage)
             alignTopToTopOf(planetImage, 12.0)
         }
 

@@ -51,7 +51,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 Allegiance.Enemy -> Colors.RED
             }
 
-            text( planet.name, 50.00, planetTextColor, font)
+            val planetTxt = "${planet.name} - ${planet.type} "
+            text( planetTxt, 50.00, planetTextColor, font)
             {
                 centerXOn(planetImage)
                 alignTopToTopOf(planetImage, 12.0)
@@ -77,8 +78,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         text("BACK", 50.00,Colors.GOLD, font)
         {
             onClick { sceneContainer.changeTo<StarsScene>() }
-            alignTopToTopOf(background, 12.0)
-            alignLeftToLeftOf(background, 12.0)
+            position(300, 0)
+            centerXOn(background)
         }
 
     }

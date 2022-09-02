@@ -25,14 +25,14 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState) : Scene() {
         {
             position(width/2, 200.00)
             centerXOnStage()
-            onClick { gs.rollGalaxy(); sceneContainer.changeTo<StarsScene>() }
+            onClick { gs.rollGalaxy(); es.rollEmpires(); sceneContainer.changeTo<StarsScene>() }
         }
 
         text("Continue Game",50.00, Colors.WHITE, font)
         {
             position(width/2, 300.00)
             centerXOnStage()
-            onClick { gs.load(); sceneContainer.changeTo<StarsScene>() }
+            onClick { gs.load(); es.load(); sceneContainer.changeTo<StarsScene>() }
         }
 
         text("Quit Game",50.00, Colors.WHITE, font)
