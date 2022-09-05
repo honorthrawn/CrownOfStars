@@ -12,6 +12,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
+    private lateinit var defenseReadout: Text
 
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
@@ -61,23 +62,29 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
             y += cellHeight
         }
 
-        val Ship = "SHIP: ${es.empires[0]!!.shipPoints}  "
-        val Research = "RESEARCH: ${es.empires[0]!!.researchPoints}  "
-        val Organic = "ORGANICS: ${es.empires[0]!!.organicPoints}  "
+        val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}  "
+        val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}  "
+        val Organic = "ORGANIC: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}  "
+        val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints}  "
 
-        uiHorizontalStack {
+        uiVerticalStack {
             position(0.00, y + cellHeight)
-            padding = 10.00
-            shipsReadout = text(Ship,50.00, Colors.CYAN, font)
-            farmerReadout = text(Organic,50.00, Colors.CYAN, font)
-            scienceReadout = text(Research,50.00, Colors.CYAN, font)
+            uiHorizontalStack {
+                padding = 10.00
+                shipsReadout = text(Ship, 50.00, Colors.CYAN, font)
+                farmerReadout = text(Organic, 50.00, Colors.CYAN, font)
+            }
+            uiHorizontalStack {
+                padding = 10.00
+                scienceReadout = text(Research, 50.00, Colors.CYAN, font)
+                defenseReadout = text(defense, 50.00, Colors.CYAN, font)
+            }
         }
 
         text("NEXT TURN", 50.00,Colors.GOLD, font)
         {
             position(0.00, y +  2 * cellHeight)
             onClick { nextTurn() }
-
         }
     }
 
@@ -91,9 +98,11 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
 
     private fun updateScreen()
     {
-        val Ship = "SHIP: ${es.empires[0]!!.shipPoints}"
-        val Research = "RESEARCH: ${es.empires[0]!!.researchPoints}"
-        val Organic = "ORGANICS: ${es.empires[0]!!.organicPoints}"
+        val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
+        val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}"
+        val Organic = "ORGANIC: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
+        val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints}  "
+        defenseReadout.text = defense
         shipsReadout.text = Ship
         farmerReadout.text = Organic
         scienceReadout.text = Research

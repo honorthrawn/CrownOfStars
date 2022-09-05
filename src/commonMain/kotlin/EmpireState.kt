@@ -8,19 +8,20 @@ class EmpireState {
 
     fun rollEmpires()
     {
-        var playerEmpire = Empire(Allegiance.Player)
-        var enemyEmpire = Empire(Allegiance.Enemy)
-        empires[0] = playerEmpire
-        empires[1] = enemyEmpire
+        val playerEmpire = Empire(Allegiance.Player)
+        val enemyEmpire = Empire(Allegiance.Enemy)
+        empires[Allegiance.Player.ordinal] = playerEmpire
+        empires[Allegiance.Enemy.ordinal] = enemyEmpire
     }
 
     fun addProduction(gs: GalaxyState)
     {
         for(empire in empires.values)
         {
-            empire.addProduction(gs);
+            empire.addProduction(gs)
         }
     }
+
 
     suspend fun load()
     {

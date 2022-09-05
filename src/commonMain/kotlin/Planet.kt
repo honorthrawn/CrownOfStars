@@ -32,6 +32,7 @@ data class Planet(val star: String)
     var defworkers: UInt = 0u
     var scientists: UInt = 0u
     var ownerIndx: Allegiance = Allegiance.Unoccupied
+    var defenseBases: UInt = 0u
 
     fun roll(pos: Int)
     {
@@ -88,4 +89,12 @@ data class Planet(val star: String)
         workerPool++
     }
 
+    fun addPopulation(inc: UInt)
+    {
+        workerPool += inc
+    }
+
+    fun addBase(inc: UInt) {
+        defenseBases += inc
+    }
 }

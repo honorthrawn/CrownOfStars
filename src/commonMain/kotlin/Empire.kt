@@ -12,6 +12,7 @@ data class Empire(val id: Allegiance) {
     var shipPoints =  0u
     var organicPoints = 0u
     var researchPoints = 0u
+    var defensePoints = 0u
 
     fun addProduction(gs: GalaxyState)
     {
@@ -21,11 +22,32 @@ data class Empire(val id: Allegiance) {
             {
                 if(planet.ownerIndx == id )
                 {
-                    shipPoints += planet.shipbuilders;
-                    organicPoints += planet.farmers;
-                    researchPoints += planet.scientists;
+                    shipPoints += planet.shipbuilders
+                    organicPoints += planet.farmers
+                    researchPoints += planet.scientists
+                    defensePoints += planet.defworkers
                 }
             }
         }
+    }
+
+    fun addPopulation(): Boolean {
+        var retval = false
+        if(organicPoints >= 50u)
+        {
+            organicPoints -= 50u
+            retval = true
+        }
+        return retval
+    }
+
+    fun buildBase(): Boolean {
+        var retval = false
+        if(defensePoints >= 50u)
+        {
+            defensePoints -= 50u
+            retval = true
+        }
+        return retval
     }
 }

@@ -14,6 +14,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     private lateinit var defenseReadout: Text
     private lateinit var scienceReadout: Text
     private lateinit var unassignedReadout: Text
+    private lateinit var baseReadout: Text
 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
@@ -40,7 +41,6 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         }
 
         val planet = "${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name} - ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.type} "
-
         text( planet, 50.00, Colors.CYAN, font)
         {
             //centerXOn(planetImage)
@@ -48,12 +48,15 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             alignTopToTopOf(planetImage, 12.0)
         }
 
-        text("BACK", 50.00,Colors.GOLD, font)
-        {
+        uiVerticalStack {
             position(300, 0)
             centerXOn(background)
-            onClick { sceneContainer.changeTo<PlanetsScene>() }
             alignTopToTopOf(planetImage, 12.0)
+            text("BACK", 50.00, Colors.GOLD, font)
+            {
+                onClick { sceneContainer.changeTo<PlanetsScene>() }
+            }
+            baseReadout = text("BASES: 00", 50.00, Colors.CYAN, font)
         }
 
         uiVerticalStack(400.00, UI_DEFAULT_PADDING){
@@ -110,6 +113,21 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
                 padding = 10.00
                 unassignedReadout= text("UNASSIGNED: 00", 50.00, Colors.CYAN, font)
             }
+            uiHorizontalStack {
+                padding = 10.00
+                text("WORKER", 50.00, Colors.GOLD, font)
+                {
+                    onClick { growPopulation() }
+                }
+                text("SHIPS", 50.00, Colors.GOLD, font)
+                {
+                    onClick { lauchShip() }
+                }
+                text("DEF BASE", 50.00, Colors.GOLD, font)
+                {
+                    onClick { buyBase() }
+                }
+            }
         }
 
         updateReadouts()
@@ -127,6 +145,8 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         scienceReadout.text = scienceReadoutString
         val unassignedReadoutString = "UNASSIGNED: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.workerPool}"
         unassignedReadout.text = unassignedReadoutString
+        val baseReadoutString = "BASES: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.defenseBases}"
+        baseReadout.text = baseReadoutString
     }
 
     private fun onWorkerUp(workertype: WorkerType) {
@@ -139,5 +159,25 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         updateReadouts()
     }
 
+    private fun growPopulation()
+    {
+        if(es.empires[Allegiance.Player.ordinal]!!.addPopulation())
+        {
+            gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addPopulation(1u)
+            updateReadouts()
+        }
+    }
 
+    private fun lauchShip()
+    {
+    }
+
+    private fun buyBase()
+    {
+        if(es.empires[Allegiance.Player.ordinal]!!.buildBase())
+        {
+            gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addBase(1u)
+            updateReadouts()
+        }
+    }
 }
