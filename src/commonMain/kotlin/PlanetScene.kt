@@ -168,8 +168,9 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         }
     }
 
-    private fun lauchShip()
+    private suspend fun lauchShip()
     {
+        sceneContainer.changeTo<BuyShipScene>()
     }
 
     private fun buyBase()
