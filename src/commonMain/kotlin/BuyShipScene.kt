@@ -47,21 +47,36 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             alignTopToTopOf(colonyShip)
         }
 
-        text("BUY", 50.00, Colors.GOLD, font)
+        val buyColony = text("BUY", 50.00, Colors.GOLD, font)
         {
             alignLeftToRightOf(colonyShip, 5.00)
             alignBottomToBottomOf(colonyShip)
             onClick { buyColony() }
         }
+
+        text("BACK", 50.00, Colors.GOLD, font)
+        {
+            alignLeftToRightOf(buyColony, 5.00)
+            alignBottomToBottomOf(buyColony)
+            onClick { sceneContainer.changeTo<PlanetScene>() }
+        }
    }
 
     private suspend fun buyTerraformer()
     {
-
+        //TODO call to spend resources
+        var newShip = shipFactory(shipType.TERRAFORMATTER_HUMAN)
+        if (newShip != null) {
+            gs.stars[ps.activePlayerStar]!!.add(newShip)
+        }
     }
 
     private suspend fun buyColony()
     {
-
+        //TODO call to spend resources
+        var newShip = shipFactory(shipType.COLONY_HUMAN)
+        if (newShip != null) {
+            gs.stars[ps.activePlayerStar]!!.add(newShip)
+        }
     }
     }

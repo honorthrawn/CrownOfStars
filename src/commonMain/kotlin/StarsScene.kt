@@ -21,7 +21,9 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
             position(0, 0)
             setSizeScaled(width, height)
         }
-        val star = resourcesVfs["stars/star1.png"].readBitmap()
+        val star = resourcesVfs["ui/star1.png"].readBitmap()
+        val fleet = resourcesVfs["ui/med-head-scout.png"].readBitmap()
+
         val cellSize = views.virtualWidth / 10.0
         val cellHeight = views.virtualHeight / 10.0
         var x: Double
@@ -39,22 +41,37 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                 uiVerticalStack(cellSize, UI_DEFAULT_PADDING, false) {
                     centerXOn(rect)
                     centerYOn(rect)
-                    val starImage = image(star)
-                    when(gs.stars[nI]!!.type)
-                    {
-                        StarType.YELLOW -> starImage.colorMul = Colors.YELLOW
-                        StarType.BLUE -> starImage.colorMul = Colors.BLUE
-                        StarType.RED -> starImage.colorMul = Colors.RED
-                    }
+                    uiHorizontalStack {
+                        val starImage = image(star)
+                        when (gs.stars[nI]!!.type) {
+                            StarType.YELLOW -> starImage.colorMul = Colors.YELLOW
+                            StarType.BLUE -> starImage.colorMul = Colors.BLUE
+                            StarType.RED -> starImage.colorMul = Colors.RED
+                        }
 
+                        if (gs.stars[nI]!!.isPresent()) {
+                            val fleetImage = image(fleet)
+                            {
+                                colorMul = Colors.CYAN
+                                onClick { clickedFleet(i, j) }
+                            }
+                        }
+                       if (gs.stars[nI]!!.enemyIsPresent()) {
+                            val fleetImage = image(fleet)
+                            {
+                                colorMul = Colors.RED
+                                onClick{ clickedEnemyFleet(i,j) }
+                            }
+                        }
+                    }
                     val textColor = when(gs.stars[nI]!!.getAllegiance())
                     {
                         Allegiance.Unoccupied -> Colors.WHITE
                         Allegiance.Player -> Colors.CYAN
                         Allegiance.Enemy -> Colors.RED
                     }
-
                     text(gs.stars[nI]!!.name, 10.00, textColor, font)
+
                 }
                 x += cellSize
                 nI++
@@ -79,6 +96,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                 scienceReadout = text(Research, 50.00, Colors.CYAN, font)
                 defenseReadout = text(defense, 50.00, Colors.CYAN, font)
             }
+           // anchor = this.koruiComponent.factory.
         }
 
         text("NEXT TURN", 50.00,Colors.GOLD, font)
@@ -110,6 +128,21 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
 
     private suspend fun clickedSector(x: Int, y: Int)
     {
-        ps.activePlayerStar = x * 10 + y; sceneContainer.changeTo<PlanetsScene>()
+        ps.activePlayerStar = x * 10 + y
+        sceneContainer.changeTo<PlanetsScene>()
+    }
+
+    private suspend fun clickedFleet(x: Int, y: Int)
+    {
+        println("OBAMANATION, we clicked a fleet")
+        ps.activePlayerStar = x * 10 + y
+        sceneContainer.changeTo<DeployShipsScene>()
+    }
+
+    private suspend fun clickedEnemyFleet(x: Int, y: Int)
+    {
+        println("OBAMANATION, we clicked an enemy fleet")
+        ps.activePlayerStar = x * 10 + y
+        sceneContainer.changeTo<DeployShipsScene>()
     }
 }

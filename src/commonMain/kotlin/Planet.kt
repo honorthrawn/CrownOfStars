@@ -1,6 +1,7 @@
 import kotlinx.serialization.Serializable
 import kotlin.random.*
 
+@Serializable
 enum class PlanetType
 {
     TOXIC,
@@ -13,6 +14,7 @@ enum class PlanetType
     TROPICAL
 }
 
+@Serializable
 enum class WorkerType
 {
     FARMING,

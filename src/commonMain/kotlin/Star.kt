@@ -1,6 +1,7 @@
 import kotlinx.serialization.Serializable
 import kotlin.random.*
 
+@Serializable
 enum class StarType
 {
     YELLOW,
@@ -13,7 +14,10 @@ data class Star(val name: String)
 {
     var type: StarType = StarType.YELLOW
     var planets = mutableMapOf<Int, Planet>()
-    val numPlanets = 4
+    var terraformers: MutableList<Ship> = mutableListOf()
+    var colonyShips:  MutableList<Ship> = mutableListOf()
+    private val numPlanets = 4
+
     fun roll()
     {
         type = StarType.values()[Random.nextInt(0, StarType.values().count())]
@@ -47,4 +51,22 @@ data class Star(val name: String)
         return Allegiance.Unoccupied
     }
 
+    fun add(shipToAdd: Ship)
+    {
+        when( shipToAdd.theType)
+        {
+            shipType.TERRAFORMATTER_HUMAN -> terraformers.add(shipToAdd)
+            shipType.COLONY_HUMAN -> colonyShips.add(shipToAdd)
+        }
+    }
+
+    fun isPresent(): Boolean
+    {
+        return terraformers.isNotEmpty() || colonyShips.isNotEmpty()
+    }
+
+    fun enemyIsPresent(): Boolean
+    {
+        return false; //TODO
+    }
 }

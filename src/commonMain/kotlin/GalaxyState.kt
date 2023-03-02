@@ -23,7 +23,7 @@ class GalaxyState {
         stars[0]!!.planets[2]!!.farmers = 5u
 
         //Backup to last star to be enemy starting world
-        nI-=2
+        nI--
         stars[nI]!!.planets[2]!!.type = PlanetType.TERRAN
         stars[nI]!!.planets[2]!!.ownerIndx = Allegiance.Enemy
         stars[nI]!!.planets[2]!!.farmers = 5u
@@ -33,7 +33,7 @@ class GalaxyState {
     suspend fun load()
     {
         val jsonIn = applicationDataVfs["galaxyState.json"].readString()
-        println(jsonIn)
+        //println(jsonIn)
         val json = Json { prettyPrint = true }
         stars = json.decodeFromString(jsonIn)
     }
@@ -42,7 +42,7 @@ class GalaxyState {
     {
         val json = Json { prettyPrint = true }
         val jsonOut = json.encodeToString(stars)
-        println(jsonOut)
+        //println(jsonOut)
         applicationDataVfs["galaxyState.json"].writeString(jsonOut)
     }
 }

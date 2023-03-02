@@ -26,7 +26,7 @@ class EmpireState {
     suspend fun load()
     {
         val jsonIn = applicationDataVfs["empireState.json"].readString()
-        println(jsonIn)
+        //println(jsonIn)
         val json = Json { prettyPrint = true }
         empires = json.decodeFromString(jsonIn)
     }
@@ -35,7 +35,7 @@ class EmpireState {
     {
         val json = Json { prettyPrint = true }
         val jsonOut = json.encodeToString(empires)
-        println(jsonOut)
+        //println(jsonOut)
         applicationDataVfs["empireState.json"].writeString(jsonOut)
     }
 }

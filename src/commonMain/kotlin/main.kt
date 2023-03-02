@@ -23,6 +23,7 @@ object ConfigModule : Module() {
         mapPrototype { PlanetScene(get(),get(),get()) }
         mapPrototype { StarsScene(get(),get(),get()) }
         mapPrototype { BuyShipScene(get(),get(),get()) }
+        mapPrototype { DeployShipsScene(get(),get(),get()) }
     }
 }
 
