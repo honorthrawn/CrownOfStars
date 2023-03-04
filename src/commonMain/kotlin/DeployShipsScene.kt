@@ -25,7 +25,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
                 uiSlider {
                     min = 0.0
-                    max = gs.stars[ps.activePlayerStar]!!.terraformers.count().toDouble()
+                 //   max = gs.stars[ps.activePlayerStar]!!.playerFleet.count().toDouble()
                     step = 1.00
                     value = 0.00
                 }
@@ -35,7 +35,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
                 uiSlider {
                     min = 0.0
-                    max = gs.stars[ps.activePlayerStar]!!.colonyShips.count().toDouble()
+                //    max = gs.stars[ps.activePlayerStar]!!.playerFleet.count().toDouble()
                     step = 1.00
                     value = 0.00
                 }

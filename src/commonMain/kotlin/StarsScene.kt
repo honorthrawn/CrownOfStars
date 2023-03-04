@@ -49,14 +49,14 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                             StarType.RED -> starImage.colorMul = Colors.RED
                         }
 
-                        if (gs.stars[nI]!!.isPresent()) {
+                        if (gs.stars[nI]!!.playerFleet.isPresent()) {
                             val fleetImage = image(fleet)
                             {
                                 colorMul = Colors.CYAN
                                 onClick { clickedFleet(i, j) }
                             }
                         }
-                       if (gs.stars[nI]!!.enemyIsPresent()) {
+                       if (gs.stars[nI]!!.enemyFleet.isPresent()) {
                             val fleetImage = image(fleet)
                             {
                                 colorMul = Colors.RED

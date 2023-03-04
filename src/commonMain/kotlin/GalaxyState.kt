@@ -34,13 +34,13 @@ class GalaxyState {
     {
         val jsonIn = applicationDataVfs["galaxyState.json"].readString()
         //println(jsonIn)
-        val json = Json { prettyPrint = true }
+        val json = Json { prettyPrint = true; allowStructuredMapKeys= true}
         stars = json.decodeFromString(jsonIn)
     }
 
     suspend fun save()
     {
-        val json = Json { prettyPrint = true }
+        val json = Json { prettyPrint = true; allowStructuredMapKeys = true }
         val jsonOut = json.encodeToString(stars)
         //println(jsonOut)
         applicationDataVfs["galaxyState.json"].writeString(jsonOut)

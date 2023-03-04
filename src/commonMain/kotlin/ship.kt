@@ -10,7 +10,7 @@ enum class shipType
 
 }
 
-suspend fun shipFactory(shipType: shipType): Ship? {
+suspend fun shipFactory(shipType: shipType): Ship {
     val shipList = resourcesVfs["ships/ships.txt"].readLines(UTF8)
     val key = shipType.name
     for(record in shipList)
@@ -25,12 +25,13 @@ suspend fun shipFactory(shipType: shipType): Ship? {
             return Ship(shipType, image, hits, moves)
         }
     }
-    println("Ship factory returning null")
-    return null
+    println("Ship factory returning default ship")
+    return Ship(shipType, "NOIMAGE", 0u,0u)
 }
 
 @Serializable
 data class Ship(val theType: shipType, val image: String, val maxHP: UInt, val maxMoves: UInt)
 {
-
+    var movesLeft = maxMoves
+    var currentHP = maxHP
 }

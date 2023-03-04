@@ -14,12 +14,8 @@ data class Star(val name: String)
 {
     var type: StarType = StarType.YELLOW
     var planets = mutableMapOf<Int, Planet>()
-
-    var terraformers: MutableList<Ship> = mutableListOf()
-    var colonyShips:  MutableList<Ship> = mutableListOf()
-    var enemyTerraformers: MutableList<Ship> = mutableListOf()
-    var enemyColonyShips:  MutableList<Ship> = mutableListOf()
-
+    var playerFleet = Fleet()
+    var enemyFleet = Fleet()
     private val numPlanets = 4
 
     fun roll()
@@ -53,24 +49,5 @@ data class Star(val name: String)
         }
         //If no player or enemy count as unoccupied
         return Allegiance.Unoccupied
-    }
-
-    fun add(shipToAdd: Ship)
-    {
-        when( shipToAdd.theType)
-        {
-            shipType.TERRAFORMATTER_HUMAN -> terraformers.add(shipToAdd)
-            shipType.COLONY_HUMAN -> colonyShips.add(shipToAdd)
-        }
-    }
-
-    fun isPresent(): Boolean
-    {
-        return terraformers.isNotEmpty() || colonyShips.isNotEmpty()
-    }
-
-    fun enemyIsPresent(): Boolean
-    {
-        return enemyTerraformers.isNotEmpty() || enemyColonyShips.isNotEmpty()
     }
 }

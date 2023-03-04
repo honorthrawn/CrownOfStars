@@ -66,17 +66,16 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     {
         //TODO call to spend resources
         var newShip = shipFactory(shipType.TERRAFORMATTER_HUMAN)
-        if (newShip != null) {
-            gs.stars[ps.activePlayerStar]!!.add(newShip)
-        }
+        // gs.stars[ps.activePlayerStar]!!.add(newShip)
+        gs.stars[ps.activePlayerStar]!!.playerFleet.add(newShip)
+
     }
 
     private suspend fun buyColony()
     {
         //TODO call to spend resources
         var newShip = shipFactory(shipType.COLONY_HUMAN)
-        if (newShip != null) {
-            gs.stars[ps.activePlayerStar]!!.add(newShip)
-        }
+        // gs.stars[ps.activePlayerStar]!!.add(newShip)
+        gs.stars[ps.activePlayerStar]!!.playerFleet.add(newShip)
     }
     }
