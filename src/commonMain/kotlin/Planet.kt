@@ -33,7 +33,7 @@ data class Planet(val star: String)
     var shipbuilders: UInt = 0u
     var defworkers: UInt = 0u
     var scientists: UInt = 0u
-    var ownerIndx: Allegiance = Allegiance.Unoccupied
+    var ownerIndex: Allegiance = Allegiance.Unoccupied
     var defenseBases: UInt = 0u
 
     fun roll(pos: Int)

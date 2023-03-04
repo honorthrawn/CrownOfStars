@@ -21,7 +21,7 @@ data class Empire(val id: Allegiance) {
         {
             for( planet in star.planets.values)
             {
-                if(planet.ownerIndx == id )
+                if(planet.ownerIndex == id )
                 {
                     shipPoints += planet.shipbuilders
                     organicPoints += planet.farmers

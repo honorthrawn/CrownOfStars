@@ -1,4 +1,3 @@
-import com.soywiz.klogger.*
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.view.*
@@ -44,7 +43,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             planetImage.addUpdater { updatePlanet(planetImage,i) }
             planetImage.onClick { planetClicked(i, font)  }
 
-            val planetTextColor = when(planet.ownerIndx)
+            val planetTextColor = when(planet.ownerIndex)
             {
                 Allegiance.Unoccupied -> Colors.WHITE
                 Allegiance.Player -> Colors.CYAN
@@ -86,7 +85,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
     private suspend fun Container.planetClicked(index: Int, font: Font)
     {
-        if(gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndx == Allegiance.Player)
+        if(gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player)
         {
             ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
         }

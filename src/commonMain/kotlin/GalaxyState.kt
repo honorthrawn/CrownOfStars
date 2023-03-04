@@ -19,13 +19,13 @@ class GalaxyState {
         }
         //Player's starting world
         stars[0]!!.planets[2]!!.type = PlanetType.TERRAN
-        stars[0]!!.planets[2]!!.ownerIndx = Allegiance.Player
+        stars[0]!!.planets[2]!!.ownerIndex = Allegiance.Player
         stars[0]!!.planets[2]!!.farmers = 5u
 
         //Backup to last star to be enemy starting world
         nI--
         stars[nI]!!.planets[2]!!.type = PlanetType.TERRAN
-        stars[nI]!!.planets[2]!!.ownerIndx = Allegiance.Enemy
+        stars[nI]!!.planets[2]!!.ownerIndex = Allegiance.Enemy
         stars[nI]!!.planets[2]!!.farmers = 5u
     }
 

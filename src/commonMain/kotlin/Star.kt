@@ -14,8 +14,12 @@ data class Star(val name: String)
 {
     var type: StarType = StarType.YELLOW
     var planets = mutableMapOf<Int, Planet>()
+
     var terraformers: MutableList<Ship> = mutableListOf()
     var colonyShips:  MutableList<Ship> = mutableListOf()
+    var enemyTerraformers: MutableList<Ship> = mutableListOf()
+    var enemyColonyShips:  MutableList<Ship> = mutableListOf()
+
     private val numPlanets = 4
 
     fun roll()
@@ -36,14 +40,14 @@ data class Star(val name: String)
         //If any world in system is enemy held, count the system as enemy
         for( i in 1..numPlanets)
         {
-            if(planets[i-1]!!.ownerIndx == Allegiance.Enemy) {
+            if(planets[i-1]!!.ownerIndex == Allegiance.Enemy) {
                 return Allegiance.Enemy
             }
         }
         //If one or more worlds are player held and there is no enemy world, count it as player system
         for( i in 1..numPlanets)
         {
-            if(planets[i-1]!!.ownerIndx == Allegiance.Player) {
+            if(planets[i-1]!!.ownerIndex == Allegiance.Player) {
                 return Allegiance.Player
             }
         }
@@ -67,6 +71,6 @@ data class Star(val name: String)
 
     fun enemyIsPresent(): Boolean
     {
-        return false; //TODO
+        return enemyTerraformers.isNotEmpty() || enemyColonyShips.isNotEmpty()
     }
 }
