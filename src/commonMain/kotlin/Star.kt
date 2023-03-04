@@ -1,4 +1,4 @@
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 import kotlin.random.*
 
 @Serializable

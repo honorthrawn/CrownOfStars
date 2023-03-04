@@ -13,6 +13,8 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
     private lateinit var defenseReadout: Text
+    private var friendlyFleets = arrayListOf<Image>()
+    private var enemyFleets = arrayListOf<Image>()
 
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
@@ -40,37 +42,39 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
 
                 uiVerticalStack(cellSize, UI_DEFAULT_PADDING, false) {
                     centerXOn(rect)
-                    centerYOn(rect)
-                    uiHorizontalStack {
-                        val starImage = image(star)
+                    //centerYOn(rect)
+                    alignTopToTopOf(rect)
+                    val starImage = image(star)
                         when (gs.stars[nI]!!.type) {
                             StarType.YELLOW -> starImage.colorMul = Colors.YELLOW
                             StarType.BLUE -> starImage.colorMul = Colors.BLUE
                             StarType.RED -> starImage.colorMul = Colors.RED
                         }
 
-                        if (gs.stars[nI]!!.playerFleet.isPresent()) {
-                            val fleetImage = image(fleet)
+                    uiHorizontalStack {
+                           val fleetImage = image(fleet)
                             {
                                 colorMul = Colors.CYAN
                                 onClick { clickedFleet(i, j) }
+                                visible = gs.stars[nI]!!.playerFleet.isPresent()
                             }
-                        }
-                       if (gs.stars[nI]!!.enemyFleet.isPresent()) {
-                            val fleetImage = image(fleet)
+                            friendlyFleets.add(fleetImage)
+                        val enemyfleetImage = image(fleet)
                             {
                                 colorMul = Colors.RED
-                                onClick{ clickedEnemyFleet(i,j) }
+                                onClick { clickedEnemyFleet(i, j) }
+                                visible = gs.stars[nI]!!.enemyFleet.isPresent()
                             }
-                        }
-                    }
+                            enemyFleets.add(enemyfleetImage)
+                      }
+
                     val textColor = when(gs.stars[nI]!!.getAllegiance())
                     {
                         Allegiance.Unoccupied -> Colors.WHITE
                         Allegiance.Player -> Colors.CYAN
                         Allegiance.Enemy -> Colors.RED
                     }
-                    text(gs.stars[nI]!!.name, 10.00, textColor, font)
+                    text(gs.stars[nI]!!.name, 11.00, textColor, font)
 
                 }
                 x += cellSize
@@ -96,7 +100,6 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                 scienceReadout = text(Research, 50.00, Colors.CYAN, font)
                 defenseReadout = text(defense, 50.00, Colors.CYAN, font)
             }
-           // anchor = this.koruiComponent.factory.
         }
 
         text("NEXT TURN", 50.00,Colors.GOLD, font)
@@ -114,7 +117,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         gs.save()
     }
 
-    private fun updateScreen()
+    private suspend fun updateScreen()
     {
         val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
         val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}"
@@ -124,24 +127,65 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         shipsReadout.text = Ship
         farmerReadout.text = Organic
         scienceReadout.text = Research
+        for (i in 0..gs.stars.count()-1)
+        {
+            enemyFleets[i].visible = gs.stars[i]!!.enemyFleet.isPresent()
+            friendlyFleets[i].visible = gs.stars[i]!!.playerFleet.isPresent()
+            println("FLEET HUMAN ${gs.stars[i]!!.playerFleet.isPresent()} ENEMY: ${gs.stars[i]!!.enemyFleet.isPresent()}")
+        }
     }
 
     private suspend fun clickedSector(x: Int, y: Int)
     {
-        ps.activePlayerStar = x * 10 + y
-        sceneContainer.changeTo<PlanetsScene>()
+        when(ps.operation) {
+            operationType.SELECTION -> {
+                ps.activePlayerStar = x * 10 + y
+                sceneContainer.changeTo<PlanetsScene>()
+            }
+            operationType.MOVINGFLEET ->
+            {
+                movechosenShips(x,y)
+                ps.operation = operationType.SELECTION
+            }
+        }
+    }
+
+    private suspend fun movechosenShips(x: Int, y: Int)
+    {
+        //Figure out destination star
+        val destination = x * 10 + y
+        //Check if can move there, todo
+
+        //Remove the ships from the current star's fleet
+        while(ps.chosenTerraformers > 0)
+        {
+            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleet(shipType.TERRAFORMATTER_HUMAN)
+            if (shipMoving != null) {
+                gs.stars[destination]?.playerFleet?.add(shipMoving)
+            }
+            ps.chosenTerraformers--
+        }
+        while(ps.chosenColony > 0)
+        {
+            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleet(shipType.COLONY_HUMAN)
+            if (shipMoving != null) {
+                gs.stars[destination]?.playerFleet?.add(shipMoving)
+            }
+            ps.chosenColony--
+        }
+        updateScreen()
     }
 
     private suspend fun clickedFleet(x: Int, y: Int)
     {
-        println("OBAMANATION, we clicked a fleet")
+        println("we clicked a fleet")
         ps.activePlayerStar = x * 10 + y
         sceneContainer.changeTo<DeployShipsScene>()
     }
 
     private suspend fun clickedEnemyFleet(x: Int, y: Int)
     {
-        println("OBAMANATION, we clicked an enemy fleet")
+        println("we clicked an enemy fleet")
         ps.activePlayerStar = x * 10 + y
         sceneContainer.changeTo<DeployShipsScene>()
     }
