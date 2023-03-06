@@ -12,4 +12,10 @@ class PlayerState {
     var chosenTerraformers = 0
     var chosenColony = 0
     var operation = operationType.SELECTION
+
+    fun reset() {
+        operation = operationType.SELECTION
+        chosenTerraformers = 0
+        chosenColony = 0
+    }
 }

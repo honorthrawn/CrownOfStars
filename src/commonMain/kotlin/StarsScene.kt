@@ -131,7 +131,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         {
             enemyFleets[i].visible = gs.stars[i]!!.enemyFleet.isPresent()
             friendlyFleets[i].visible = gs.stars[i]!!.playerFleet.isPresent()
-            println("FLEET HUMAN ${gs.stars[i]!!.playerFleet.isPresent()} ENEMY: ${gs.stars[i]!!.enemyFleet.isPresent()}")
+           // println("FLEET HUMAN ${gs.stars[i]!!.playerFleet.isPresent()} ENEMY: ${gs.stars[i]!!.enemyFleet.isPresent()}")
         }
     }
 
@@ -145,10 +145,11 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
             operationType.MOVINGFLEET ->
             {
                 movechosenShips(x,y)
-                ps.operation = operationType.SELECTION
+                ps.reset()
             }
         }
     }
+
 
     private suspend fun movechosenShips(x: Int, y: Int)
     {
@@ -180,6 +181,9 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
     {
         println("we clicked a fleet")
         ps.activePlayerStar = x * 10 + y
+        //Assume want to move whole fleet
+        ps.chosenTerraformers = gs.stars[ps.activePlayerStar]?.playerFleet?.getTerraformersCount()!!
+        ps.chosenColony = gs.stars[ps.activePlayerStar]?.playerFleet?.getColonyShipCount()!!
         sceneContainer.changeTo<DeployShipsScene>()
     }
 
