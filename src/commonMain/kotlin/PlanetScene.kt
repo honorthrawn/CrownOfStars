@@ -15,7 +15,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     private lateinit var scienceReadout: Text
     private lateinit var unassignedReadout: Text
     private lateinit var baseReadout: Text
-
+    private lateinit var notEnoughDialog: RoundRect
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
         {
@@ -43,7 +43,6 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         val planet = "${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name} - ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.type} "
         text( planet, 50.00, Colors.CYAN, font)
         {
-            //centerXOn(planetImage)
             alignLeftToLeftOf(planetImage)
             alignTopToTopOf(planetImage, 12.0)
         }
@@ -159,12 +158,16 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         updateReadouts()
     }
 
-    private fun growPopulation()
+    private suspend fun growPopulation()
     {
         if(es.empires[Allegiance.Player.ordinal]!!.addPopulation())
         {
             gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addPopulation(1u)
             updateReadouts()
+        }
+        else
+        {
+            showNotEnough()
         }
     }
 
@@ -173,12 +176,42 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         sceneContainer.changeTo<BuyShipScene>()
     }
 
-    private fun buyBase()
+    private suspend fun buyBase() = if(es.empires[Allegiance.Player.ordinal]!!.buildBase())
     {
-        if(es.empires[Allegiance.Player.ordinal]!!.buildBase())
-        {
-            gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addBase(1u)
-            updateReadouts()
+        gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addBase(1u)
+        updateReadouts()
+    } else
+    {
+        showNotEnough()
+    }
+
+
+    private suspend fun showNotEnough() {
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        notEnoughDialog =
+            this.sceneContainer.container().roundRect(sceneWidth/2.00, sceneHeight / 4.00, 5.0, 5.0,
+                Colors.BLACK)
+            {
+                centerOnStage()
+                uiVerticalStack {
+                    width = sceneWidth / 2.00
+                    text("Not enough resources", 50.00, Colors.CYAN, font)
+                    {
+                        autoScaling = true
+                    }
+                    text("CLOSE", 50.00, Colors.GOLD, font)
+                    {
+                        autoScaling = true
+                        onClick { closeMessage() }
+                    }
+               }
         }
     }
+
+    private fun closeMessage()
+    {
+        notEnoughDialog.removeFromParent()
+    }
+
 }
+

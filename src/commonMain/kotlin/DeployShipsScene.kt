@@ -57,7 +57,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 padding = 20.0
                 text("CLOSE", 50.00, Colors.GOLD, font)
                 {
-                    ps.operation = operationType.SELECTION
+                    ps.reset()
                     onClick { sceneContainer.changeTo<StarsScene>() }
                 }
 
