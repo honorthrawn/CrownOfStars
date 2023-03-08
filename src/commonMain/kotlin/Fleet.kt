@@ -31,15 +31,18 @@ class Fleet {
 
     suspend fun removeShipFromFleet(shipTypeToRemove: shipType) : Ship
     {
-        val  ship = when (shipTypeToRemove) {
+        val ship: Ship
+        when (shipTypeToRemove) {
             shipType.TERRAFORMATTER_HUMAN -> {
                 println("Trying to remove terraformer")
-                this.terraformers.removeAt(0)
+                ship = terraformers.get(0)
+                terraformers.removeAt(0)
             }
 
             shipType.COLONY_HUMAN -> {
                 println("Trying to remove colony ship")
-                this.colonyShips.removeAt(0)
+                ship = colonyShips.get(0)
+                colonyShips.removeAt(0)
 
             }
         }

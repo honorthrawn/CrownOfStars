@@ -147,6 +147,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                 movechosenShips(x,y)
                 ps.reset()
             }
+            operationType.COLONIZE -> {} //shouldn't happen but gotta have it for compiler
         }
     }
 
@@ -182,8 +183,8 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         println("we clicked a fleet")
         ps.activePlayerStar = x * 10 + y
         //Assume want to move whole fleet
-        ps.chosenTerraformers = gs.stars[ps.activePlayerStar]?.playerFleet?.getTerraformersCount()!!
-        ps.chosenColony = gs.stars[ps.activePlayerStar]?.playerFleet?.getColonyShipCount()!!
+        ps.chosenTerraformers = gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount()
+        ps.chosenColony = gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount()
         sceneContainer.changeTo<DeployShipsScene>()
     }
 

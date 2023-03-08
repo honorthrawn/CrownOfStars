@@ -8,7 +8,6 @@ import com.soywiz.korio.file.std.*
 import com.soywiz.korge.ui.*
 
 class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
-
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var defenseReadout: Text

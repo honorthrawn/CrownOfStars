@@ -1,5 +1,6 @@
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
+import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
@@ -9,6 +10,7 @@ import com.soywiz.korio.file.std.*
 class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
 
     private val direction = mutableListOf<Boolean>()
+    private lateinit var notEnoughDialog: RoundRect
 
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
@@ -74,26 +76,48 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             alignTopToTopOf(starImage, 12.0)
         }
 
-        text("BACK", 50.00,Colors.GOLD, font)
-        {
-            onClick { sceneContainer.changeTo<StarsScene>() }
+        uiHorizontalStack {
             position(300, 0)
-            centerXOn(background)
+            padding = 15.00
+            text("BACK", 50.00, Colors.GOLD, font)
+            {
+                onClick { sceneContainer.changeTo<StarsScene>() }
+             //   position(300, 0) //centerXOn(background)
+            }
+            text("COLONIZE", 50.00, Colors.GOLD, font)
+            {
+                onClick { ps.operation = operationType.COLONIZE }
+                //centerXOn(background)
+            }
         }
-
     }
 
     private suspend fun Container.planetClicked(index: Int, font: Font)
     {
-        if(gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player)
-        {
-            ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
+        when(ps.operation) {
+            operationType.SELECTION -> {
+                if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player) {
+                    ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
+                } else {
+                    showNoGo("Not Your World")
+                }
+            }
+            operationType.MOVINGFLEET -> { showNoGo("Invalid Mode")} //shouldn't happen
+            operationType.COLONIZE -> {
+                if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
+                    if (gs.stars[ps.activePlayerStar]!!.playerFleet!!.getColonyShipCount() >= 1) {
+                        ps.activePlayerPlanet = index
+                        ps.operation = operationType.SELECTION
+                        sceneContainer.changeTo<ColonyScene>()
+                    } else {
+                        showNoGo("At least one colony ship in system to establish colony")
+                    }
+                } else
+                {
+                    showNoGo("Planet must be unoccupied to establish colony")
+            }
+            }
         }
-        //else
-        //{
-        //   text("NOT YOUR WORLD", 50.00, Colors.GOLD, font)
-        //}
-
     }
 
 
@@ -113,5 +137,33 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         {
             planet.x += (index + 1)
         }
+    }
+
+    private suspend fun showNoGo(requirements: String) {
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        notEnoughDialog =
+            this.sceneContainer.container().roundRect(sceneWidth/2.00, sceneHeight / 4.00, 5.0, 5.0,
+                Colors.BLACK)
+            {
+                centerOnStage()
+                uiVerticalStack {
+                    width = sceneWidth / 2.00
+                    //text("Not enough resources", 50.00, Colors.CYAN, font)
+                    //{
+                    //    autoScaling = true
+                    //}
+                    text(requirements, 50.00, Colors.CYAN, font)
+                    text("CLOSE", 50.00, Colors.GOLD, font)
+                    {
+                        autoScaling = true
+                        onClick { closeMessage() }
+                    }
+                }
+            }
+    }
+
+    private fun closeMessage()
+    {
+        notEnoughDialog.removeFromParent()
     }
 }

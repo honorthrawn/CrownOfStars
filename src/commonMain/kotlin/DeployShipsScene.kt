@@ -23,7 +23,8 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                  text("Deploy Forces", 50.00, Colors.CYAN, font)
             }
            uiHorizontalStack {
-                text(" ADD ", 50.00, Colors.GOLD, font)
+               terraFormerReadout = text("Terraformers: ${ps.chosenTerraformers}", 50.00, Colors.CYAN, font)
+               text(" ADD ", 50.00, Colors.GOLD, font)
                 {
                     onClick { onShipUp(shipType.TERRAFORMATTER_HUMAN) }
                 }
@@ -31,13 +32,13 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 {
                     onClick { onShipDown(shipType.TERRAFORMATTER_HUMAN) }
                 }
-                terraFormerReadout = text("Terraformers: 00", 50.00, Colors.CYAN, font)
-                image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap())
+               image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap())
                {
                    scale(0.5, 0.5)
                }
             }
             uiHorizontalStack {
+                colonyReadout = text("Colony Ships: ${ps.chosenColony}", 50.00, Colors.CYAN, font)
                 text(" ADD ", 50.00, Colors.GOLD, font)
                 {
                     onClick { onShipUp(shipType.COLONY_HUMAN) }
@@ -46,7 +47,6 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 {
                     onClick { onShipDown(shipType.COLONY_HUMAN) }
                 }
-                colonyReadout = text("Colony Ships: 00", 50.00, Colors.CYAN, font)
                 image(resourcesVfs["ships/Human-Battlecruiser.png"].readBitmap())
                 {
                     scale(0.5, 0.5)
@@ -57,8 +57,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 padding = 20.0
                 text("CLOSE", 50.00, Colors.GOLD, font)
                 {
-                    ps.reset()
-                    onClick { sceneContainer.changeTo<StarsScene>() }
+                     onClick {  ps.reset(); sceneContainer.changeTo<StarsScene>() }
                 }
 
                 text("MOVE", 50.00, Colors.GOLD, font)
@@ -71,7 +70,6 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
             }
         }
-        updateReadouts()
     }
 
     private suspend fun onShipUp(type: shipType) {
@@ -91,20 +89,24 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         updateReadouts()
     }
 
-    private fun onShipDown(type: shipType) {
+    private suspend fun onShipDown(type: shipType) {
         when(type)
         {
-            shipType.TERRAFORMATTER_HUMAN -> if (ps.chosenTerraformers > 0) {
+            shipType.TERRAFORMATTER_HUMAN ->
+            {
+                if (ps.chosenTerraformers > 0)
                 ps.chosenTerraformers--
             }
-            shipType.COLONY_HUMAN -> if(ps.chosenColony > 0 ) {
-                ps.chosenColony--
+            shipType.COLONY_HUMAN ->
+            {
+                if (ps.chosenColony > 0)
+                    ps.chosenColony--
             }
         }
         updateReadouts()
     }
 
-    private fun updateReadouts() {
+    private suspend fun updateReadouts() {
         terraFormerReadout.text = "Terraformers: ${ps.chosenTerraformers}"
         colonyReadout.text = "Colony Ships: ${ps.chosenColony}"
     }
