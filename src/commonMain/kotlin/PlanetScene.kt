@@ -167,7 +167,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         }
         else
         {
-            showNotEnough()
+            showNotEnough("Requires at least 50 organics to grow population")
         }
     }
 
@@ -182,11 +182,11 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         updateReadouts()
     } else
     {
-        showNotEnough()
+        showNotEnough("Requires at least 50 defense")
     }
 
 
-    private suspend fun showNotEnough() {
+    private suspend fun showNotEnough(requirements: String) {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         notEnoughDialog =
             this.sceneContainer.container().roundRect(sceneWidth/2.00, sceneHeight / 4.00, 5.0, 5.0,
@@ -199,6 +199,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
                     {
                         autoScaling = true
                     }
+                    text(requirements, 50.00, Colors.CYAN, font)
                     text("CLOSE", 50.00, Colors.GOLD, font)
                     {
                         autoScaling = true
