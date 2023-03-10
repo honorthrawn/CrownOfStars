@@ -12,7 +12,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private lateinit var colonyReadout: Text
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-        val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
         {
             position(0, 0)
             setSizeScaled(width, height)

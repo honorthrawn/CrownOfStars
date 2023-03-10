@@ -19,7 +19,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         val startx = 200
         var starty = 600
 
-        val background = image(resourcesVfs["hs-2012-37-a-large_web.jpg"].readBitmap())
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
         {
             position(0, 0)
             setSizeScaled(width, height)
@@ -107,6 +107,9 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
                     if (gs.stars[ps.activePlayerStar]!!.playerFleet!!.getColonyShipCount() >= 1) {
                         ps.activePlayerPlanet = index
+                        gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex = Allegiance.Player
+                        gs.stars[ps.activePlayerStar]!!.planets[index]!!.farmers = 1u
+                        gs.stars[ps.activePlayerStar]!!.playerFleet!!.removeShipFromFleet(shipType.COLONY_HUMAN)
                         ps.operation = operationType.SELECTION
                         sceneContainer.changeTo<ColonyScene>()
                     } else {
