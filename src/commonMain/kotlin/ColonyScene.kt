@@ -24,7 +24,7 @@ class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         val planetImage = image(resourcesVfs[fileName].readBitmap())
             {
                 position(0, 0)
-                setSizeScaled(width, height)
+                setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
             }
 
         val message = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name
