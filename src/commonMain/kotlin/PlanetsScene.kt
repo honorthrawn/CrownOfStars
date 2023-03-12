@@ -52,7 +52,14 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 Allegiance.Enemy -> Colors.RED
             }
 
-            val planetTxt = "${planet.name} - ${planet.type} "
+            var turnCounter = gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform
+            val planetTxt: String
+            if(turnCounter == -1) {
+                planetTxt = "${planet.name} - ${planet.type}"
+            } else
+            {
+                planetTxt = "${planet.name} - ${planet.type} ($turnCounter)"
+            }
             text( planetTxt, 50.00, planetTextColor, font)
             {
                 centerXOn(planetImage)
@@ -82,12 +89,14 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             text("BACK", 50.00, Colors.GOLD, font)
             {
                 onClick { sceneContainer.changeTo<StarsScene>() }
-             //   position(300, 0) //centerXOn(background)
             }
             text("COLONIZE", 50.00, Colors.GOLD, font)
             {
                 onClick { ps.operation = operationType.COLONIZE }
-                //centerXOn(background)
+            }
+            text("TERRAFORM", 50.00, Colors.GOLD, font)
+            {
+                onClick { ps.operation = operationType.TERRAFORM }
             }
         }
     }
@@ -95,32 +104,72 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private suspend fun Container.planetClicked(index: Int, font: Font)
     {
         when(ps.operation) {
-            operationType.SELECTION -> {
-                if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player) {
-                    ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
-                } else {
-                    showNoGo("Not Your World")
+            operationType.SELECTION -> selectPlanet(index, font)
+            operationType.MOVINGFLEET -> showNoGo("Invalid Mode") //shouldn't happen
+            operationType.COLONIZE -> colonizePlanet(index, font)
+            operationType.TERRAFORM -> terraformPlanet(index, font)
+        }
+    }
+
+    private suspend fun terraformPlanet(index: Int, font: Font)
+    {
+        val message = "turns left: ${gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform}"
+        println(message)
+        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
+            if (gs.stars[ps.activePlayerStar]!!.playerFleet!!.getTerraformersCount() >= 1) {
+                if(gs.stars[ps.activePlayerStar]!!.planets[index]!!.type != PlanetType.SUPERTERRAN) {
+                    if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform == -1) {
+                        ps.terraformingIndex = index
+                        gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.startTerraforming()
+                        gs.stars[ps.activePlayerStar]!!.playerFleet!!.removeShipFromFleet(shipType.TERRAFORMATTER_HUMAN)
+                        sceneContainer.changeTo<terraformingScene>()
+                    } else
+                    {
+                        showNoGo("This world is already being terraformed!")
+                    }
+                }
+                else
+                {
+                    showNoGo("This world is as good as it gets!")
                 }
             }
-            operationType.MOVINGFLEET -> { showNoGo("Invalid Mode")} //shouldn't happen
-            operationType.COLONIZE -> {
-                if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
-                    if (gs.stars[ps.activePlayerStar]!!.playerFleet!!.getColonyShipCount() >= 1) {
-                        ps.activePlayerPlanet = index
-                        gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex = Allegiance.Player
-                        gs.stars[ps.activePlayerStar]!!.planets[index]!!.farmers = 1u
-                        gs.stars[ps.activePlayerStar]!!.playerFleet!!.removeShipFromFleet(shipType.COLONY_HUMAN)
-                        ps.operation = operationType.SELECTION
-                        sceneContainer.changeTo<ColonyScene>()
-                    } else {
-                        showNoGo("At least one colony ship in system to establish colony")
-                    }
-                } else
-                {
-                    showNoGo("Planet must be unoccupied to establish colony")
+            else
+            {
+                showNoGo("You must have at least one Terraformer in system to terraform the world")
             }
-            }
+        } else {
+            showNoGo("Planet must be unoccupied to terraform")
         }
+        ps.operation = operationType.SELECTION
+    }
+
+    private suspend fun selectPlanet(index: Int, font: Font)
+    {
+        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player) {
+            ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
+        } else {
+            showNoGo("Not Your World")
+        }
+    }
+
+    private suspend fun colonizePlanet(index: Int, font: Font)
+    {
+        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
+            if (gs.stars[ps.activePlayerStar]!!.playerFleet!!.getColonyShipCount() >= 1) {
+                ps.activePlayerPlanet = index
+                gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex = Allegiance.Player
+                gs.stars[ps.activePlayerStar]!!.planets[index]!!.farmers = 1u
+                gs.stars[ps.activePlayerStar]!!.playerFleet!!.removeShipFromFleet(shipType.COLONY_HUMAN)
+                ps.operation = operationType.SELECTION
+                sceneContainer.changeTo<ColonyScene>()
+            } else {
+                showNoGo("At least one colony ship in system to establish colony")
+            }
+        } else
+        {
+            showNoGo("Planet must be unoccupied to establish colony")
+        }
+        ps.operation = operationType.SELECTION
     }
 
 

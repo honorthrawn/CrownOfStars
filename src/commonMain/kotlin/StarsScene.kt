@@ -112,6 +112,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
     private suspend fun nextTurn()
     {
         es.addProduction(gs)
+        gs.nextTurn()
         updateScreen()
         es.save()
         gs.save()
@@ -148,6 +149,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                 ps.reset()
             }
             operationType.COLONIZE -> {} //shouldn't happen but gotta have it for compiler
+            operationType.TERRAFORM -> {} //shouldn't happen but gotta have it for compiler
         }
     }
 

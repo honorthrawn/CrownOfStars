@@ -35,6 +35,7 @@ data class Planet(val star: String)
     var scientists: UInt = 0u
     var ownerIndex: Allegiance = Allegiance.Unoccupied
     var defenseBases: UInt = 0u
+    var turnsLeftTerraform: Int = -1 //-1 indicates not being terraformed
 
     fun roll(pos: Int)
     {
@@ -98,5 +99,43 @@ data class Planet(val star: String)
 
     fun addBase(inc: UInt) {
         defenseBases += inc
+    }
+
+
+    //Should be called whenever there is a new turn.   Important for terraforming logic
+    fun nextTurn()
+    {
+        if(turnsLeftTerraform > 1)
+        {
+            turnsLeftTerraform--
+        } else if(turnsLeftTerraform == 1)
+        {
+            //Terraforming complete change counter back to not being terraformed
+            turnsLeftTerraform = -1
+            type = when(type) {
+                PlanetType.TOXIC -> PlanetType.BARREN
+                PlanetType.OCEAN -> PlanetType.TERRAN
+                PlanetType.TERRAN -> PlanetType.SUPERTERRAN
+                PlanetType.DESSERT -> PlanetType.TROPICAL
+                PlanetType.VOLCANIC -> PlanetType.DESSERT
+                PlanetType.BARREN -> PlanetType.VOLCANIC
+                PlanetType.SUPERTERRAN -> PlanetType.SUPERTERRAN //Cannot be terraformed further
+                PlanetType.TROPICAL -> PlanetType.SUPERTERRAN
+            }
+        }
+        //If we aren't terraforming, there's nothing to do here
+    }
+
+    fun startTerraforming() {
+        turnsLeftTerraform = when(type) {
+            PlanetType.TOXIC -> 25
+            PlanetType.OCEAN -> 10
+            PlanetType.TERRAN -> 10
+            PlanetType.DESSERT -> 15
+            PlanetType.VOLCANIC -> 15
+            PlanetType.BARREN -> 5
+            PlanetType.SUPERTERRAN -> -1
+            PlanetType.TROPICAL -> 5
+        }
     }
 }

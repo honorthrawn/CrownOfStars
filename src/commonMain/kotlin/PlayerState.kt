@@ -2,7 +2,8 @@ enum class operationType
 {
     SELECTION,
     MOVINGFLEET,
-    COLONIZE
+    COLONIZE,
+    TERRAFORM
 }
 
 class PlayerState {
@@ -13,6 +14,7 @@ class PlayerState {
     var chosenTerraformers = 0
     var chosenColony = 0
     var operation = operationType.SELECTION
+    var terraformingIndex = 0
 
     fun reset() {
         operation = operationType.SELECTION

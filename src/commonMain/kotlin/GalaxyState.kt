@@ -29,6 +29,15 @@ class GalaxyState {
         stars[nI]!!.planets[2]!!.farmers = 5u
     }
 
+    //This function does end of turn bookkeeping for the galaxy state.  Right now, that means calling next turn
+    //on each planet for terraforming
+    fun nextTurn()
+    {
+       for( star in stars.values )
+       {
+           star.nextTurn()
+       }
+    }
 
     suspend fun load()
     {

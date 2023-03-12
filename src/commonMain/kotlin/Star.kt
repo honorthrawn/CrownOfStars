@@ -31,6 +31,14 @@ data class Star(val name: String)
         }
     }
 
+    fun nextTurn()
+    {
+       for(planet in planets.values)
+       {
+           planet.nextTurn()
+       }
+    }
+
     fun getAllegiance(): Allegiance
     {
         //If any world in system is enemy held, count the system as enemy
