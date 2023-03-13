@@ -23,7 +23,9 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
             position(0, 0)
             setSizeScaled(width, height)
         }
-        val star = resourcesVfs["ui/star1.png"].readBitmap()
+        val yellowStar = resourcesVfs["stars/Star cK gK eg9.bmp"].readBitmap()
+        val blueStar = resourcesVfs["stars/Star B supeg5.bmp"].readBitmap()
+        val redStar = resourcesVfs["stars/Star M supeg5.bmp"].readBitmap()
         val fleet = resourcesVfs["ui/med-head-scout.png"].readBitmap()
 
         val cellSize = views.virtualWidth / 10.0
@@ -37,45 +39,51 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                 val rect = roundRect(cellSize, cellHeight, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 5.00)
                 {
                     position(x, y)
-                    onClick { clickedSector(i,j) } //for some weird reason trying to use nI always results in 40
+                    onClick { clickedSector(i, j) } //for some weird reason trying to use nI always results in 40
                 }
 
                 uiVerticalStack(cellSize, UI_DEFAULT_PADDING, false) {
                     centerXOn(rect)
-                    //centerYOn(rect)
                     alignTopToTopOf(rect)
-                    val starImage = image(star)
-                        when (gs.stars[nI]!!.type) {
-                            StarType.YELLOW -> starImage.colorMul = Colors.YELLOW
-                            StarType.BLUE -> starImage.colorMul = Colors.BLUE
-                            StarType.RED -> starImage.colorMul = Colors.RED
-                        }
-
+                    scaledHeight = cellHeight
+                    scaledWidth = cellSize
                     uiHorizontalStack {
-                           val fleetImage = image(fleet)
-                            {
-                                colorMul = Colors.CYAN
-                                onClick { clickedFleet(i, j) }
-                                visible = gs.stars[nI]!!.playerFleet.isPresent()
-                            }
-                            friendlyFleets.add(fleetImage)
+                        alignTopToTopOf(rect)
+                        val fleetImage = image(fleet)
+                        {
+                            colorMul = Colors.CYAN
+                            onClick { clickedFleet(i, j) }
+                            visible = gs.stars[nI]!!.playerFleet.isPresent()
+                        }
+                        friendlyFleets.add(fleetImage)
                         val enemyfleetImage = image(fleet)
-                            {
-                                colorMul = Colors.RED
-                                onClick { clickedEnemyFleet(i, j) }
-                                visible = gs.stars[nI]!!.enemyFleet.isPresent()
-                            }
-                            enemyFleets.add(enemyfleetImage)
-                      }
+                        {
+                            colorMul = Colors.RED
+                            onClick { clickedEnemyFleet(i, j) }
+                            visible = gs.stars[nI]!!.enemyFleet.isPresent()
+                        }
+                        enemyFleets.add(enemyfleetImage)
+                    }
 
-                    val textColor = when(gs.stars[nI]!!.getAllegiance())
-                    {
+                    val textColor = when (gs.stars[nI]!!.getAllegiance()) {
                         Allegiance.Unoccupied -> Colors.WHITE
                         Allegiance.Player -> Colors.CYAN
                         Allegiance.Enemy -> Colors.RED
                     }
                     text(gs.stars[nI]!!.name, 11.00, textColor, font)
-
+                    //Trying to put star first pushed the text and the fleet down to bottom of screen
+                    // outside of rect don't understand
+                    var starImage = image(
+                        when (gs.stars[nI]!!.type) {
+                            StarType.YELLOW -> yellowStar
+                            StarType.BLUE -> blueStar
+                            StarType.RED -> redStar
+                        }
+                    )
+                    {
+                        scaledWidth = 30.0
+                        scaledHeight = 30.0
+                    }
                 }
                 x += cellSize
                 nI++
@@ -102,15 +110,14 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
             }
         }
 
-        text("NEXT TURN", 50.00,Colors.GOLD, font)
+        text("NEXT TURN", 50.00, Colors.GOLD, font)
         {
-            position(0.00, y +  2 * cellHeight)
+            position(0.00, y + 2 * cellHeight)
             onClick { nextTurn() }
         }
     }
 
-    private suspend fun nextTurn()
-    {
+    private suspend fun nextTurn() {
         es.addProduction(gs)
         gs.nextTurn()
         updateScreen()
@@ -118,8 +125,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         gs.save()
     }
 
-    private suspend fun updateScreen()
-    {
+    private suspend fun updateScreen() {
         val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
         val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}"
         val Organic = "ORGANIC: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
@@ -128,49 +134,46 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         shipsReadout.text = Ship
         farmerReadout.text = Organic
         scienceReadout.text = Research
-        for (i in 0..gs.stars.count()-1)
-        {
+        for (i in 0..gs.stars.count() - 1) {
             enemyFleets[i].visible = gs.stars[i]!!.enemyFleet.isPresent()
             friendlyFleets[i].visible = gs.stars[i]!!.playerFleet.isPresent()
-           // println("FLEET HUMAN ${gs.stars[i]!!.playerFleet.isPresent()} ENEMY: ${gs.stars[i]!!.enemyFleet.isPresent()}")
+            // println("FLEET HUMAN ${gs.stars[i]!!.playerFleet.isPresent()} ENEMY: ${gs.stars[i]!!.enemyFleet.isPresent()}")
         }
     }
 
-    private suspend fun clickedSector(x: Int, y: Int)
-    {
-        when(ps.operation) {
+    private suspend fun clickedSector(x: Int, y: Int) {
+        when (ps.operation) {
             operationType.SELECTION -> {
                 ps.activePlayerStar = x * 10 + y
                 sceneContainer.changeTo<PlanetsScene>()
             }
-            operationType.MOVINGFLEET ->
-            {
-                movechosenShips(x,y)
+
+            operationType.MOVINGFLEET -> {
+                movechosenShips(x, y)
                 ps.reset()
             }
+
             operationType.COLONIZE -> {} //shouldn't happen but gotta have it for compiler
             operationType.TERRAFORM -> {} //shouldn't happen but gotta have it for compiler
         }
     }
 
 
-    private suspend fun movechosenShips(x: Int, y: Int)
-    {
+    private suspend fun movechosenShips(x: Int, y: Int) {
         //Figure out destination star
         val destination = x * 10 + y
         //Check if can move there, todo
 
         //Remove the ships from the current star's fleet
-        while(ps.chosenTerraformers > 0)
-        {
-            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleet(shipType.TERRAFORMATTER_HUMAN)
+        while (ps.chosenTerraformers > 0) {
+            var shipMoving =
+                gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleet(shipType.TERRAFORMATTER_HUMAN)
             if (shipMoving != null) {
                 gs.stars[destination]?.playerFleet?.add(shipMoving)
             }
             ps.chosenTerraformers--
         }
-        while(ps.chosenColony > 0)
-        {
+        while (ps.chosenColony > 0) {
             var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleet(shipType.COLONY_HUMAN)
             if (shipMoving != null) {
                 gs.stars[destination]?.playerFleet?.add(shipMoving)
@@ -180,8 +183,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         updateScreen()
     }
 
-    private suspend fun clickedFleet(x: Int, y: Int)
-    {
+    private suspend fun clickedFleet(x: Int, y: Int) {
         println("we clicked a fleet")
         ps.activePlayerStar = x * 10 + y
         //Assume want to move whole fleet
@@ -190,8 +192,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
         sceneContainer.changeTo<DeployShipsScene>()
     }
 
-    private suspend fun clickedEnemyFleet(x: Int, y: Int)
-    {
+    private suspend fun clickedEnemyFleet(x: Int, y: Int) {
         println("we clicked an enemy fleet")
         ps.activePlayerStar = x * 10 + y
         sceneContainer.changeTo<DeployShipsScene>()
