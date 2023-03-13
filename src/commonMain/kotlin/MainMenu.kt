@@ -1,5 +1,6 @@
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
+import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
@@ -35,9 +36,16 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState) : Scene() {
             onClick { gs.load(); es.load(); sceneContainer.changeTo<StarsScene>() }
         }
 
-        text("Quit Game",50.00, Colors.WHITE, font)
+        uiButton("Credits")
         {
             position(width/2, 400.00)
+            centerXOnStage()
+            onClick { sceneContainer.changeTo<CreditsScene>() }
+        }
+
+        text("Quit Game",50.00, Colors.WHITE, font)
+        {
+            position(width/2, 500.00)
             centerXOnStage()
             onClick { views.gameWindow.close() }
         }

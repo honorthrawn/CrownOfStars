@@ -26,6 +26,7 @@ object ConfigModule : Module() {
         mapPrototype { DeployShipsScene(get(),get(),get()) }
         mapPrototype { ColonyScene(get(),get(),get()) }
         mapPrototype { terraformingScene(get(),get(),get()) }
+        mapPrototype { CreditsScene() }
     }
 }
 
