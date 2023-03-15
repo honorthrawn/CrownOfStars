@@ -57,7 +57,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             }
             planetTexts.add(i, text(planetTxt, 50.00, planetTextColor, font)
             {
-                centerXOn(planetImage)
+                //centerXOn(planetImage)
+                centerXOnStage()
                 alignTopToTopOf(planetImage, 12.0)
             }
             )

@@ -50,10 +50,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             position(300, 0)
             centerXOn(background)
             alignTopToTopOf(planetImage, 12.0)
-            text("BACK", 50.00, Colors.GOLD, font)
-            {
-                onClick { sceneContainer.changeTo<PlanetsScene>() }
-            }
+            //text("BACK", 50.00, Colors.GOLD, font)
             baseReadout = text("BASES: 00", 50.00, Colors.CYAN, font)
         }
 
@@ -61,48 +58,72 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             position(000.00, 300.00)
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD, font)
+                //text(" ADD ", 50.00,Colors.GOLD, font)
+                uiButton("ADD")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerUp(WorkerType.FARMING) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD, font)
+                //text(" SUB ", 50.00, Colors.GOLD, font)
+                uiButton("SUB")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerDown(WorkerType.FARMING) }
                 }
                 farmerReadout = text("FARMING: 00", 50.00, Colors.CYAN, font)
             }
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD, font)
+                //text(" ADD ", 50.00,Colors.GOLD, font)
+                uiButton("ADD")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerUp(WorkerType.SHIPS) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD, font)
+                //text(" SUB ", 50.00, Colors.GOLD, font)
+                uiButton("SUB")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerDown(WorkerType.SHIPS) }
                 }
                 shipsReadout = text("SHIPS:   00", 50.00, Colors.CYAN, font)
             }
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD, font)
+                //text(" ADD ", 50.00,Colors.GOLD, font)
+                uiButton("ADD")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerUp(WorkerType.DEFENSE) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD, font)
+                //text(" SUB ", 50.00, Colors.GOLD, font)
+                uiButton("SUB")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerDown(WorkerType.DEFENSE) }
                 }
                 defenseReadout = text("DEFENSE: 00", 50.00, Colors.CYAN, font)
             }
             uiHorizontalStack {
                 padding = 10.00
-                text(" ADD ", 50.00,Colors.GOLD, font)
+                //text(" ADD ", 50.00,Colors.GOLD, font)
+                uiButton("ADD")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerUp(WorkerType.SCIENCE) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD, font)
+                //text(" SUB ", 50.00, Colors.GOLD, font)
+                uiButton("SUB")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onWorkerDown(WorkerType.SCIENCE) }
                 }
                 scienceReadout = text("SCIENCE: 00", 50.00, Colors.CYAN, font)
@@ -113,17 +134,32 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                text("WORKER", 50.00, Colors.GOLD, font)
+                //text("WORKER", 50.00, Colors.GOLD, font)
+                uiButton("POPULATION")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { growPopulation() }
                 }
-                text("SHIPS", 50.00, Colors.GOLD, font)
+                //text("SHIPS", 50.00, Colors.GOLD, font)
+                uiButton("SHIPS")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { lauchShip() }
                 }
-                text("DEF BASE", 50.00, Colors.GOLD, font)
+                //text("DEF BASE", 50.00, Colors.GOLD, font)
+                uiButton("DEF BASE")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { buyBase() }
+                }
+                uiButton("BACK")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { sceneContainer.changeTo<PlanetsScene>() }
                 }
             }
         }
@@ -193,15 +229,18 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             {
                 centerOnStage()
                 uiVerticalStack {
-                    width = sceneWidth / 2.00
+                    scaledWidth = sceneWidth / 2.00
                     text("Not enough resources", 50.00, Colors.CYAN, font)
                     {
                         autoScaling = true
                     }
                     text(requirements, 50.00, Colors.CYAN, font)
-                    text("CLOSE", 50.00, Colors.GOLD, font)
+                    //text("CLOSE", 50.00, Colors.GOLD, font)
+                    uiButton("CLOSE")
                     {
-                        autoScaling = true
+                        textColor = Colors.GOLD
+                        textFont = font
+                       // autoScaling = true
                         onClick { closeMessage() }
                     }
                }

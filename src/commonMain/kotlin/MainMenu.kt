@@ -22,18 +22,23 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState) : Scene() {
             centerXOnStage()
         }
 
-        text("New Game",50.00, Colors.WHITE, font)
+        uiButton("New Game")
         {
             position(width/2, 200.00)
             centerXOnStage()
             onClick { gs.rollGalaxy(); es.rollEmpires(); sceneContainer.changeTo<StarsScene>() }
+            textFont = font
+            textColor = Colors.GOLD
         }
 
-        text("Continue Game",50.00, Colors.WHITE, font)
+
+        uiButton("Continue Game")
         {
             position(width/2, 300.00)
             centerXOnStage()
             onClick { gs.load(); es.load(); sceneContainer.changeTo<StarsScene>() }
+            textFont = font
+            textColor = Colors.GOLD
         }
 
         uiButton("Credits")
@@ -41,13 +46,17 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState) : Scene() {
             position(width/2, 400.00)
             centerXOnStage()
             onClick { sceneContainer.changeTo<CreditsScene>() }
+            textFont = font
+            textColor = Colors.GOLD
         }
 
-        text("Quit Game",50.00, Colors.WHITE, font)
+        uiButton("Quit Game")
         {
             position(width/2, 500.00)
             centerXOnStage()
             onClick { views.gameWindow.close() }
+            textFont = font
+            textColor = Colors.GOLD
         }
 
 

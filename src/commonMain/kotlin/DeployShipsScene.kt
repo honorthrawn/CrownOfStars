@@ -23,13 +23,19 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                  text("Deploy Forces", 50.00, Colors.CYAN, font)
             }
            uiHorizontalStack {
-               terraFormerReadout = text("Terraformers: ${ps.chosenTerraformers}", 50.00, Colors.CYAN, font)
-               text(" ADD ", 50.00, Colors.GOLD, font)
+               padding = 5.00
+               terraFormerReadout = text("Terraformers: ${ps.chosenTerraformers}", 25.00, Colors.CYAN, font)
+               uiButton("ADD")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onShipUp(shipType.TERRAFORMATTER_HUMAN) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD, font)
+                //text(" SUB ", 50.00, Colors.GOLD, font)
+               uiButton("SUB")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onShipDown(shipType.TERRAFORMATTER_HUMAN) }
                 }
                image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap())
@@ -38,13 +44,18 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                }
             }
             uiHorizontalStack {
-                colonyReadout = text("Colony Ships: ${ps.chosenColony}", 50.00, Colors.CYAN, font)
-                text(" ADD ", 50.00, Colors.GOLD, font)
+                padding = 5.00
+                colonyReadout = text("Colony Ships: ${ps.chosenColony}", 25.00, Colors.CYAN, font)
+                uiButton("ADD")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onShipUp(shipType.COLONY_HUMAN) }
                 }
-                text(" SUB ", 50.00, Colors.GOLD, font)
+                uiButton("SUB")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick { onShipDown(shipType.COLONY_HUMAN) }
                 }
                 image(resourcesVfs["ships/Human-Battlecruiser.png"].readBitmap())
@@ -55,13 +66,19 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
             uiHorizontalStack {
                 padding = 20.0
-                text("CLOSE", 50.00, Colors.GOLD, font)
+                //text("CLOSE", 50.00, Colors.GOLD, font)
+                uiButton("CLOSE")
                 {
-                     onClick {  ps.reset(); sceneContainer.changeTo<StarsScene>() }
+                    textColor =  Colors.GOLD
+                    textFont = font
+                    onClick {  ps.reset(); sceneContainer.changeTo<StarsScene>() }
                 }
 
-                text("MOVE", 50.00, Colors.GOLD, font)
+                //text("MOVE", 50.00, Colors.GOLD, font)
+                uiButton("MOVE")
                 {
+                    textColor = Colors.GOLD
+                    textFont = font
                     onClick {
                         ps.operation = operationType.MOVINGFLEET
                         println("chosenTerraformers: ${ps.chosenTerraformers} chosenColony: ${ps.chosenColony}")

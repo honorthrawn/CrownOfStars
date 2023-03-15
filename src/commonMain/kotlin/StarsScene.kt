@@ -110,9 +110,11 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
             }
         }
 
-        text("NEXT TURN", 50.00, Colors.GOLD, font)
+        uiButton("NEXT TURN")
         {
             position(0.00, y + 2 * cellHeight)
+            textColor = Colors.GOLD
+            textFont = font
             onClick { nextTurn() }
         }
     }

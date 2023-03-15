@@ -1,5 +1,6 @@
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
+import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
@@ -28,8 +29,11 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 alignTopToTopOf(terraFormer)
             }
 
-            text("BUY", 50.00, Colors.GOLD, font)
+            //text("BUY", 50.00, Colors.GOLD, font)
+            uiButton("BUY")
             {
+               textColor = Colors.GOLD
+               textFont = font
                alignLeftToRightOf(terraFormer, 5.00)
                alignBottomToBottomOf(terraFormer)
                onClick { buyTerraformer() }
@@ -47,15 +51,21 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             alignTopToTopOf(colonyShip)
         }
 
-        val buyColony = text("BUY", 50.00, Colors.GOLD, font)
+       // val buyColony = text("BUY", 50.00, Colors.GOLD, font)
+        val buyColony = uiButton("BUY")
         {
+            textColor = Colors.GOLD
+            textFont = font
             alignLeftToRightOf(colonyShip, 5.00)
             alignBottomToBottomOf(colonyShip)
             onClick { buyColony() }
         }
 
-        text("BACK", 50.00, Colors.GOLD, font)
+        //text("BACK", 50.00, Colors.GOLD, font)
+        uiButton("BACK")
         {
+            textColor = Colors.GOLD
+            textFont = font
             alignLeftToRightOf(buyColony, 5.00)
             alignBottomToBottomOf(buyColony)
             onClick { sceneContainer.changeTo<PlanetScene>() }

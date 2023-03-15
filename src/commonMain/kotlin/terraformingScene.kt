@@ -35,8 +35,10 @@ class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: Player
             text("You started Terraforming on", 50.00, Colors.CYAN, font )
             text(message, 50.00, Colors.CYAN, font)
             text(turnsNeeded, 50.00, Colors.CYAN, font)
-            text("CLOSE", 50.00, Colors.GOLD, font)
+            uiButton("CLOSE")
             {
+                textColor = Colors.GOLD
+                textFont = font
                 onClick {  sceneContainer.changeTo<PlanetsScene>() }
             }
         }

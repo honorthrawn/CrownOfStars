@@ -38,6 +38,8 @@ class CreditsScene : Scene() {
             text("FreeOrion Assets on OpenGameArt", 20.00, Colors.CYAN, font)
             uiButton("Main Menu")
             {
+                textFont = font
+                textColor = Colors.GOLD
                 onClick { sceneContainer.changeTo<MainMenu>() }
             }
         }
