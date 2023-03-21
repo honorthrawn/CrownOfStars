@@ -1,9 +1,7 @@
 enum class operationType
 {
     SELECTION,
-    MOVINGFLEET,
-    COLONIZE,
-    TERRAFORM
+    MOVINGFLEET
 }
 
 class PlayerState {

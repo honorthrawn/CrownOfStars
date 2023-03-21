@@ -11,6 +11,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
     private val direction = mutableListOf<Boolean>()
     private lateinit var notEnoughDialog: RoundRect
+    private lateinit var selectOperationDialog: RoundRect
     private var planetTexts = mutableListOf<Text>()
 
     override suspend fun SContainer.sceneInit() {
@@ -20,7 +21,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         val startx = 200
         var starty = 600
 
-        image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
         {
             position(0, 0)
             setSizeScaled(width, height)
@@ -57,7 +58,6 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             }
             planetTexts.add(i, text(planetTxt, 50.00, planetTextColor, font)
             {
-                //centerXOn(planetImage)
                 centerXOnStage()
                 alignTopToTopOf(planetImage, 12.0)
             }
@@ -81,37 +81,50 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
         }
-
-        uiHorizontalStack {
-            position(300, 0)
-            padding = 15.00
-            text("BACK", 50.00, Colors.GOLD, font)
-            {
-                onClick { sceneContainer.changeTo<StarsScene>() }
-            }
-            text("COLONIZE", 50.00, Colors.GOLD, font)
-            {
-                onClick { ps.operation = operationType.COLONIZE }
-            }
-            text("TERRAFORM", 50.00, Colors.GOLD, font)
-            {
-                onClick { ps.operation = operationType.TERRAFORM }
-            }
+        uiButton("BACK")
+        {
+            alignBottomToBottomOf(background)
+            textColor = Colors.GOLD
+            textFont = font
+            onClick { sceneContainer.changeTo<StarsScene>() }
         }
-    }
+}
 
     private suspend fun planetClicked(index: Int) {
-        when (ps.operation) {
-            operationType.SELECTION -> selectPlanet(index)
-            operationType.MOVINGFLEET -> showNoGo("Invalid Mode") //shouldn't happen
-            operationType.COLONIZE -> colonizePlanet(index)
-            operationType.TERRAFORM -> terraformPlanet(index)
+        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player) {
+            ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
+        } else {
+            val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+            selectOperationDialog =
+                this.sceneContainer.container().roundRect(
+                    sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+                    Colors.BLACK
+                )
+                {
+                    centerOnStage()
+                    uiVerticalStack {
+                        scaledWidth = sceneWidth / 2.00
+                        uiButton("COLONIZE")
+                        {
+                            textColor = Colors.GOLD
+                            textFont = font
+                            onClick { colonizePlanet(index) }
+                        }
+                        uiButton("TERRAFORM")
+                        {
+                            textColor = Colors.GOLD
+                            textFont = font
+                            onClick { terraformPlanet(index) }
+                        }
+                    }
+                }
         }
     }
 
     private suspend fun terraformPlanet(index: Int) {
         //val message = "turns left: ${gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform}"
         //println(message)
+        selectOperationDialog.removeFromParent()
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
             if (gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() >= 1) {
                 if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.type != PlanetType.SUPERTERRAN) {
@@ -135,15 +148,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ps.operation = operationType.SELECTION
     }
 
-    private suspend fun selectPlanet(index: Int) {
-        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player) {
-            ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
-        } else {
-            showNoGo("Not Your World")
-        }
-    }
-
     private suspend fun colonizePlanet(index: Int) {
+        selectOperationDialog.removeFromParent()
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
             if (gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() >= 1) {
                 ps.activePlayerPlanet = index
@@ -203,9 +209,10 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 uiVerticalStack {
                     scaledWidth = sceneWidth / 2.00
                     text(requirements, 50.00, Colors.CYAN, font)
-                    text("CLOSE", 50.00, Colors.GOLD, font)
+                    uiButton("CLOSE")
                     {
-                        autoScaling = true
+                        textFont = font
+                        textColor = Colors.GOLD
                         onClick { closeMessage() }
                     }
                 }

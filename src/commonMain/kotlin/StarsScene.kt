@@ -154,9 +154,6 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
                 movechosenShips(x, y)
                 ps.reset()
             }
-
-            operationType.COLONIZE -> {} //shouldn't happen but gotta have it for compiler
-            operationType.TERRAFORM -> {} //shouldn't happen but gotta have it for compiler
         }
     }
 

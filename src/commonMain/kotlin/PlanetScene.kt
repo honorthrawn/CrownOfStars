@@ -235,12 +235,10 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
                         autoScaling = true
                     }
                     text(requirements, 50.00, Colors.CYAN, font)
-                    //text("CLOSE", 50.00, Colors.GOLD, font)
                     uiButton("CLOSE")
                     {
                         textColor = Colors.GOLD
                         textFont = font
-                       // autoScaling = true
                         onClick { closeMessage() }
                     }
                }
