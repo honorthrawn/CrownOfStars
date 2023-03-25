@@ -10,7 +10,7 @@ korge {
     name = "Crown of Stars"
 // To enable all targets at once
 
-    targetAll()
+   // targetAll()
 
 // To enable targets based on properties/environment variables
     //targetDefault()
@@ -18,8 +18,8 @@ korge {
 // To selectively enable targets
 
     targetJvm()
-    targetJs()
-    targetDesktop()
+    //targetJs()
+    //targetDesktop()
     targetIos()
     targetAndroidIndirect() // targetAndroidDirect()
 

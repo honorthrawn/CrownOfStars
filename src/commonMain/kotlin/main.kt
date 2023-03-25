@@ -1,7 +1,8 @@
+
 import com.soywiz.korge.*
 import com.soywiz.korge.scene.*
-import com.soywiz.korma.geom.*
 import com.soywiz.korinject.*
+import com.soywiz.korma.geom.*
 import kotlin.reflect.*
 
 suspend fun main() = Korge(Korge.Config(module = ConfigModule))
@@ -18,10 +19,11 @@ object ConfigModule : Module() {
         mapInstance(GalaxyState())
         mapInstance(EmpireState())
         mapInstance(PlayerState())
+        mapInstance(AICore(get(),get()))
         mapPrototype { MainMenu(get(),get()) }
         mapPrototype { PlanetsScene(get(),get(),get()) }
         mapPrototype { PlanetScene(get(),get(),get()) }
-        mapPrototype { StarsScene(get(),get(),get()) }
+        mapPrototype { StarsScene(get(),get(),get(),get()) }
         mapPrototype { BuyShipScene(get(),get(),get()) }
         mapPrototype { DeployShipsScene(get(),get(),get()) }
         mapPrototype { ColonyScene(get(),get(),get()) }

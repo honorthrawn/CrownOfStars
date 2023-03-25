@@ -1,14 +1,14 @@
+
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
-import com.soywiz.korge.view.roundRect
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: AICore) : Scene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
@@ -120,6 +120,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) 
     }
 
     private suspend fun nextTurn() {
+        ai.takeTurn()
         es.addProduction(gs)
         gs.nextTurn()
         updateScreen()
