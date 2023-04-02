@@ -1,4 +1,4 @@
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
 
 @Serializable
 enum class Allegiance
@@ -23,10 +23,21 @@ data class Empire(val id: Allegiance) {
             {
                 if(planet.ownerIndex == id )
                 {
-                    shipPoints += planet.shipbuilders
-                    organicPoints += planet.farmers
-                    researchPoints += planet.scientists
-                    defensePoints += planet.defworkers
+                    shipPoints += planet.GetShipProduction()
+                    organicPoints += planet.GetOrganicProduction()
+                    researchPoints += planet.GetResearchProduction()
+                    defensePoints += planet.GetDefenseProduction()
+                }
+            }
+
+            //Star bonus
+            if(star.getAllegiance() == id)
+            {
+                when(star.type)
+                {
+                    StarType.YELLOW -> researchPoints += 2u
+                    StarType.BLUE -> shipPoints += 4u
+                    StarType.RED -> organicPoints += 4u
                 }
             }
         }

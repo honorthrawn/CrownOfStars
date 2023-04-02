@@ -1,4 +1,5 @@
-import kotlinx.serialization.Serializable
+
+import kotlinx.serialization.*
 import kotlin.random.*
 
 @Serializable
@@ -36,6 +37,7 @@ data class Planet(val star: String)
     var ownerIndex: Allegiance = Allegiance.Unoccupied
     var defenseBases: UInt = 0u
     var turnsLeftTerraform: Int = -1 //-1 indicates not being terraformed
+
 
     fun roll(pos: Int)
     {
@@ -138,4 +140,93 @@ data class Planet(val star: String)
             PlanetType.TROPICAL -> 5
         }
     }
+
+    fun GetShipProduction(): UInt {
+        var retval = 0u
+        for(i in 1..shipbuilders.toInt())
+        {
+            retval += Random.nextInt(1, getDieSizeMetals()).toUInt()
+        }
+        return retval
+    }
+
+    fun GetOrganicProduction(): UInt {
+        var retval = 0u
+        for(i in 1..farmers.toInt())
+        {
+            retval += Random.nextInt(1, getDieSizeOrganic()).toUInt()
+        }
+        return retval
+    }
+
+    fun GetResearchProduction(): UInt {
+        var retval = 0u
+        for(i in 1..scientists.toInt())
+        {
+            retval += Random.nextInt(1, getDieSizeResearch()).toUInt()
+        }
+        return retval
+    }
+
+    fun GetDefenseProduction(): UInt {
+        var retval = 0u
+        for(i in 1..defworkers.toInt())
+        {
+            retval += Random.nextInt(1, getDieSizeDefense()).toUInt()
+        }
+        return retval
+    }
+
+
+    fun getDieSizeOrganic() : Int
+    {
+        val retval = when(type) {
+            PlanetType.TOXIC -> 1
+            PlanetType.OCEAN -> 6
+            PlanetType.TERRAN -> 6
+            PlanetType.DESSERT -> 4
+            PlanetType.VOLCANIC -> 2
+            PlanetType.BARREN -> 1
+            PlanetType.SUPERTERRAN -> 8
+            PlanetType.TROPICAL -> 8
+        }
+        return retval
+    }
+
+    fun getDieSizeMetals() : Int
+    {
+        val retval = when(type) {
+            PlanetType.TOXIC -> 1
+            PlanetType.OCEAN -> 4
+            PlanetType.TERRAN -> 6
+            PlanetType.DESSERT -> 4
+            PlanetType.VOLCANIC -> 8
+            PlanetType.BARREN -> 6
+            PlanetType.SUPERTERRAN -> 8
+            PlanetType.TROPICAL -> 4
+        }
+        return retval
+    }
+
+    //For now, assume all worlds equally defensible
+    fun getDieSizeDefense() : Int
+    {
+        return 4
+    }
+
+    fun getDieSizeResearch(): Int
+    {
+        val retval = when(type) {
+            PlanetType.TOXIC -> 1
+            PlanetType.OCEAN -> 6
+            PlanetType.TERRAN -> 6
+            PlanetType.DESSERT -> 6
+            PlanetType.VOLCANIC -> 6
+            PlanetType.BARREN -> 4
+            PlanetType.SUPERTERRAN -> 8
+            PlanetType.TROPICAL -> 6
+        }
+        return retval
+    }
+
 }
