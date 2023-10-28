@@ -62,4 +62,15 @@ data class Empire(val id: Allegiance) {
         }
         return retval
     }
+
+    fun buyShip(costs: shipCosts): Boolean {
+        var retval = false
+        if(shipPoints >= costs.metal && organicPoints >= costs.organics)
+        {
+            shipPoints -= costs.metal
+            organicPoints -= costs.organics
+            retval = true
+        }
+        return retval
+    }
 }

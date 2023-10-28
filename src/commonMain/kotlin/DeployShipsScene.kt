@@ -1,3 +1,4 @@
+
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
@@ -102,6 +103,10 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 {
                     ps.chosenColony++
                 }
+            shipType.CORVETTE_HUMAN -> {}
+            shipType.CRUISER_HUMAN -> {}
+            shipType.BATTLESHIP_HUMAN -> {}
+            shipType.GALLEON -> {}
         }
         updateReadouts()
     }
@@ -119,6 +124,10 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 if (ps.chosenColony > 0)
                     ps.chosenColony--
             }
+            shipType.CORVETTE_HUMAN -> {}
+            shipType.CRUISER_HUMAN -> {}
+            shipType.BATTLESHIP_HUMAN -> {}
+            shipType.GALLEON -> {}
         }
         updateReadouts()
     }
