@@ -17,13 +17,14 @@ class Fleet {
             shipType.CORVETTE_HUMAN -> corvettes.add(shipToAdd)
             shipType.CRUISER_HUMAN -> cruisers.add(shipToAdd)
             shipType.BATTLESHIP_HUMAN -> battleships.add(shipToAdd)
-            shipType.GALLEON -> galleons.add(shipToAdd)
+            shipType.GALLEON_HUMAN -> galleons.add(shipToAdd)
         }
     }
 
     suspend fun isPresent(): Boolean
     {
-      return terraformers.isNotEmpty()  || colonyShips.isNotEmpty()
+      return terraformers.isNotEmpty()  || colonyShips.isNotEmpty() || corvettes.isNotEmpty() ||
+          cruisers.isNotEmpty() || battleships.isNotEmpty() || galleons.isNotEmpty()
     }
 
     suspend fun getColonyShipCount(): Int
@@ -34,6 +35,22 @@ class Fleet {
     suspend fun getTerraformersCount(): Int
     {
         return terraformers.count()
+    }
+
+    fun getCorvetteCount() : Int {
+        return corvettes.count()
+    }
+
+    fun getCruiserCount() : Int {
+        return cruisers.count()
+    }
+
+    fun getBattleShipCount() : Int {
+        return battleships.count()
+    }
+
+    fun getGalleonCount() : Int {
+        return galleons.count()
     }
 
     suspend fun removeShipFromFleet(shipTypeToRemove: shipType) : Ship
@@ -67,7 +84,7 @@ class Fleet {
                 battleships.removeAt(0)
             }
 
-            shipType.GALLEON -> {
+            shipType.GALLEON_HUMAN -> {
                 ship = galleons.get(0)
                 galleons.removeAt(0)
             }

@@ -9,8 +9,14 @@ class PlayerState {
     var activePlayerStar = 0
     //Index of the player's chosen planet or 0 if none
     var activePlayerPlanet = 0
+
+    //chosen number of ships
     var chosenTerraformers = 0
     var chosenColony = 0
+    var chosenCorvette = 0
+    var chosenCruiser = 0
+    var chosenBattleship = 0
+    var chosenGalleon = 0
     var operation = operationType.SELECTION
     var terraformingIndex = 0
 

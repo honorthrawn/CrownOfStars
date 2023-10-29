@@ -11,6 +11,10 @@ import com.soywiz.korio.file.std.*
 class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     private lateinit var terraFormerReadout: Text
     private lateinit var colonyReadout: Text
+    private lateinit var corvetteReadout: Text
+    private lateinit var cruiserReadout: Text
+    private lateinit var battleshipReadout: Text
+    private lateinit var galleonReadout: Text
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
@@ -32,7 +36,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textFont = font
                     onClick { onShipUp(shipType.TERRAFORMATTER_HUMAN) }
                 }
-                //text(" SUB ", 50.00, Colors.GOLD, font)
+
                uiButton("SUB")
                 {
                     textColor = Colors.GOLD
@@ -46,7 +50,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
             uiHorizontalStack {
                 padding = 5.00
-                colonyReadout = text("Colony Ships: ${ps.chosenColony}", 25.00, Colors.CYAN, font)
+                colonyReadout = text("Colony: ${ps.chosenColony}", 25.00, Colors.CYAN, font)
                 uiButton("ADD")
                 {
                     textColor = Colors.GOLD
@@ -63,11 +67,95 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 {
                     scale(0.5, 0.5)
                 }
-
             }
+
+            uiHorizontalStack {
+                padding = 5.00
+                corvetteReadout = text("Corvettes: ${ps.chosenCorvette}", 25.00, Colors.CYAN, font)
+                uiButton("ADD")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipUp(shipType.CORVETTE_HUMAN) }
+                }
+                uiButton("SUB")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipDown(shipType.CORVETTE_HUMAN) }
+                }
+                image(resourcesVfs["ships/Human-Corvette.png"].readBitmap())
+                {
+                    scale(0.5, 0.5)
+                }
+            }
+
+            uiHorizontalStack {
+                padding = 5.00
+                cruiserReadout = text("Cruisers: ${ps.chosenCruiser}", 25.00, Colors.CYAN, font)
+                uiButton("ADD")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipUp(shipType.CRUISER_HUMAN) }
+                }
+                uiButton("SUB")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipDown(shipType.CRUISER_HUMAN) }
+                }
+                image(resourcesVfs["ships/Human-Cruiser.png"].readBitmap())
+                {
+                    scale(0.5, 0.5)
+                }
+            }
+
+            uiHorizontalStack {
+                padding = 5.00
+                battleshipReadout = text("Battleships: ${ps.chosenBattleship}", 25.00, Colors.CYAN, font)
+                uiButton("ADD")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipUp(shipType.BATTLESHIP_HUMAN) }
+                }
+                uiButton("SUB")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipDown(shipType.BATTLESHIP_HUMAN) }
+                }
+                image(resourcesVfs["ships/Human-Battleship.png"].readBitmap())
+                {
+                    scale(0.5, 0.5)
+                }
+            }
+
+            uiHorizontalStack {
+                padding = 5.00
+                galleonReadout = text("Galleons: ${ps.chosenGalleon}", 25.00, Colors.CYAN, font)
+                uiButton("ADD")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipUp(shipType.GALLEON_HUMAN) }
+                }
+                uiButton("SUB")
+                {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { onShipDown(shipType.GALLEON_HUMAN) }
+                }
+                image(resourcesVfs["ships/Human-Frigate.png"].readBitmap())
+                {
+                    scale(0.5, 0.5)
+                }
+            }
+
             uiHorizontalStack {
                 padding = 20.0
-                //text("CLOSE", 50.00, Colors.GOLD, font)
+
                 uiButton("CLOSE")
                 {
                     textColor =  Colors.GOLD
@@ -75,7 +163,6 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     onClick {  ps.reset(); sceneContainer.changeTo<StarsScene>() }
                 }
 
-                //text("MOVE", 50.00, Colors.GOLD, font)
                 uiButton("MOVE")
                 {
                     textColor = Colors.GOLD
@@ -103,10 +190,29 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 {
                     ps.chosenColony++
                 }
-            shipType.CORVETTE_HUMAN -> {}
-            shipType.CRUISER_HUMAN -> {}
-            shipType.BATTLESHIP_HUMAN -> {}
-            shipType.GALLEON -> {}
+            shipType.CORVETTE_HUMAN ->
+                if(ps.chosenCorvette < gs.stars[ps.activePlayerStar]?.playerFleet?.getCorvetteCount()!!)
+            {
+                ps.chosenCorvette++
+            }
+            shipType.CRUISER_HUMAN -> {
+                if(ps.chosenCruiser < gs.stars[ps.activePlayerStar]?.playerFleet?.getCruiserCount()!!)
+                {
+                    ps.chosenCruiser++
+                }
+            }
+            shipType.BATTLESHIP_HUMAN -> {
+                if(ps.chosenBattleship < gs.stars[ps.activePlayerStar]?.playerFleet?.getBattleShipCount()!!)
+                {
+                    ps.chosenBattleship++
+                }
+            }
+            shipType.GALLEON_HUMAN -> {
+                if(ps.chosenGalleon < gs.stars[ps.activePlayerStar]?.playerFleet?.getGalleonCount()!!)
+                {
+                    ps.chosenGalleon++
+                }
+            }
         }
         updateReadouts()
     }
@@ -124,16 +230,31 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 if (ps.chosenColony > 0)
                     ps.chosenColony--
             }
-            shipType.CORVETTE_HUMAN -> {}
-            shipType.CRUISER_HUMAN -> {}
-            shipType.BATTLESHIP_HUMAN -> {}
-            shipType.GALLEON -> {}
+            shipType.CORVETTE_HUMAN -> {
+                if (ps.chosenCorvette > 0)
+                    ps.chosenCorvette--
+            }
+            shipType.CRUISER_HUMAN -> {
+                if (ps.chosenCruiser > 0)
+                    ps.chosenCruiser--
+            }
+            shipType.BATTLESHIP_HUMAN -> {
+                if (ps.chosenBattleship > 0)
+                    ps.chosenBattleship--}
+            shipType.GALLEON_HUMAN -> {
+                if (ps.chosenGalleon > 0)
+                ps.chosenGalleon--
+            }
         }
         updateReadouts()
     }
 
     private suspend fun updateReadouts() {
         terraFormerReadout.text = "Terraformers: ${ps.chosenTerraformers}"
-        colonyReadout.text = "Colony Ships: ${ps.chosenColony}"
+        colonyReadout.text = "Colony: ${ps.chosenColony}"
+        corvetteReadout.text = "Corvettes: ${ps.chosenCorvette}"
+        cruiserReadout.text =  "Cruisers: ${ps.chosenCruiser}"
+        battleshipReadout.text = "Battleships: ${ps.chosenBattleship}"
+        galleonReadout.text = "Galleons: ${ps.chosenGalleon}"
     }
 }

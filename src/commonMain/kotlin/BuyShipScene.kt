@@ -177,7 +177,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             textFont = font
             alignLeftToRightOf(galleon, 12.00)
             alignTopToBottomOf(line12)
-            onClick { buy(shipType.GALLEON) }
+            onClick { buy(shipType.GALLEON_HUMAN) }
         }
 
         uiButton("BACK")

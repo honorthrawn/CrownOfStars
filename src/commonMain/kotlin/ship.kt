@@ -10,7 +10,7 @@ enum class shipType {
     CORVETTE_HUMAN,
     CRUISER_HUMAN,
     BATTLESHIP_HUMAN,
-    GALLEON,
+    GALLEON_HUMAN,
 }
 
 data class shipCosts(val metal: UInt, val organics: UInt) {
