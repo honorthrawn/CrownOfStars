@@ -10,8 +10,10 @@ import com.soywiz.korio.file.std.*
 
 class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     private lateinit var notEnoughDialog: RoundRect
+    private var shipFactory = shipFactory()
 
     override suspend fun SContainer.sceneInit() {
+        shipFactory.init()
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
         {
             position(0, 0)
@@ -154,7 +156,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             onClick { buy(shipType.BATTLESHIP_HUMAN) }
         }
 
-        val galleonCost = getCosts(shipType.BATTLESHIP_HUMAN)
+        val galleonCost = getCosts(shipType.GALLEON_HUMAN)
         val galleon =  image(resourcesVfs[ "ships/Human-Frigate.png"].readBitmap())
         {
             alignLeftToLeftOf(background, 12.00)
@@ -193,7 +195,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private suspend fun buy(shipType: shipType) {
         val costs = getCosts(shipType)
         if(es.empires[Allegiance.Player.ordinal]!!.buyShip(costs)) {
-            var newShip = shipFactory(shipType)
+            var newShip = shipFactory.getShip(shipType)
             gs.stars[ps.activePlayerStar]!!.playerFleet.add(newShip)
         } else {
             showNotEnough("Organics ${costs.organics} Ship ${costs.metal}")

@@ -1,3 +1,4 @@
+
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
@@ -131,7 +132,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                     if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform == -1) {
                         ps.terraformingIndex = index
                         gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.startTerraforming()
-                        gs.stars[ps.activePlayerStar]!!.playerFleet.removeShipFromFleet(shipType.TERRAFORMATTER_HUMAN)
+                        gs.stars[ps.activePlayerStar]!!.playerFleet.destroyShip(shipType.TERRAFORMATTER_HUMAN)
                         sceneContainer.changeTo<terraformingScene>()
                     } else {
                         showNoGo("This world is already being terraformed!")
@@ -155,7 +156,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 ps.activePlayerPlanet = index
                 gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex = Allegiance.Player
                 gs.stars[ps.activePlayerStar]!!.planets[index]!!.farmers = 1u
-                gs.stars[ps.activePlayerStar]!!.playerFleet.removeShipFromFleet(shipType.COLONY_HUMAN)
+                gs.stars[ps.activePlayerStar]!!.playerFleet.destroyShip(shipType.COLONY_HUMAN)
                 ps.operation = operationType.SELECTION
                 sceneContainer.changeTo<ColonyScene>()
             } else {

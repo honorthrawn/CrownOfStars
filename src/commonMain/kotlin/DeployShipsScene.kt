@@ -177,7 +177,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         }
     }
 
-    private suspend fun onShipUp(type: shipType) {
+    private fun onShipUp(type: shipType) {
         when(type)
         {
             shipType.TERRAFORMATTER_HUMAN ->
@@ -213,11 +213,14 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     ps.chosenGalleon++
                 }
             }
+            else -> {
+                //not going to be moving enemy ships
+            }
         }
         updateReadouts()
     }
 
-    private suspend fun onShipDown(type: shipType) {
+    private fun onShipDown(type: shipType) {
         when(type)
         {
             shipType.TERRAFORMATTER_HUMAN ->
@@ -244,12 +247,12 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             shipType.GALLEON_HUMAN -> {
                 if (ps.chosenGalleon > 0)
                 ps.chosenGalleon--
-            }
+            } else -> {} //not going to be moving enemy ships
         }
         updateReadouts()
     }
 
-    private suspend fun updateReadouts() {
+    private fun updateReadouts() {
         terraFormerReadout.text = "Terraformers: ${ps.chosenTerraformers}"
         colonyReadout.text = "Colony: ${ps.chosenColony}"
         corvetteReadout.text = "Corvettes: ${ps.chosenCorvette}"

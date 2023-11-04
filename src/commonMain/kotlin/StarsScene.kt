@@ -120,6 +120,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     }
 
     private suspend fun nextTurn() {
+        ai.setShipCosts()
         ai.takeTurn()
         es.addProduction(gs)
         gs.nextTurn()
@@ -128,7 +129,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         gs.save()
     }
 
-    private suspend fun updateScreen() {
+    private fun updateScreen() {
         val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
         val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}"
         val Organic = "ORGANIC: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
@@ -167,18 +168,52 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         //Remove the ships from the current star's fleet
         while (ps.chosenTerraformers > 0) {
             var shipMoving =
-                gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleet(shipType.TERRAFORMATTER_HUMAN)
+                gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.TERRAFORMATTER_HUMAN)
             if (shipMoving != null) {
+                shipMoving.hasMoved = true
                 gs.stars[destination]?.playerFleet?.add(shipMoving)
             }
             ps.chosenTerraformers--
         }
         while (ps.chosenColony > 0) {
-            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleet(shipType.COLONY_HUMAN)
+            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.COLONY_HUMAN)
             if (shipMoving != null) {
+                shipMoving.hasMoved = true
                 gs.stars[destination]?.playerFleet?.add(shipMoving)
             }
             ps.chosenColony--
+        }
+        while (ps.chosenGalleon > 0) {
+            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.GALLEON_HUMAN)
+            if (shipMoving != null) {
+                shipMoving.hasMoved = true
+                gs.stars[destination]?.playerFleet?.add(shipMoving)
+            }
+            ps.chosenGalleon--
+        }
+        while (ps.chosenCorvette > 0) {
+            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.CORVETTE_HUMAN)
+            if (shipMoving != null) {
+                shipMoving.hasMoved = true
+                gs.stars[destination]?.playerFleet?.add(shipMoving)
+            }
+            ps.chosenCorvette--
+        }
+        while (ps.chosenCruiser > 0) {
+            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.CRUISER_HUMAN)
+            if (shipMoving != null) {
+                shipMoving.hasMoved = true
+                gs.stars[destination]?.playerFleet?.add(shipMoving)
+            }
+            ps.chosenCruiser--
+        }
+        while (ps.chosenBattleship > 0) {
+            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.BATTLESHIP_HUMAN)
+            if (shipMoving != null) {
+                shipMoving.hasMoved = true
+                gs.stars[destination]?.playerFleet?.add(shipMoving)
+            }
+            ps.chosenBattleship--
         }
         updateScreen()
     }
@@ -189,6 +224,10 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         //Assume want to move whole fleet
         ps.chosenTerraformers = gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount()
         ps.chosenColony = gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount()
+        ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount()
+        ps.chosenCorvette = gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCount()
+        ps.chosenCruiser = gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCount()
+        ps.chosenBattleship = gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCount()
         sceneContainer.changeTo<DeployShipsScene>()
     }
 

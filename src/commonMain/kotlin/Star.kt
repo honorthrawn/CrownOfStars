@@ -37,6 +37,8 @@ data class Star(val name: String)
        {
            planet.nextTurn()
        }
+       playerFleet.nextTurn()
+       enemyFleet.nextTurn()
     }
 
     fun getAllegiance(): Allegiance
