@@ -145,7 +145,7 @@ data class Planet(val star: String)
         var retval = 0u
         for(i in 1..shipbuilders.toInt())
         {
-            retval += Random.nextInt(1, getDieSizeMetals()).toUInt()
+            retval += Random.nextInt(0, getDieSizeMetals()).toUInt()
         }
         return retval
     }
@@ -154,7 +154,7 @@ data class Planet(val star: String)
         var retval = 0u
         for(i in 1..farmers.toInt())
         {
-            retval += Random.nextInt(1, getDieSizeOrganic()).toUInt()
+            retval += Random.nextInt(0, getDieSizeOrganic()).toUInt()
         }
         return retval
     }
@@ -163,7 +163,7 @@ data class Planet(val star: String)
         var retval = 0u
         for(i in 1..scientists.toInt())
         {
-            retval += Random.nextInt(1, getDieSizeResearch()).toUInt()
+            retval += Random.nextInt(0, getDieSizeResearch()).toUInt()
         }
         return retval
     }
@@ -172,7 +172,7 @@ data class Planet(val star: String)
         var retval = 0u
         for(i in 1..defworkers.toInt())
         {
-            retval += Random.nextInt(1, getDieSizeDefense()).toUInt()
+            retval += Random.nextInt(0, getDieSizeDefense()).toUInt()
         }
         return retval
     }
@@ -196,7 +196,7 @@ data class Planet(val star: String)
     fun getDieSizeMetals() : Int
     {
         val retval = when(type) {
-            PlanetType.TOXIC -> 1
+            PlanetType.TOXIC -> 4
             PlanetType.OCEAN -> 4
             PlanetType.TERRAN -> 6
             PlanetType.DESSERT -> 4
@@ -229,4 +229,25 @@ data class Planet(val star: String)
         return retval
     }
 
+    fun getPopulationLimit(): UInt {
+        val retval = when(type) {
+            PlanetType.TOXIC -> 5u
+            PlanetType.OCEAN -> 10u
+            PlanetType.TERRAN -> 12u
+            PlanetType.DESSERT -> 8u
+            PlanetType.VOLCANIC -> 6u
+            PlanetType.BARREN -> 6u
+            PlanetType.SUPERTERRAN -> 20u
+            PlanetType.TROPICAL -> 10u
+        }
+        return retval
+    }
+
+    fun getTotalPopulation(): UInt {
+        return( workerPool + shipbuilders + farmers + scientists + defworkers)
+    }
+
+    fun canGrowPopulation(): Boolean {
+        return( getTotalPopulation() < getPopulationLimit())
+    }
 }

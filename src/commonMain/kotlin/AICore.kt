@@ -2,10 +2,10 @@ import rule.*
 
 class AICore(val gs: GalaxyState, val es: EmpireState){
 
-    private var popRule: Rule<Empire>
+    private var popRule: Rule<Planet>
     private var assignRule: Rule<Planet>
     private var buildColonyShipRule: Rule<Empire>
-    private var dispatchColonyShip: Rule<Fleet>
+    private var dispatchColonyShip: Rule<Star>
     private var shipFactory = shipFactory()
     private lateinit var colonyCosts: shipCosts
     private lateinit var corvetteCosts: shipCosts
@@ -17,10 +17,9 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         popRule = rule("populationAddRule") {
             name = "populationAddRule"
             description = "This is the rule for adding population"
-            condition = { it.organicPoints >= 50u }
+            condition = { es.empires[Allegiance.Enemy.ordinal]!!.organicPoints >= 50u && it.canGrowPopulation() }
             action = {
-                println("populationAddRule is fired")
-                growPopulation()
+                growPopulation(it)
             }
         }
 
@@ -34,8 +33,8 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         dispatchColonyShip = rule("dispatchColonyShipRule") {
             name = "dispatchColonyShipRule"
             description = "This is the rule for moving colony ships"
-            condition = { it.getColonyShipCount() > 0 }
-            action = { moveColonyShip() }
+            condition = { it.enemyFleet.getColonyShipCount() > 0 }
+            action = { moveColonyShip(it) }
         }
 
         assignRule = rule("assignPopulationRule") {
@@ -43,13 +42,13 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
             description = "Rule to assign workers if any spare"
             condition = { it.ownerIndex == Allegiance.Enemy  && it.workerPool > 0u }
             action = {
-                println("assignPopulationRule is fired")
                 assignPopulation()
                 }
         }
     }
 
     private fun assignPopulation() {
+        println("ASSIGNING POPS")
         var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
         for( star in aiStars) {
             for (planet in star.planets.values) {
@@ -69,18 +68,10 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         }
     }
 
-    private fun growPopulation() {
-       //Find world and grow it
-       var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
-        for( star in aiStars) {
-            for (planet in star.planets.values) {
-                if(planet.ownerIndex == Allegiance.Enemy)
-                {
-                    es.empires[Allegiance.Enemy.ordinal]!!.addPopulation()
-                    planet.addPopulation(1u)
-                }
-            }
-        }
+    private fun growPopulation(planet: Planet) {
+        println("GROWING POPS")
+        es.empires[Allegiance.Enemy.ordinal]!!.addPopulation()
+        planet.addPopulation(1u)
     }
 
     private fun canbuildShip(type: shipType, empire: Empire) : Boolean {
@@ -107,8 +98,10 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
     }
 
      private fun buildColonyShip() {
+        println("BUILDING A COLONY SHIP")
         var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
         if(aiStars.isNotEmpty()) {
+            es.empires[Allegiance.Enemy.ordinal]!!.buyShip(colonyCosts)
             var newColonyShip = shipFactory.getShip(shipType.COLONY_ENEMY)
             aiStars[0].enemyFleet.add(newColonyShip)
         }
@@ -123,11 +116,23 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         galleonCosts = getCosts(shipType.GALLEON_ENEMY)
     }
 
-    fun moveColonyShip() {
-
+    private fun moveColonyShip(startStar: Star) {
+        println("MOVING A COLONY SHIP")
+        //first see if the star the ship is at has uncolonized worlds
+        var unsettledPlanets = startStar.planets.filter { it.value.ownerIndex == Allegiance.Unoccupied }
+        if(unsettledPlanets.isNotEmpty()) {
+            unsettledPlanets[0]!!.ownerIndex = Allegiance.Enemy
+            unsettledPlanets[0]!!.farmers = 1u
+            startStar.enemyFleet.destroyShip(shipType.COLONY_ENEMY)
+        } else {
+            println("COLONY SHIP NEEDS DESTINATION")
+            //TODO set new destination for colony ship
+        }
     }
 
     fun takeTurn() {
+        println("AI PLAYER RUNNING")
+        println("AI HAS: ORGANICS: ${es.empires[Allegiance.Enemy.ordinal]!!.organicPoints} METAL:  ${es.empires[Allegiance.Enemy.ordinal]!!.shipPoints}")
         //If we can build colony ships, build them
         var builtColony = buildColonyShipRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
         while(builtColony) {
@@ -137,25 +142,19 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         //If we have colony ships, move them and/or establish colonies
         var allStars = gs.stars.values
         for( star in allStars) {
-            dispatchColonyShip.fire(star.enemyFleet)
+            dispatchColonyShip.fire(star)
         }
 
-        //Add population if we can
-        var popAdded = popRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        while(popAdded)
-        {
-            popAdded = popRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        }
-
-        //Assign workers for next turn
+        //Add population if we can & assign workers
         var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
         for( star in aiStars) {
-            for (planet in star.planets.values) {
-                if (planet.ownerIndex == Allegiance.Enemy) {
-                    assignRule.fire(planet)
-                }
+            var aiPlanets = star.planets.values.filter { planet: Planet -> planet.ownerIndex == Allegiance.Enemy }
+            for (planet in aiPlanets) {
+                popRule.fire(planet)
+                assignRule.fire(planet)
             }
         }
+
 
 
     }

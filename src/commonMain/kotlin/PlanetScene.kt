@@ -1,11 +1,12 @@
+
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
+import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
-import com.soywiz.korge.ui.*
 
 class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     private lateinit var farmerReadout: Text
@@ -50,7 +51,6 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             position(300, 0)
             centerXOn(background)
             alignTopToTopOf(planetImage, 12.0)
-            //text("BACK", 50.00, Colors.GOLD, font)
             baseReadout = text("BASES: 00", 50.00, Colors.CYAN, font)
         }
 
@@ -58,14 +58,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             position(000.00, 300.00)
             uiHorizontalStack {
                 padding = 10.00
-                //text(" ADD ", 50.00,Colors.GOLD, font)
                 uiButton("ADD")
                 {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.FARMING) }
                 }
-                //text(" SUB ", 50.00, Colors.GOLD, font)
                 uiButton("SUB")
                 {
                     textColor = Colors.GOLD
@@ -76,14 +74,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                //text(" ADD ", 50.00,Colors.GOLD, font)
                 uiButton("ADD")
                 {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.SHIPS) }
                 }
-                //text(" SUB ", 50.00, Colors.GOLD, font)
                 uiButton("SUB")
                 {
                     textColor = Colors.GOLD
@@ -94,14 +90,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                //text(" ADD ", 50.00,Colors.GOLD, font)
                 uiButton("ADD")
                 {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.DEFENSE) }
                 }
-                //text(" SUB ", 50.00, Colors.GOLD, font)
                 uiButton("SUB")
                 {
                     textColor = Colors.GOLD
@@ -112,14 +106,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                //text(" ADD ", 50.00,Colors.GOLD, font)
                 uiButton("ADD")
                 {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.SCIENCE) }
                 }
-                //text(" SUB ", 50.00, Colors.GOLD, font)
                 uiButton("SUB")
                 {
                     textColor = Colors.GOLD
@@ -134,21 +126,18 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                //text("WORKER", 50.00, Colors.GOLD, font)
-                uiButton("POPULATION")
+                 uiButton("POPULATION")
                 {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { growPopulation() }
                 }
-                //text("SHIPS", 50.00, Colors.GOLD, font)
                 uiButton("SHIPS")
                 {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { lauchShip() }
                 }
-                //text("DEF BASE", 50.00, Colors.GOLD, font)
                 uiButton("DEF BASE")
                 {
                     textColor = Colors.GOLD
@@ -195,14 +184,15 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
 
     private suspend fun growPopulation()
     {
-        if(es.empires[Allegiance.Player.ordinal]!!.addPopulation())
-        {
-            gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addPopulation(1u)
-            updateReadouts()
-        }
-        else
-        {
-            showNotEnough("Requires at least 50 organics to grow population")
+        if(gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.canGrowPopulation()) {
+            if (es.empires[Allegiance.Player.ordinal]!!.addPopulation()) {
+                gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addPopulation(1u)
+                updateReadouts()
+            } else {
+                showNotEnough("Requires at least 50 organics to grow population")
+            }
+        } else {
+            showNotEnough("This world cannot support more people")
         }
     }
 

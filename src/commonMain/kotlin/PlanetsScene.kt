@@ -92,6 +92,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 }
 
     private suspend fun planetClicked(index: Int) {
+        //TODO: need to update for enemy held worlds
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player) {
             ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
         } else {

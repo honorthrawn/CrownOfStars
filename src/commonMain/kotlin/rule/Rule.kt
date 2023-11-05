@@ -8,12 +8,12 @@ class Rule<T> constructor(
         val name: String?,
         var description: String?,
         val condition: Predicate<T>,
-        val action: () -> Unit
+        val action: (T) -> Unit
 ) {
 
     fun fire(t: T): Boolean {
         if (condition(t)) {
-            action()
+            action(t)
             return true
         }
         return false
@@ -24,12 +24,12 @@ class Rule<T> constructor(
         var name: String? = null
         var description: String? = null
         var condition: Predicate<T> = Condition<T>{false}
-        var action: () -> Unit = {}
+        var action: (T) -> Unit = {} //made change here so that action has access to the what we passed in as predicate
 
         fun setName(name: String?) = apply { this.name = name }
         fun setDescription(description: String?) = apply { this.description = description }
         fun setCondition(block: Predicate<T>) = apply { this.condition = block}
-        fun setAction(block: () -> Unit) = apply { this.action = block }
+        fun setAction(block: (T) -> Unit) = apply { this.action = block }
         fun build(): Rule<T> {
             return Rule(id, name, description, condition, action)
         }
