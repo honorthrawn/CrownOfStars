@@ -221,6 +221,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
 
     private suspend fun clickedFleet(x: Int, y: Int) {
         println("we clicked a fleet")
+        ps.activePlayerStar = x * 10 + y
         //Assume want to move whole fleet
         if(gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() == 0 &&
             gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() == 0  &&
@@ -232,7 +233,6 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             return
         }
 
-        ps.activePlayerStar = x * 10 + y
         ps.chosenTerraformers = gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount()
         ps.chosenColony = gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount()
         ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount()
