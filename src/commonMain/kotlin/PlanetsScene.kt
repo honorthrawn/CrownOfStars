@@ -92,34 +92,63 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 }
 
     private suspend fun planetClicked(index: Int) {
-        //TODO: need to update for enemy held worlds
-        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Player) {
-            ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
-        } else {
-            val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-            selectOperationDialog =
-                this.sceneContainer.container().roundRect(
-                    sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                    Colors.BLACK
-                )
-                {
-                    centerOnStage()
-                    uiVerticalStack {
-                        scaledWidth = sceneWidth / 2.00
-                        uiButton("COLONIZE")
-                        {
-                            textColor = Colors.GOLD
-                            textFont = font
-                            onClick { colonizePlanet(index) }
-                        }
-                        uiButton("TERRAFORM")
-                        {
-                            textColor = Colors.GOLD
-                            textFont = font
-                            onClick { terraformPlanet(index) }
+        when(gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex ) {
+            Allegiance.Player -> {
+                ps.activePlayerPlanet = index; sceneContainer.changeTo<PlanetScene>()
+            }
+            Allegiance.Unoccupied -> {
+                val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+                selectOperationDialog =
+                    this.sceneContainer.container().roundRect(
+                        sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+                        Colors.BLACK
+                    )
+                    {
+                        centerOnStage()
+                        uiVerticalStack {
+                            scaledWidth = sceneWidth / 2.00
+                            uiButton("COLONIZE")
+                            {
+                                textColor = Colors.GOLD
+                                textFont = font
+                                onClick { colonizePlanet(index) }
+                            }
+                            uiButton("TERRAFORM")
+                            {
+                                textColor = Colors.GOLD
+                                textFont = font
+                                onClick { terraformPlanet(index) }
+                            }
                         }
                     }
-                }
+            }
+
+            Allegiance.Enemy -> {
+                val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+                selectOperationDialog =
+                    this.sceneContainer.container().roundRect(
+                        sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+                        Colors.BLACK
+                    )
+                    {
+                        centerOnStage()
+                        uiVerticalStack {
+                            scaledWidth = sceneWidth / 2.00
+                            uiButton("BOMBARD")
+                            {
+                                textColor = Colors.GOLD
+                                textFont = font
+                                onClick { bombardPlanet(index) }
+                            }
+                            uiButton("INVADE")
+                            {
+                                textColor = Colors.GOLD
+                                textFont = font
+                                onClick { invadePlanet(index) }
+                            }
+                        }
+                    }
+            }
         }
     }
 
@@ -169,6 +198,15 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ps.operation = operationType.SELECTION
     }
 
+    private suspend fun bombardPlanet(index: Int) {
+        selectOperationDialog.removeFromParent()
+        showNoGo("Planetary Bombardment: Not implemented yet")
+    }
+
+    private suspend fun invadePlanet(index: Int) {
+        selectOperationDialog.removeFromParent()
+        showNoGo("Planetary Invasion: Not implemented yet")
+    }
 
     private fun updatePlanet(planet: Image, index: Int) {
         if (planet.x >= sceneWidth - planet.width) {

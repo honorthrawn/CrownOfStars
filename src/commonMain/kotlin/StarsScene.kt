@@ -9,6 +9,7 @@ import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
 class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: AICore) : Scene() {
+    private lateinit var notEnoughDialog: RoundRect
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
@@ -220,8 +221,18 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
 
     private suspend fun clickedFleet(x: Int, y: Int) {
         println("we clicked a fleet")
-        ps.activePlayerStar = x * 10 + y
         //Assume want to move whole fleet
+        if(gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() == 0 &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() == 0  &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCount() == 0  &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCount() == 0 &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCount() == 0 &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount() == 0 ) {
+            showNoGo("The fleet has already moved this turn")
+            return
+        }
+
+        ps.activePlayerStar = x * 10 + y
         ps.chosenTerraformers = gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount()
         ps.chosenColony = gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount()
         ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount()
@@ -233,7 +244,35 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
 
     private suspend fun clickedEnemyFleet(x: Int, y: Int) {
         println("we clicked an enemy fleet")
+        //TODO need logics for clicking enemy fleet
         ps.activePlayerStar = x * 10 + y
         sceneContainer.changeTo<DeployShipsScene>()
     }
+
+    private suspend fun showNoGo(requirements: String) {
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        notEnoughDialog =
+            this.sceneContainer.container().roundRect(
+                sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+                Colors.BLACK
+            )
+            {
+                centerOnStage()
+                uiVerticalStack {
+                    scaledWidth = sceneWidth / 2.00
+                    text(requirements, 50.00, Colors.CYAN, font)
+                    uiButton("CLOSE")
+                    {
+                        textFont = font
+                        textColor = Colors.GOLD
+                        onClick { closeMessage() }
+                    }
+                }
+            }
+    }
+
+    private fun closeMessage() {
+        notEnoughDialog.removeFromParent()
+    }
+
 }
