@@ -12,6 +12,8 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private lateinit var notEnoughDialog: RoundRect
     private var shipFactory = shipFactory()
 
+    //TODO: Need some indication of what can be built or how many resources player has
+
     override suspend fun SContainer.sceneInit() {
         shipFactory.init()
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())

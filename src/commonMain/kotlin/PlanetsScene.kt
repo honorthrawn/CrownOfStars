@@ -128,7 +128,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         //println(message)
         selectOperationDialog.removeFromParent()
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
-            if (gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() >= 1) {
+            if (gs.stars[ps.activePlayerStar]!!.playerFleet.isTerraformersPresent()) {
                 if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.type != PlanetType.SUPERTERRAN) {
                     if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform == -1) {
                         ps.terraformingIndex = index
@@ -153,7 +153,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private suspend fun colonizePlanet(index: Int) {
         selectOperationDialog.removeFromParent()
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
-            if (gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() >= 1) {
+            if (gs.stars[ps.activePlayerStar]!!.playerFleet.isColonyPresent()) {
                 ps.activePlayerPlanet = index
                 gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex = Allegiance.Player
                 gs.stars[ps.activePlayerStar]!!.planets[index]!!.farmers = 1u

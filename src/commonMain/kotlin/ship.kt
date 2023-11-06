@@ -24,8 +24,7 @@ data class shipCosts(val metal: UInt, val organics: UInt) {
 suspend fun getCosts(shipType: shipType) : shipCosts {
     val shipList = resourcesVfs["ships/shipcosts.txt"].readLines(UTF8)
     val key = shipType.name
-    for(record in shipList)
-    {
+    for(record in shipList) {
         //Don't know why couldn't get tab to work but \t and \\t didn't work.   So, I just decided to use |
         val sep = "|"
         var fields = record.split(sep)

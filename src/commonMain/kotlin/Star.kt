@@ -16,12 +16,15 @@ data class Star(val name: String)
     var planets = mutableMapOf<Int, Planet>()
     var playerFleet = Fleet()
     var enemyFleet = Fleet()
+    //Location in galaxy, used to help AICore and such
+    var xloc = 0
+    var yloc = 0
+
     private val numPlanets = 4
 
     fun roll()
     {
         type = StarType.values()[Random.nextInt(0, StarType.values().count())]
-        //val numPlanets = Random.nextInt(1,4)
 
         for( i in 1..numPlanets)
         {

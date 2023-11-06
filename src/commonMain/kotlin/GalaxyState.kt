@@ -1,7 +1,11 @@
-import com.soywiz.korio.file.std.*
-import com.soywiz.korio.lang.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+
+import com.soywiz.korio.file.std.applicationDataVfs
+import com.soywiz.korio.file.std.resourcesVfs
+import com.soywiz.korio.lang.UTF8
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlin.collections.set
 
 class GalaxyState {
 
@@ -15,6 +19,8 @@ class GalaxyState {
             val newStar = Star(name)
             newStar.roll()
             stars[nI] = newStar
+            stars[nI]!!.xloc = nI % 10
+            stars[nI]!!.yloc = nI / 10
             nI++
         }
         //Player's starting world

@@ -121,12 +121,28 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         //first see if the star the ship is at has uncolonized worlds
         var unsettledPlanets = startStar.planets.filter { it.value.ownerIndex == Allegiance.Unoccupied }
         if(unsettledPlanets.isNotEmpty()) {
+            println("ESTABLISHING COLONY IN SYSTEM")
+            //TODO: Bad -- could be colonizing barren or toxic world when plenty of good worlds around
             unsettledPlanets[0]!!.ownerIndex = Allegiance.Enemy
             unsettledPlanets[0]!!.farmers = 1u
             startStar.enemyFleet.destroyShip(shipType.COLONY_ENEMY)
         } else {
-            println("COLONY SHIP NEEDS DESTINATION")
-            //TODO set new destination for colony ship
+            println("COLONY SHIP MOVING")
+            //For now, do the simple thing and select the next star system - slowing marching backwards towards Sol
+            val x = startStar.xloc
+            val y = startStar.yloc
+            val startloc = (x * 10 + y)
+            var destination = startloc - 1
+            //Probably won't happen but just in case
+            if(destination <= 0) {
+                //TODO This is probably bad.   If there is a player fleet, they will be able to blow the AI colonizer out
+                //of space
+                var shipMoving = gs.stars[startloc]!!.enemyFleet!!.removeShipFromFleetForMove(shipType.COLONY_ENEMY)
+                if (shipMoving != null) {
+                    shipMoving.hasMoved = true
+                    gs.stars[destination]!!.enemyFleet!!.add(shipMoving)
+                }
+            }
         }
     }
 
@@ -142,12 +158,14 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         //If we have colony ships, move them and/or establish colonies
         var allStars = gs.stars.values
         for( star in allStars) {
-            dispatchColonyShip.fire(star)
+            //make a loop in case more than one colony ship in system
+            while( dispatchColonyShip.fire(star) ) {
+
+            }
         }
 
         //Add population if we can & assign workers
-        var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
-        for( star in aiStars) {
+        for( star in allStars) {
             var aiPlanets = star.planets.values.filter { planet: Planet -> planet.ownerIndex == Allegiance.Enemy }
             for (planet in aiPlanets) {
                 popRule.fire(planet)

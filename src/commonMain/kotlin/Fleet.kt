@@ -33,6 +33,14 @@ class Fleet {
           cruisers.isNotEmpty() || battleships.isNotEmpty() || galleons.isNotEmpty()
     }
 
+    fun isColonyPresent(): Boolean {
+        return colonyShips.isNotEmpty()
+    }
+
+    fun isTerraformersPresent(): Boolean {
+        return terraformers.isNotEmpty()
+    }
+
     //Changed these functions to return count that hasn't moved already, that way neither player
     //nor AI will get to move the ships more than once per turn
     fun getColonyShipCount(): Int
