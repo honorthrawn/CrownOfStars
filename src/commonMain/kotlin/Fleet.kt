@@ -8,10 +8,9 @@ class Fleet {
    private var cruisers: MutableList<Ship> = mutableListOf()
    private var battleships: MutableList<Ship> = mutableListOf()
    private var galleons: MutableList<Ship> = mutableListOf()
-    fun add(shipToAdd: Ship)
-    {
-        when( shipToAdd.theType)
-        {
+
+    fun add(shipToAdd: Ship) {
+        when( shipToAdd.theType) {
             shipType.TERRAFORMATTER_HUMAN -> terraformers.add(shipToAdd)
             shipType.COLONY_HUMAN -> colonyShips.add(shipToAdd)
             shipType.CORVETTE_HUMAN -> corvettes.add(shipToAdd)
@@ -27,8 +26,7 @@ class Fleet {
         }
     }
 
-    fun isPresent(): Boolean
-    {
+    fun isPresent(): Boolean {
       return terraformers.isNotEmpty()  || colonyShips.isNotEmpty() || corvettes.isNotEmpty() ||
           cruisers.isNotEmpty() || battleships.isNotEmpty() || galleons.isNotEmpty()
     }
@@ -43,13 +41,11 @@ class Fleet {
 
     //Changed these functions to return count that hasn't moved already, that way neither player
     //nor AI will get to move the ships more than once per turn
-    fun getColonyShipCount(): Int
-    {
+    fun getColonyShipCount(): Int {
         return colonyShips.filterNot { it.hasMoved }.count()
     }
 
-    fun getTerraformersCount(): Int
-    {
+    fun getTerraformersCount(): Int {
         return terraformers.filterNot { it.hasMoved }.count()
     }
 
@@ -69,10 +65,10 @@ class Fleet {
         return galleons.filterNot { it.hasMoved }.count()
     }
 
-    fun removeShipFromFleetForMove(shipTypeToRemove: shipType) : Ship
-    {
+    fun removeShipFromFleetForMove(shipTypeToRemove: shipType) : Ship  {
         val ship: Ship
         when (shipTypeToRemove) {
+
             shipType.TERRAFORMATTER_HUMAN -> {
                 println("Trying to remove terraformer")
                 val indx = terraformers.indexOfFirst { !it.hasMoved }
@@ -85,8 +81,8 @@ class Fleet {
                 val indx = colonyShips.indexOfFirst { !it.hasMoved }
                 ship = colonyShips[indx]
                 colonyShips.removeAt(indx)
-
             }
+
             shipType.CORVETTE_HUMAN -> {
                 val indx = corvettes.indexOfFirst { !it.hasMoved }
                 ship = corvettes[indx]
@@ -116,8 +112,8 @@ class Fleet {
                 val indx = colonyShips.indexOfFirst { !it.hasMoved }
                 ship = colonyShips[indx]
                 colonyShips.removeAt(indx)
-
             }
+
             shipType.CORVETTE_ENEMY -> {
                 val indx = corvettes.indexOfFirst { !it.hasMoved }
                 ship = corvettes[indx]
@@ -145,8 +141,7 @@ class Fleet {
         return ship
     }
 
-    fun destroyShip(shipTypeToRemove: shipType)
-    {
+    fun destroyShip(shipTypeToRemove: shipType) {
         when (shipTypeToRemove) {
             shipType.TERRAFORMATTER_HUMAN -> {
                 println("Trying to remove terraformer")
@@ -156,8 +151,8 @@ class Fleet {
             shipType.COLONY_HUMAN -> {
                 println("Trying to remove colony ship")
                 colonyShips.removeAt(0)
-
             }
+
             shipType.CORVETTE_HUMAN -> {
                 corvettes.removeAt(0)
             }

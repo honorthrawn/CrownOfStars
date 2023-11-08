@@ -19,8 +19,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
 
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
-        {
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
         }
@@ -37,8 +36,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         for (i in 0..3) {
             x = 0.00
             for (j in 0..9) {
-                val rect = roundRect(cellSize, cellHeight, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 5.00)
-                {
+                val rect = roundRect(cellSize, cellHeight, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 5.00) {
                     position(x, y)
                     onClick { clickedSector(i, j) } //for some weird reason trying to use nI always results in 40
                 }
@@ -50,15 +48,13 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
                     scaledWidth = cellSize
                     uiHorizontalStack {
                         alignTopToTopOf(rect)
-                        val fleetImage = image(fleet)
-                        {
+                        val fleetImage = image(fleet) {
                             colorMul = Colors.CYAN
                             onClick { clickedFleet(i, j) }
                             visible = gs.stars[nI]!!.playerFleet.isPresent()
                         }
                         friendlyFleets.add(fleetImage)
-                        val enemyfleetImage = image(fleet)
-                        {
+                        val enemyfleetImage = image(fleet) {
                             colorMul = Colors.RED
                             onClick { clickedEnemyFleet(i, j) }
                             visible = gs.stars[nI]!!.enemyFleet.isPresent()
@@ -66,7 +62,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
                         enemyFleets.add(enemyfleetImage)
                     }
 
-                    val textColor = when (gs.stars[nI]!!.getAllegiance()) {
+                    val textColor = when(gs.stars[nI]!!.getAllegiance()) {
                         Allegiance.Unoccupied -> Colors.WHITE
                         Allegiance.Player -> Colors.CYAN
                         Allegiance.Enemy -> Colors.RED
@@ -79,9 +75,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
                             StarType.YELLOW -> yellowStar
                             StarType.BLUE -> blueStar
                             StarType.RED -> redStar
-                        }
-                    )
-                    {
+                        } ) {
                         scaledWidth = 30.0
                         scaledHeight = 30.0
                     }
@@ -111,8 +105,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             }
         }
 
-        uiButton("NEXT TURN")
-        {
+        uiButton("NEXT TURN") {
             position(0.00, y + 2 * cellHeight)
             textColor = Colors.GOLD
             textFont = font
@@ -254,15 +247,12 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         notEnoughDialog =
             this.sceneContainer.container().roundRect(
                 sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                Colors.BLACK
-            )
-            {
+                Colors.BLACK ) {
                 centerOnStage()
                 uiVerticalStack {
                     scaledWidth = sceneWidth / 2.00
                     text(requirements, 50.00, Colors.CYAN, font)
-                    uiButton("CLOSE")
-                    {
+                    uiButton("CLOSE") {
                         textFont = font
                         textColor = Colors.GOLD
                         onClick { closeMessage() }

@@ -1,12 +1,12 @@
 
-import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
+import com.soywiz.korge.input.onClick
+import com.soywiz.korge.scene.Scene
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
-import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
-import com.soywiz.korim.format.*
-import com.soywiz.korio.file.std.*
+import com.soywiz.korim.color.Colors
+import com.soywiz.korim.font.readTtfFont
+import com.soywiz.korim.format.readBitmap
+import com.soywiz.korio.file.std.resourcesVfs
 
 class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     private lateinit var farmerReadout: Text
@@ -16,9 +16,9 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     private lateinit var unassignedReadout: Text
     private lateinit var baseReadout: Text
     private lateinit var notEnoughDialog: RoundRect
+
     override suspend fun SContainer.sceneInit() {
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
-        {
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
         }
@@ -41,8 +41,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         }
 
         val planet = "${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name} - ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.type} "
-        text( planet, 50.00, Colors.CYAN, font)
-        {
+        text( planet, 50.00, Colors.CYAN, font) {
             alignLeftToLeftOf(planetImage)
             alignTopToTopOf(planetImage, 12.0)
         }
@@ -58,14 +57,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             position(000.00, 300.00)
             uiHorizontalStack {
                 padding = 10.00
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.FARMING) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerDown(WorkerType.FARMING) }
@@ -74,14 +71,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.SHIPS) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerDown(WorkerType.SHIPS) }
@@ -90,14 +85,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                uiButton("ADD")
-                {
+                uiButton("ADD")  {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.DEFENSE) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerDown(WorkerType.DEFENSE) }
@@ -106,14 +99,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerUp(WorkerType.SCIENCE) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onWorkerDown(WorkerType.SCIENCE) }
@@ -126,38 +117,32 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             uiHorizontalStack {
                 padding = 10.00
-                 uiButton("POPULATION")
-                {
+                 uiButton("POPULATION") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { growPopulation() }
                 }
-                uiButton("SHIPS")
-                {
+                uiButton("SHIPS") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { lauchShip() }
                 }
-                uiButton("DEF BASE")
-                {
+                uiButton("DEF BASE") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { buyBase() }
                 }
-                uiButton("BACK")
-                {
+                uiButton("BACK") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { sceneContainer.changeTo<PlanetsScene>() }
                 }
             }
         }
-
         updateReadouts()
     }
 
-    private fun updateReadouts()
-    {
+    private fun updateReadouts() {
         val farmerReadoutString = "FARMING: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.farmers}"
         farmerReadout.text = farmerReadoutString
         val shipsReadoutString = "SHIPS: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.shipbuilders}"
@@ -182,8 +167,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         updateReadouts()
     }
 
-    private suspend fun growPopulation()
-    {
+    private suspend fun growPopulation()  {
         if(gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.canGrowPopulation()) {
             if (es.empires[Allegiance.Player.ordinal]!!.addPopulation()) {
                 gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addPopulation(1u)
@@ -196,17 +180,14 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         }
     }
 
-    private suspend fun lauchShip()
-    {
+    private suspend fun lauchShip() {
         sceneContainer.changeTo<BuyShipScene>()
     }
 
-    private suspend fun buyBase() = if(es.empires[Allegiance.Player.ordinal]!!.buildBase())
-    {
+    private suspend fun buyBase() = if(es.empires[Allegiance.Player.ordinal]!!.buildBase())  {
         gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addBase(1u)
         updateReadouts()
-    } else
-    {
+    } else {
         showNotEnough("Requires at least 50 defense")
     }
 
@@ -215,18 +196,15 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         notEnoughDialog =
             this.sceneContainer.container().roundRect(sceneWidth/2.00, sceneHeight / 4.00, 5.0, 5.0,
-                Colors.BLACK)
-            {
+                Colors.BLACK)   {
                 centerOnStage()
                 uiVerticalStack {
                     scaledWidth = sceneWidth / 2.00
-                    text("Not enough resources", 50.00, Colors.CYAN, font)
-                    {
+                    text("Not enough resources", 50.00, Colors.CYAN, font)  {
                         autoScaling = true
                     }
                     text(requirements, 50.00, Colors.CYAN, font)
-                    uiButton("CLOSE")
-                    {
+                    uiButton("CLOSE")  {
                         textColor = Colors.GOLD
                         textFont = font
                         onClick { closeMessage() }
@@ -235,10 +213,8 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         }
     }
 
-    private fun closeMessage()
-    {
+    private fun closeMessage() {
         notEnoughDialog.removeFromParent()
     }
-
 }
 

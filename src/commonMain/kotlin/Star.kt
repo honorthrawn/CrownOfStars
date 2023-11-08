@@ -2,16 +2,14 @@ import kotlinx.serialization.*
 import kotlin.random.*
 
 @Serializable
-enum class StarType
-{
+enum class StarType {
     YELLOW,
     BLUE,
     RED
 }
 
 @Serializable
-data class Star(val name: String)
-{
+data class Star(val name: String) {
     var type: StarType = StarType.YELLOW
     var planets = mutableMapOf<Int, Planet>()
     var playerFleet = Fleet()
@@ -22,40 +20,33 @@ data class Star(val name: String)
 
     private val numPlanets = 4
 
-    fun roll()
-    {
+    fun roll() {
         type = StarType.values()[Random.nextInt(0, StarType.values().count())]
 
-        for( i in 1..numPlanets)
-        {
+        for( i in 1..numPlanets) {
             val planetRolled = Planet(name)
             planetRolled.roll(i)
             planets[i-1] = planetRolled
         }
     }
 
-    fun nextTurn()
-    {
-       for(planet in planets.values)
-       {
+    fun nextTurn() {
+       for(planet in planets.values) {
            planet.nextTurn()
        }
        playerFleet.nextTurn()
        enemyFleet.nextTurn()
     }
 
-    fun getAllegiance(): Allegiance
-    {
+    fun getAllegiance(): Allegiance {
         //If any world in system is enemy held, count the system as enemy
-        for( i in 1..numPlanets)
-        {
+        for( i in 1..numPlanets) {
             if(planets[i-1]!!.ownerIndex == Allegiance.Enemy) {
                 return Allegiance.Enemy
             }
         }
         //If one or more worlds are player held and there is no enemy world, count it as player system
-        for( i in 1..numPlanets)
-        {
+        for( i in 1..numPlanets) {
             if(planets[i-1]!!.ownerIndex == Allegiance.Player) {
                 return Allegiance.Player
             }

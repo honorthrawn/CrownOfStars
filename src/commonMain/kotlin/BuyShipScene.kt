@@ -16,36 +16,31 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
     override suspend fun SContainer.sceneInit() {
         shipFactory.init()
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
-        {
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
         val terraformerCosts = getCosts(shipType.TERRAFORMATTER_HUMAN)
-        val terraFormer = image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap())
-        {
+        val terraFormer = image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
             alignLeftToLeftOf(background, 12.00)
             alignTopToTopOf(background, 12.00)
             scale(0.5)
         }
 
-            val line1 = text("Terraformer",50.00, Colors.CYAN, font)
-            {
+            val line1 = text("Terraformer",50.00, Colors.CYAN, font) {
                 alignLeftToRightOf(terraFormer)
                 alignTopToTopOf(terraFormer)
             }
 
             val line2 = text("Organics ${terraformerCosts.organics} Ship ${terraformerCosts.metal}",50.00,
-                Colors.CYAN, font)
-            {
+                Colors.CYAN, font) {
                 alignLeftToRightOf(terraFormer)
                 alignTopToBottomOf(line1)
             }
 
-            uiButton("BUY")
-            {
+            uiButton("BUY") {
                textColor = Colors.GOLD
                textFont = font
                alignLeftToRightOf(terraFormer, 5.00)
@@ -54,25 +49,21 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             }
 
         val colonyCosts = getCosts(shipType.COLONY_HUMAN)
-        val colonyShip = image(resourcesVfs[ "ships/Human-Battlecruiser.png"].readBitmap())
-        {
+        val colonyShip = image(resourcesVfs[ "ships/Human-Battlecruiser.png"].readBitmap()) {
             alignLeftToLeftOf(background, 12.00)
             alignTopToBottomOf(terraFormer,12.00)
             scale(0.5)
         }
-        val line3 = text("Colony", 50.00, Colors.CYAN, font)
-        {
+        val line3 = text("Colony", 50.00, Colors.CYAN, font) {
             alignLeftToRightOf(colonyShip)
             alignTopToTopOf(colonyShip)
         }
-        val line4 = text("Organics ${colonyCosts.organics} Ship ${colonyCosts.metal}", 50.00, Colors.CYAN, font)
-        {
+        val line4 = text("Organics ${colonyCosts.organics} Ship ${colonyCosts.metal}", 50.00, Colors.CYAN, font) {
             alignLeftToRightOf(colonyShip)
             alignTopToBottomOf(line3)
         }
 
-        val buyColony = uiButton("BUY")
-        {
+        val buyColony = uiButton("BUY") {
             textColor = Colors.GOLD
             textFont = font
             alignLeftToRightOf(colonyShip, 5.00)
@@ -81,24 +72,20 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
 
         val corvetteCosts = getCosts(shipType.CORVETTE_HUMAN)
-        val corvetteShip = image(resourcesVfs[ "ships/Human-Corvette.png"].readBitmap())
-        {
+        val corvetteShip = image(resourcesVfs[ "ships/Human-Corvette.png"].readBitmap()) {
             alignLeftToLeftOf(background, 12.00)
             alignTopToBottomOf(buyColony,12.00)
             scale(1, 1)
         }
-        val line5 = text("Corvette",50.00, Colors.CYAN, font)
-        {
+        val line5 = text("Corvette",50.00, Colors.CYAN, font) {
             alignLeftToRightOf(corvetteShip)
             alignTopToTopOf(corvetteShip)
         }
-        val line6 = text("Organics ${corvetteCosts.organics} Ship ${corvetteCosts.metal}",50.00, Colors.CYAN, font)
-        {
+        val line6 = text("Organics ${corvetteCosts.organics} Ship ${corvetteCosts.metal}",50.00, Colors.CYAN, font){
             alignLeftToRightOf(corvetteShip)
             alignTopToBottomOf(line5)
         }
-        val buyCorvette = uiButton("BUY")
-        {
+        val buyCorvette = uiButton("BUY") {
             textColor = Colors.GOLD
             textFont = font
             alignLeftToRightOf(corvetteShip, 12.00)
@@ -107,24 +94,20 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
 
         val cruiserCost = getCosts(shipType.CRUISER_HUMAN)
-        val cruiserShip =  image(resourcesVfs[ "ships/Human-Cruiser.png"].readBitmap())
-        {
+        val cruiserShip =  image(resourcesVfs[ "ships/Human-Cruiser.png"].readBitmap()) {
             alignLeftToLeftOf(background, 12.00)
             alignTopToBottomOf(buyCorvette,12.00)
             scale(0.5)
         }
-        val line7 = text("Cruiser",50.00, Colors.CYAN, font)
-        {
+        val line7 = text("Cruiser",50.00, Colors.CYAN, font) {
             alignLeftToRightOf(cruiserShip)
             alignTopToTopOf(cruiserShip)
         }
-        val line8 = text("Organics ${cruiserCost.organics} Ship ${cruiserCost.metal}",50.00, Colors.CYAN, font)
-        {
+        val line8 = text("Organics ${cruiserCost.organics} Ship ${cruiserCost.metal}",50.00, Colors.CYAN, font){
             alignLeftToRightOf(cruiserShip)
             alignTopToBottomOf(line7)
         }
-        val buyCruiser = uiButton("BUY")
-        {
+        val buyCruiser = uiButton("BUY") {
             textColor = Colors.GOLD
             textFont = font
             alignLeftToRightOf(cruiserShip, 12.00)
@@ -133,24 +116,20 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
 
         val battleShipCost = getCosts(shipType.BATTLESHIP_HUMAN)
-        val battleShip =  image(resourcesVfs[ "ships/Human-Battleship.png"].readBitmap())
-        {
+        val battleShip =  image(resourcesVfs[ "ships/Human-Battleship.png"].readBitmap()) {
             alignLeftToLeftOf(background, 12.00)
             alignTopToBottomOf(buyCruiser,12.00)
             scale(0.5)
         }
-        val line9 = text("Battleship",50.00, Colors.CYAN, font)
-        {
+        val line9 = text("Battleship",50.00, Colors.CYAN, font) {
             alignLeftToRightOf(battleShip)
             alignTopToTopOf(battleShip)
         }
-        val line10 = text("Organics ${battleShipCost.organics} Ship ${battleShipCost.metal}",50.00, Colors.CYAN, font)
-        {
+        val line10 = text("Organics ${battleShipCost.organics} Ship ${battleShipCost.metal}",50.00, Colors.CYAN, font) {
             alignLeftToRightOf(battleShip)
             alignTopToBottomOf(line9)
         }
-        val buyBattleShip = uiButton("BUY")
-        {
+        val buyBattleShip = uiButton("BUY")  {
             textColor = Colors.GOLD
             textFont = font
             alignLeftToRightOf(battleShip, 12.00)
@@ -159,24 +138,20 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
 
         val galleonCost = getCosts(shipType.GALLEON_HUMAN)
-        val galleon =  image(resourcesVfs[ "ships/Human-Frigate.png"].readBitmap())
-        {
+        val galleon =  image(resourcesVfs[ "ships/Human-Frigate.png"].readBitmap()) {
             alignLeftToLeftOf(background, 12.00)
             alignTopToBottomOf(buyBattleShip,12.00)
             scale(0.5)
         }
-        val line11 = text("Galleon",50.00, Colors.CYAN, font)
-        {
+        val line11 = text("Galleon",50.00, Colors.CYAN, font) {
             alignLeftToRightOf(galleon)
             alignTopToTopOf(galleon)
         }
-        val line12 = text("Organics ${galleonCost.organics} Ship ${galleonCost.metal}",50.00, Colors.CYAN, font)
-        {
+        val line12 = text("Organics ${galleonCost.organics} Ship ${galleonCost.metal}",50.00, Colors.CYAN, font) {
             alignLeftToRightOf(galleon)
             alignTopToBottomOf(line11)
         }
-        val buyhGalleon = uiButton("BUY")
-        {
+        val buyhGalleon = uiButton("BUY") {
             textColor = Colors.GOLD
             textFont = font
             alignLeftToRightOf(galleon, 12.00)
@@ -184,8 +159,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             onClick { buy(shipType.GALLEON_HUMAN) }
         }
 
-        uiButton("BACK")
-        {
+        uiButton("BACK") {
             textColor = Colors.GOLD
             textFont = font
             alignLeftToRightOf(buyhGalleon, 5.00)
@@ -211,18 +185,15 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             this.sceneContainer.container().roundRect(
                 sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
                 Colors.BLACK
-            )
-            {
+            ) {
                 centerOnStage()
                 uiVerticalStack {
                     scaledWidth = sceneWidth / 2.00
-                    text("Not enough resources", 50.00, Colors.CYAN, font)
-                    {
+                    text("Not enough resources", 50.00, Colors.CYAN, font) {
                         autoScaling = true
                     }
                     text(requirements, 50.00, Colors.CYAN, font)
-                    uiButton("CLOSE")
-                    {
+                    uiButton("CLOSE") {
                         textColor = Colors.GOLD
                         textFont = font
                         onClick { closeMessage() }
@@ -231,8 +202,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             }
     }
 
-    private fun closeMessage()
-    {
+    private fun closeMessage() {
         notEnoughDialog.removeFromParent()
     }
 

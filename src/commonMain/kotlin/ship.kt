@@ -18,8 +18,7 @@ enum class shipType {
     GALLEON_ENEMY
 }
 
-data class shipCosts(val metal: UInt, val organics: UInt) {
-}
+data class shipCosts(val metal: UInt, val organics: UInt) {}
 
 suspend fun getCosts(shipType: shipType) : shipCosts {
     val shipList = resourcesVfs["ships/shipcosts.txt"].readLines(UTF8)

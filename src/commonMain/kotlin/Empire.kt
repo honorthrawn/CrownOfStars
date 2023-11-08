@@ -1,8 +1,7 @@
 import kotlinx.serialization.*
 
 @Serializable
-enum class Allegiance
-{
+enum class Allegiance {
     Unoccupied,
     Player,
     Enemy
@@ -15,14 +14,10 @@ data class Empire(val id: Allegiance) {
     var researchPoints = 0u
     var defensePoints = 0u
 
-    fun addProduction(gs: GalaxyState)
-    {
-        for( star in gs.stars.values)
-        {
-            for( planet in star.planets.values)
-            {
-                if(planet.ownerIndex == id )
-                {
+    fun addProduction(gs: GalaxyState) {
+        for( star in gs.stars.values) {
+            for( planet in star.planets.values) {
+                if(planet.ownerIndex == id ) {
                     shipPoints += planet.GetShipProduction()
                     organicPoints += planet.GetOrganicProduction()
                     researchPoints += planet.GetResearchProduction()
@@ -31,10 +26,8 @@ data class Empire(val id: Allegiance) {
             }
 
             //Star bonus
-            if(star.getAllegiance() == id)
-            {
-                when(star.type)
-                {
+            if(star.getAllegiance() == id) {
+                when(star.type)  {
                     StarType.YELLOW -> researchPoints += 2u
                     StarType.BLUE -> shipPoints += 4u
                     StarType.RED -> organicPoints += 4u
@@ -45,8 +38,7 @@ data class Empire(val id: Allegiance) {
 
     fun addPopulation(): Boolean {
         var retval = false
-        if(organicPoints >= 50u)
-        {
+        if(organicPoints >= 50u)  {
             organicPoints -= 50u
             retval = true
         }
@@ -55,8 +47,7 @@ data class Empire(val id: Allegiance) {
 
     fun buildBase(): Boolean {
         var retval = false
-        if(defensePoints >= 50u)
-        {
+        if(defensePoints >= 50u) {
             defensePoints -= 50u
             retval = true
         }
@@ -65,8 +56,7 @@ data class Empire(val id: Allegiance) {
 
     fun buyShip(costs: shipCosts): Boolean {
         var retval = false
-        if(shipPoints >= costs.metal && organicPoints >= costs.organics)
-        {
+        if(shipPoints >= costs.metal && organicPoints >= costs.organics) {
             shipPoints -= costs.metal
             organicPoints -= costs.organics
             retval = true

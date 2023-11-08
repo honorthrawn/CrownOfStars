@@ -21,8 +21,7 @@ class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             PlanetType.SUPERTERRAN -> "landscapes/413.bmp"
             PlanetType.TROPICAL -> "landscapes/906.bmp"
         }
-        val planetImage = image(resourcesVfs[fileName].readBitmap())
-            {
+        val planetImage = image(resourcesVfs[fileName].readBitmap()) {
                 position(0, 0)
                 setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
             }
@@ -33,8 +32,7 @@ class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             scaledHeight = sceneHeight.toDouble()
             text("You started a new colony on", 50.00, Colors.CYAN, font )
             text(message, 50.00, Colors.CYAN, font)
-            uiButton("CLOSE")
-            {
+            uiButton("CLOSE")  {
                 textColor = Colors.GOLD
                 textFont = font
                 onClick {  sceneContainer.changeTo<PlanetScene>() }

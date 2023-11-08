@@ -52,14 +52,11 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
         for( star in aiStars) {
             for (planet in star.planets.values) {
-                while(planet.ownerIndex == Allegiance.Enemy && planet.workerPool > 0u )
-                {
-                    if(planet.farmers > planet.shipbuilders)
-                    {
+                while(planet.ownerIndex == Allegiance.Enemy && planet.workerPool > 0u ) {
+                    if(planet.farmers > planet.shipbuilders) {
                         planet.shipbuilders++
                         planet.workerPool--
-                    } else
-                    {
+                    } else {
                         planet.farmers++
                         planet.workerPool--
                     }

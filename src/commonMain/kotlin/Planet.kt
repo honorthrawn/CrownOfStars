@@ -3,8 +3,7 @@ import kotlinx.serialization.*
 import kotlin.random.*
 
 @Serializable
-enum class PlanetType
-{
+enum class PlanetType {
     TOXIC,
     OCEAN,
     TERRAN,
@@ -16,8 +15,7 @@ enum class PlanetType
 }
 
 @Serializable
-enum class WorkerType
-{
+enum class WorkerType {
     FARMING,
     SHIPS,
     DEFENSE,
@@ -25,8 +23,7 @@ enum class WorkerType
 }
 
 @Serializable
-data class Planet(val star: String)
-{
+data class Planet(val star: String) {
     var type: PlanetType = PlanetType.TOXIC
     var name: String = "VENUS"
     var workerPool: UInt = 0u
@@ -38,9 +35,7 @@ data class Planet(val star: String)
     var defenseBases: UInt = 0u
     var turnsLeftTerraform: Int = -1 //-1 indicates not being terraformed
 
-
-    fun roll(pos: Int)
-    {
+    fun roll(pos: Int)  {
         type = PlanetType.values()[Random.nextInt(0, PlanetType.values().count())]
 
         val numeral = when( pos) {
@@ -94,8 +89,7 @@ data class Planet(val star: String)
         workerPool++
     }
 
-    fun addPopulation(inc: UInt)
-    {
+    fun addPopulation(inc: UInt) {
         workerPool += inc
     }
 
@@ -103,15 +97,11 @@ data class Planet(val star: String)
         defenseBases += inc
     }
 
-
     //Should be called whenever there is a new turn.   Important for terraforming logic
-    fun nextTurn()
-    {
-        if(turnsLeftTerraform > 1)
-        {
+    fun nextTurn()  {
+        if(turnsLeftTerraform > 1) {
             turnsLeftTerraform--
-        } else if(turnsLeftTerraform == 1)
-        {
+        } else if(turnsLeftTerraform == 1) {
             //Terraforming complete change counter back to not being terraformed
             turnsLeftTerraform = -1
             type = when(type) {
@@ -143,8 +133,7 @@ data class Planet(val star: String)
 
     fun GetShipProduction(): UInt {
         var retval = 0u
-        for(i in 1..shipbuilders.toInt())
-        {
+        for(i in 1..shipbuilders.toInt()) {
             retval += Random.nextInt(0, getDieSizeMetals()).toUInt()
         }
         return retval
@@ -152,8 +141,7 @@ data class Planet(val star: String)
 
     fun GetOrganicProduction(): UInt {
         var retval = 0u
-        for(i in 1..farmers.toInt())
-        {
+        for(i in 1..farmers.toInt()) {
             retval += Random.nextInt(0, getDieSizeOrganic()).toUInt()
         }
         return retval
@@ -161,8 +149,7 @@ data class Planet(val star: String)
 
     fun GetResearchProduction(): UInt {
         var retval = 0u
-        for(i in 1..scientists.toInt())
-        {
+        for(i in 1..scientists.toInt())  {
             retval += Random.nextInt(0, getDieSizeResearch()).toUInt()
         }
         return retval
@@ -170,16 +157,14 @@ data class Planet(val star: String)
 
     fun GetDefenseProduction(): UInt {
         var retval = 0u
-        for(i in 1..defworkers.toInt())
-        {
+        for(i in 1..defworkers.toInt()) {
             retval += Random.nextInt(0, getDieSizeDefense()).toUInt()
         }
         return retval
     }
 
 
-    fun getDieSizeOrganic() : Int
-    {
+    fun getDieSizeOrganic() : Int  {
         val retval = when(type) {
             PlanetType.TOXIC -> 1
             PlanetType.OCEAN -> 6
@@ -193,8 +178,7 @@ data class Planet(val star: String)
         return retval
     }
 
-    fun getDieSizeMetals() : Int
-    {
+    fun getDieSizeMetals() : Int {
         val retval = when(type) {
             PlanetType.TOXIC -> 4
             PlanetType.OCEAN -> 4
@@ -209,13 +193,11 @@ data class Planet(val star: String)
     }
 
     //For now, assume all worlds equally defensible
-    fun getDieSizeDefense() : Int
-    {
+    fun getDieSizeDefense() : Int {
         return 4
     }
 
-    fun getDieSizeResearch(): Int
-    {
+    fun getDieSizeResearch(): Int {
         val retval = when(type) {
             PlanetType.TOXIC -> 1
             PlanetType.OCEAN -> 6

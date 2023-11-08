@@ -1,8 +1,8 @@
+
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
-import com.soywiz.korge.view.onClick
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
@@ -10,8 +10,7 @@ import com.soywiz.korio.file.std.*
 
 class CreditsScene : Scene() {
     override suspend fun SContainer.sceneInit() {
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
-        {
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())  {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
@@ -36,8 +35,7 @@ class CreditsScene : Scene() {
             text("Skorpio on OpenGameArt", 20.00, Colors.CYAN, font)
             text("Icons", 20.00, Colors.GOLD, font)
             text("FreeOrion Assets on OpenGameArt", 20.00, Colors.CYAN, font)
-            uiButton("Main Menu")
-            {
+            uiButton("Main Menu") {
                 textFont = font
                 textColor = Colors.GOLD
                 onClick { sceneContainer.changeTo<MainMenu>() }

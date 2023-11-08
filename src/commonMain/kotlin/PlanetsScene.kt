@@ -22,8 +22,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         val startx = 200
         var starty = 600
 
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
-        {
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
         }
@@ -57,12 +56,9 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             } else {
                 "${planet.name} - ${planet.type} $turnCounter"
             }
-            planetTexts.add(i, text(planetTxt, 50.00, planetTextColor, font)
-            {
+            planetTexts.add(i, text(planetTxt, 50.00, planetTextColor, font) {
                 centerXOnStage()
-                alignTopToTopOf(planetImage, 12.0)
-            }
-            )
+                alignTopToTopOf(planetImage, 12.0) })
             planetImage.addUpdater { updatePlanet(planetImage, i) }
             planetImage.onClick { planetClicked(i) }
             starty -= 200
@@ -77,13 +73,11 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             scale(0.5)
             position(width / 2, 800.00)
         }
-        text(gs.stars[ps.activePlayerStar]!!.name, 50.00, Colors.CYAN, font)
-        {
+        text(gs.stars[ps.activePlayerStar]!!.name, 50.00, Colors.CYAN, font) {
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
         }
-        uiButton("BACK")
-        {
+        uiButton("BACK") {
             alignBottomToBottomOf(background)
             textColor = Colors.GOLD
             textFont = font
@@ -101,20 +95,16 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 selectOperationDialog =
                     this.sceneContainer.container().roundRect(
                         sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                        Colors.BLACK
-                    )
-                    {
+                        Colors.BLACK ) {
                         centerOnStage()
                         uiVerticalStack {
                             scaledWidth = sceneWidth / 2.00
-                            uiButton("COLONIZE")
-                            {
+                            uiButton("COLONIZE")  {
                                 textColor = Colors.GOLD
                                 textFont = font
                                 onClick { colonizePlanet(index) }
                             }
-                            uiButton("TERRAFORM")
-                            {
+                            uiButton("TERRAFORM") {
                                 textColor = Colors.GOLD
                                 textFont = font
                                 onClick { terraformPlanet(index) }
@@ -128,20 +118,16 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 selectOperationDialog =
                     this.sceneContainer.container().roundRect(
                         sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                        Colors.BLACK
-                    )
-                    {
+                        Colors.BLACK ) {
                         centerOnStage()
                         uiVerticalStack {
                             scaledWidth = sceneWidth / 2.00
-                            uiButton("BOMBARD")
-                            {
+                            uiButton("BOMBARD") {
                                 textColor = Colors.GOLD
                                 textFont = font
                                 onClick { bombardPlanet(index) }
                             }
-                            uiButton("INVADE")
-                            {
+                            uiButton("INVADE") {
                                 textColor = Colors.GOLD
                                 textFont = font
                                 onClick { invadePlanet(index) }
@@ -242,9 +228,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         notEnoughDialog =
             this.sceneContainer.container().roundRect(
                 sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                Colors.BLACK
-            )
-            {
+                Colors.BLACK ) {
                 centerOnStage()
                 uiVerticalStack {
                     scaledWidth = sceneWidth / 2.00

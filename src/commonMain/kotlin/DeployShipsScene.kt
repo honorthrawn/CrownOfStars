@@ -17,8 +17,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private lateinit var galleonReadout: Text
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())
-        {
+        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
         }
@@ -30,41 +29,35 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
            uiHorizontalStack {
                padding = 5.00
                terraFormerReadout = text("Terraformers: ${ps.chosenTerraformers}", 25.00, Colors.CYAN, font)
-               uiButton("ADD")
-                {
+               uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipUp(shipType.TERRAFORMATTER_HUMAN) }
                 }
 
-               uiButton("SUB")
-                {
+               uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipDown(shipType.TERRAFORMATTER_HUMAN) }
                 }
-               image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap())
-               {
+               image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
                    scale(0.5, 0.5)
                }
             }
             uiHorizontalStack {
                 padding = 5.00
                 colonyReadout = text("Colony: ${ps.chosenColony}", 25.00, Colors.CYAN, font)
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipUp(shipType.COLONY_HUMAN) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipDown(shipType.COLONY_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Battlecruiser.png"].readBitmap())
-                {
+                image(resourcesVfs["ships/Human-Battlecruiser.png"].readBitmap()) {
                     scale(0.5, 0.5)
                 }
             }
@@ -72,20 +65,17 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             uiHorizontalStack {
                 padding = 5.00
                 corvetteReadout = text("Corvettes: ${ps.chosenCorvette}", 25.00, Colors.CYAN, font)
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipUp(shipType.CORVETTE_HUMAN) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipDown(shipType.CORVETTE_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Corvette.png"].readBitmap())
-                {
+                image(resourcesVfs["ships/Human-Corvette.png"].readBitmap())  {
                     scale(0.5, 0.5)
                 }
             }
@@ -93,20 +83,17 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             uiHorizontalStack {
                 padding = 5.00
                 cruiserReadout = text("Cruisers: ${ps.chosenCruiser}", 25.00, Colors.CYAN, font)
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipUp(shipType.CRUISER_HUMAN) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipDown(shipType.CRUISER_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Cruiser.png"].readBitmap())
-                {
+                image(resourcesVfs["ships/Human-Cruiser.png"].readBitmap()) {
                     scale(0.5, 0.5)
                 }
             }
@@ -114,20 +101,17 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             uiHorizontalStack {
                 padding = 5.00
                 battleshipReadout = text("Battleships: ${ps.chosenBattleship}", 25.00, Colors.CYAN, font)
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipUp(shipType.BATTLESHIP_HUMAN) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipDown(shipType.BATTLESHIP_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Battleship.png"].readBitmap())
-                {
+                image(resourcesVfs["ships/Human-Battleship.png"].readBitmap()) {
                     scale(0.5, 0.5)
                 }
             }
@@ -135,20 +119,17 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             uiHorizontalStack {
                 padding = 5.00
                 galleonReadout = text("Galleons: ${ps.chosenGalleon}", 25.00, Colors.CYAN, font)
-                uiButton("ADD")
-                {
+                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipUp(shipType.GALLEON_HUMAN) }
                 }
-                uiButton("SUB")
-                {
+                uiButton("SUB") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick { onShipDown(shipType.GALLEON_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Frigate.png"].readBitmap())
-                {
+                image(resourcesVfs["ships/Human-Frigate.png"].readBitmap())  {
                     scale(0.5, 0.5)
                 }
             }
@@ -156,15 +137,13 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             uiHorizontalStack {
                 padding = 20.0
 
-                uiButton("CLOSE")
-                {
+                uiButton("CLOSE") {
                     textColor =  Colors.GOLD
                     textFont = font
                     onClick {  ps.reset(); sceneContainer.changeTo<StarsScene>() }
                 }
 
-                uiButton("MOVE")
-                {
+                uiButton("MOVE") {
                     textColor = Colors.GOLD
                     textFont = font
                     onClick {
@@ -178,42 +157,34 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     }
 
     private fun onShipUp(type: shipType) {
-        when(type)
-        {
+        when(type) {
             shipType.TERRAFORMATTER_HUMAN ->
-                if(ps.chosenTerraformers < gs.stars[ps.activePlayerStar]?.playerFleet?.getTerraformersCount()!!)
-                {
+                if(ps.chosenTerraformers < gs.stars[ps.activePlayerStar]?.playerFleet?.getTerraformersCount()!!) {
                     ps.chosenTerraformers++
                 }
             shipType.COLONY_HUMAN ->
-                if(ps.chosenColony < gs.stars[ps.activePlayerStar]?.playerFleet?.getColonyShipCount()!!)
-                {
+                if(ps.chosenColony < gs.stars[ps.activePlayerStar]?.playerFleet?.getColonyShipCount()!!) {
                     ps.chosenColony++
                 }
             shipType.CORVETTE_HUMAN ->
-                if(ps.chosenCorvette < gs.stars[ps.activePlayerStar]?.playerFleet?.getCorvetteCount()!!)
-            {
+                if(ps.chosenCorvette < gs.stars[ps.activePlayerStar]?.playerFleet?.getCorvetteCount()!!) {
                 ps.chosenCorvette++
             }
             shipType.CRUISER_HUMAN -> {
-                if(ps.chosenCruiser < gs.stars[ps.activePlayerStar]?.playerFleet?.getCruiserCount()!!)
-                {
+                if(ps.chosenCruiser < gs.stars[ps.activePlayerStar]?.playerFleet?.getCruiserCount()!!) {
                     ps.chosenCruiser++
                 }
             }
             shipType.BATTLESHIP_HUMAN -> {
-                if(ps.chosenBattleship < gs.stars[ps.activePlayerStar]?.playerFleet?.getBattleShipCount()!!)
-                {
+                if(ps.chosenBattleship < gs.stars[ps.activePlayerStar]?.playerFleet?.getBattleShipCount()!!) {
                     ps.chosenBattleship++
                 }
             }
             shipType.GALLEON_HUMAN -> {
-                if(ps.chosenGalleon < gs.stars[ps.activePlayerStar]?.playerFleet?.getGalleonCount()!!)
-                {
+                if(ps.chosenGalleon < gs.stars[ps.activePlayerStar]?.playerFleet?.getGalleonCount()!!) {
                     ps.chosenGalleon++
                 }
-            }
-            else -> {
+            } else -> {
                 //not going to be moving enemy ships
             }
         }
@@ -221,15 +192,12 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     }
 
     private fun onShipDown(type: shipType) {
-        when(type)
-        {
-            shipType.TERRAFORMATTER_HUMAN ->
-            {
+        when(type) {
+            shipType.TERRAFORMATTER_HUMAN -> {
                 if (ps.chosenTerraformers > 0)
-                ps.chosenTerraformers--
+                  ps.chosenTerraformers--
             }
-            shipType.COLONY_HUMAN ->
-            {
+            shipType.COLONY_HUMAN -> {
                 if (ps.chosenColony > 0)
                     ps.chosenColony--
             }
@@ -243,7 +211,8 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
             shipType.BATTLESHIP_HUMAN -> {
                 if (ps.chosenBattleship > 0)
-                    ps.chosenBattleship--}
+                    ps.chosenBattleship--
+            }
             shipType.GALLEON_HUMAN -> {
                 if (ps.chosenGalleon > 0)
                 ps.chosenGalleon--

@@ -21,8 +21,7 @@ class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: Player
             PlanetType.SUPERTERRAN -> "landscapes/413.bmp"
             PlanetType.TROPICAL -> "landscapes/906.bmp"
         }
-        val planetImage = image(resourcesVfs[fileName].readBitmap())
-        {
+        val planetImage = image(resourcesVfs[fileName].readBitmap())  {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
@@ -35,8 +34,7 @@ class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: Player
             text("You started Terraforming on", 50.00, Colors.CYAN, font )
             text(message, 50.00, Colors.CYAN, font)
             text(turnsNeeded, 50.00, Colors.CYAN, font)
-            uiButton("CLOSE")
-            {
+            uiButton("CLOSE") {
                 textColor = Colors.GOLD
                 textFont = font
                 onClick {  sceneContainer.changeTo<PlanetsScene>() }

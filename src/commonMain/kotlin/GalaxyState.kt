@@ -1,21 +1,17 @@
 
-import com.soywiz.korio.file.std.applicationDataVfs
-import com.soywiz.korio.file.std.resourcesVfs
-import com.soywiz.korio.lang.UTF8
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.soywiz.korio.file.std.*
+import com.soywiz.korio.lang.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import kotlin.collections.set
 
 class GalaxyState {
 
     var stars = mutableMapOf<Int, Star>()
-    suspend fun rollGalaxy()
-    {
+    suspend fun rollGalaxy()  {
         val starList = resourcesVfs["stars/starlist.txt"].readLines(UTF8)
         var nI = 0
-        for(name in starList)
-        {
+        for(name in starList) {
             val newStar = Star(name)
             newStar.roll()
             stars[nI] = newStar
@@ -37,24 +33,20 @@ class GalaxyState {
 
     //This function does end of turn bookkeeping for the galaxy state.  Right now, that means calling next turn
     //on each planet for terraforming
-    fun nextTurn()
-    {
-       for( star in stars.values )
-       {
+    fun nextTurn() {
+       for( star in stars.values ) {
            star.nextTurn()
        }
     }
 
-    suspend fun load()
-    {
+    suspend fun load() {
         val jsonIn = applicationDataVfs["galaxyState.json"].readString()
         //println(jsonIn)
         val json = Json { prettyPrint = true; allowStructuredMapKeys= true}
         stars = json.decodeFromString(jsonIn)
     }
 
-    suspend fun save()
-    {
+    suspend fun save() {
         val json = Json { prettyPrint = true; allowStructuredMapKeys = true }
         val jsonOut = json.encodeToString(stars)
         //println(jsonOut)
