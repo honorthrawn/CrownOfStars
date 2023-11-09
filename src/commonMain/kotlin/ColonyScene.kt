@@ -11,16 +11,7 @@ class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        val fileName = when( gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.type) {
-            PlanetType.TOXIC -> "landscapes/108.bmp"
-            PlanetType.OCEAN -> "landscapes/7.bmp"
-            PlanetType.TERRAN -> "landscapes/412.bmp"
-            PlanetType.DESSERT -> "landscapes/101.bmp"
-            PlanetType.VOLCANIC -> "landscapes/403.bmp"
-            PlanetType.BARREN -> "landscapes/914.bmp"
-            PlanetType.SUPERTERRAN -> "landscapes/413.bmp"
-            PlanetType.TROPICAL -> "landscapes/906.bmp"
-        }
+        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.getLandscapeImagePath()
         val planetImage = image(resourcesVfs[fileName].readBitmap()) {
                 position(0, 0)
                 setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())

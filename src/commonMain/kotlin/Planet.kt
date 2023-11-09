@@ -1,6 +1,6 @@
 
-import kotlinx.serialization.*
-import kotlin.random.*
+import kotlinx.serialization.Serializable
+import kotlin.random.Random
 
 @Serializable
 enum class PlanetType {
@@ -34,6 +34,20 @@ data class Planet(val star: String) {
     var ownerIndex: Allegiance = Allegiance.Unoccupied
     var defenseBases: UInt = 0u
     var turnsLeftTerraform: Int = -1 //-1 indicates not being terraformed
+
+    fun getLandscapeImagePath() : String {
+        val retval = when(type) {
+            PlanetType.TOXIC -> "landscapes/toxicWorld.jpg"
+            PlanetType.OCEAN -> "landscapes/oceanWorld.jpg"
+            PlanetType.TERRAN -> "landscapes/terranWorld.jpg"
+            PlanetType.DESSERT -> "landscapes/desertWorld.jpg"
+            PlanetType.VOLCANIC -> "landscapes/volcanicWorld.jpg"
+            PlanetType.BARREN -> "landscapes/barrenWorld.jpg"
+            PlanetType.SUPERTERRAN -> "landscapes/paradiseWorld.jpg"
+            PlanetType.TROPICAL -> "landscapes/tropicalWorld.jpg"
+        }
+        return retval
+    }
 
     fun roll(pos: Int)  {
         type = PlanetType.values()[Random.nextInt(0, PlanetType.values().count())]
