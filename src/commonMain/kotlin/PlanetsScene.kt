@@ -1,6 +1,5 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
@@ -8,11 +7,9 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
-
+class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : BasicScene() {
     private val direction = mutableListOf<Boolean>()
-    private lateinit var notEnoughDialog: RoundRect
-    private lateinit var selectOperationDialog: RoundRect
+    private var selectOperationDialog: RoundRect? = null
     private var planetTexts = mutableListOf<Text>()
 
     override suspend fun SContainer.sceneInit() {
@@ -143,7 +140,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private suspend fun terraformPlanet(index: Int) {
         //val message = "turns left: ${gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform}"
         //println(message)
-        selectOperationDialog.removeFromParent()
+        selectOperationDialog?.removeFromParent()
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
             if (gs.stars[ps.activePlayerStar]!!.playerFleet.isTerraformersPresent()) {
                 if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.type != PlanetType.SUPERTERRAN) {
@@ -159,7 +156,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                     showNoGo("This world is as good as it gets!")
                 }
             } else {
-                showNoGo("You must have at least one Terraformer in system to terraform the world")
+               showNoGo("You must have at least one Terraformer in system to terraform the world")
             }
         } else {
             showNoGo("Planet must be unoccupied to terraform")
@@ -168,7 +165,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     }
 
     private suspend fun colonizePlanet(index: Int) {
-        selectOperationDialog.removeFromParent()
+        selectOperationDialog?.removeFromParent()
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
             if (gs.stars[ps.activePlayerStar]!!.playerFleet.isColonyPresent()) {
                 ps.activePlayerPlanet = index
@@ -187,12 +184,12 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     }
 
     private suspend fun bombardPlanet(index: Int) {
-        selectOperationDialog.removeFromParent()
+        selectOperationDialog?.removeFromParent()
         showNoGo("Planetary Bombardment: Not implemented yet")
     }
 
     private suspend fun invadePlanet(index: Int) {
-        selectOperationDialog.removeFromParent()
+        selectOperationDialog?.removeFromParent()
         showNoGo("Planetary Invasion: Not implemented yet")
     }
 
@@ -225,28 +222,11 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         planetTexts[index].color = planetTextColor
     }
 
-    private suspend fun showNoGo(requirements: String) {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-        notEnoughDialog =
-            this.sceneContainer.container().roundRect(
-                sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                Colors.BLACK ) {
-                centerOnStage()
-                uiVerticalStack {
-                    scaledWidth = sceneWidth / 2.00
-                    text(requirements, 50.00, Colors.CYAN, font)
-                    uiButton("CLOSE")
-                    {
-                        textFont = font
-                        textColor = Colors.GOLD
-                        onClick { closeMessage() }
-                    }
-                }
-            }
+
+    override suspend fun sceneBeforeLeaving() {
+        super.sceneBeforeLeaving()
+        selectOperationDialog?.removeFromParent()
     }
 
-    private fun closeMessage() {
-        notEnoughDialog.removeFromParent()
-    }
 
 }

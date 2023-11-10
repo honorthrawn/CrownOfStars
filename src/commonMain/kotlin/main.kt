@@ -18,7 +18,7 @@ object ConfigModule : Module() {
         mapInstance(GalaxyState())
         mapInstance(EmpireState())
         mapInstance(PlayerState())
-        mapSingleton { MusicPlayer() }
+        mapInstance(MusicPlayer())
         mapInstance(AICore(get(), get()))
         mapPrototype { MainMenu(get(), get(), get(), get()) }
         mapPrototype { PlanetsScene(get(), get(), get(), get()) }

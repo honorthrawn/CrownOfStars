@@ -1,6 +1,5 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
@@ -8,8 +7,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
-    private lateinit var notEnoughDialog: RoundRect
+class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : BasicScene() {
     private var shipFactory = shipFactory()
 
     //TODO: Need some indication of what can be built or how many resources player has
@@ -176,36 +174,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             var newShip = shipFactory.getShip(shipType)
             gs.stars[ps.activePlayerStar]!!.playerFleet.add(newShip)
         } else {
-            showNotEnough("Organics ${costs.organics} Ship ${costs.metal}")
+            showNoGo("Requires at least Organics ${costs.organics} Ship ${costs.metal}")
         }
     }
-
-
-    private suspend fun showNotEnough(requirements: String) {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-        notEnoughDialog =
-            this.sceneContainer.container().roundRect(
-                sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                Colors.BLACK
-            ) {
-                centerOnStage()
-                uiVerticalStack {
-                    scaledWidth = sceneWidth / 2.00
-                    text("Not enough resources", 50.00, Colors.CYAN, font) {
-                        autoScaling = true
-                    }
-                    text(requirements, 50.00, Colors.CYAN, font)
-                    uiButton("CLOSE") {
-                        textColor = Colors.GOLD
-                        textFont = font
-                        onClick { closeMessage() }
-                    }
-                }
-            }
-    }
-
-    private fun closeMessage() {
-        notEnoughDialog.removeFromParent()
-    }
-
     }

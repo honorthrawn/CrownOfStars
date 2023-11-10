@@ -1,6 +1,5 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
@@ -8,14 +7,13 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
+class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : BasicScene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var defenseReadout: Text
     private lateinit var scienceReadout: Text
     private lateinit var unassignedReadout: Text
     private lateinit var baseReadout: Text
-    private lateinit var notEnoughDialog: RoundRect
 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
@@ -175,10 +173,10 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState,
                 gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addPopulation(1u)
                 updateReadouts()
             } else {
-                showNotEnough("Requires at least 50 organics to grow population")
+                showNoGo("Requires at least 50 organics to grow population")
             }
         } else {
-            showNotEnough("This world cannot support more people")
+            showNoGo("This world cannot support more people")
         }
     }
 
@@ -190,34 +188,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState,
         gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.addBase(1u)
         updateReadouts()
     } else {
-        showNotEnough("Requires at least 50 defense")
+        showNoGo("Requires at least 50 defense")
     }
-
-
-    private suspend fun showNotEnough(requirements: String) {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-        notEnoughDialog =
-            this.sceneContainer.container().roundRect(sceneWidth/2.00, sceneHeight / 4.00, 5.0, 5.0,
-                Colors.BLACK)   {
-                centerOnStage()
-                uiVerticalStack {
-                    scaledWidth = sceneWidth / 2.00
-                    text("Not enough resources", 50.00, Colors.CYAN, font)  {
-                        autoScaling = true
-                    }
-                    text(requirements, 50.00, Colors.CYAN, font)
-                    uiButton("CLOSE")  {
-                        textColor = Colors.GOLD
-                        textFont = font
-                        onClick { closeMessage() }
-                    }
-               }
-        }
-    }
-
-    private fun closeMessage() {
-        notEnoughDialog.removeFromParent()
-    }
-
 }
 
