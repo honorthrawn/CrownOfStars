@@ -13,6 +13,7 @@ object ConfigModule : Module() {
     override val windowSize = SizeInt(2000, 1200) // Window Size
     override val title = "Crown of Stars"
     override val mainScene: KClass<out Scene> = MainMenu::class
+    override val icon = "ui/CrownOfStars.jpg"
 
     override suspend fun AsyncInjector.configure() {
         mapInstance(GalaxyState())

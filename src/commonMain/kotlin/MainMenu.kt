@@ -11,7 +11,8 @@ import com.soywiz.korio.file.std.*
 class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
 
     override suspend fun SContainer.sceneInit() {
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
+        //val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
+        val background = image(resourcesVfs["ui/CrownofStars.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
         }
