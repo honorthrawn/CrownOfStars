@@ -8,7 +8,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
     private lateinit var notEnoughDialog: RoundRect
     private var shipFactory = shipFactory()
 
@@ -21,6 +21,8 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             setSizeScaled(width, height)
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+
+        mp.playBackground()
 
         val terraformerCosts = getCosts(shipType.TERRAFORMATTER_HUMAN)
         val terraFormer = image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {

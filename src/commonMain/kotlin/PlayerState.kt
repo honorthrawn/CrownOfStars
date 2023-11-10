@@ -1,5 +1,3 @@
-import com.soywiz.korau.sound.*
-
 enum class operationType {
     SELECTION,
     MOVINGFLEET
@@ -20,8 +18,6 @@ class PlayerState {
     var chosenGalleon = 0
     var operation = operationType.SELECTION
     var terraformingIndex = 0
-    var tunes = mutableListOf<Sound>()
-    lateinit var currentTune: SoundChannel
 
     fun reset() {
         operation = operationType.SELECTION

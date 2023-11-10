@@ -8,7 +8,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
 
     private val direction = mutableListOf<Boolean>()
     private lateinit var notEnoughDialog: RoundRect
@@ -18,6 +18,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         println("ACTIVE STAR: ${ps.activePlayerStar}")
+
+        mp.playBackground()
 
         val startx = 200
         var starty = 600
@@ -246,4 +248,5 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private fun closeMessage() {
         notEnoughDialog.removeFromParent()
     }
+
 }

@@ -1,5 +1,4 @@
 
-import com.soywiz.korau.sound.*
 import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
@@ -9,22 +8,17 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
         }
+
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        ps.tunes.add(resourcesVfs["music/Badlands.mp3"].readMusic())
-        ps.tunes.add(resourcesVfs["music/Cassette.mp3"].readMusic())
-        ps.tunes.add(resourcesVfs["music/Powerful.mp3"].readMusic())
-        ps.tunes.add(resourcesVfs["music/Soprano.mp3"].readMusic())
-        ps.tunes.shuffle()
-       //var pb = PlaybackParameters()
-        ps.currentTune = ps.tunes[0].play()
+        mp.playBackground()
 
         text("Crown of Stars", 60.00, Colors.GOLD, font) {
             position(width/2, 100.00)
@@ -63,4 +57,5 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : 
             textColor = Colors.GOLD
         }
     }
+
 }

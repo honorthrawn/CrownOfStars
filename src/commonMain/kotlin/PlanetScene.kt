@@ -1,14 +1,14 @@
 
-import com.soywiz.korge.input.onClick
-import com.soywiz.korge.scene.Scene
+import com.soywiz.korge.input.*
+import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
-import com.soywiz.korim.color.Colors
-import com.soywiz.korim.font.readTtfFont
-import com.soywiz.korim.format.readBitmap
-import com.soywiz.korio.file.std.resourcesVfs
+import com.soywiz.korim.color.*
+import com.soywiz.korim.font.*
+import com.soywiz.korim.format.*
+import com.soywiz.korio.file.std.*
 
-class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var defenseReadout: Text
@@ -23,6 +23,8 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             setSizeScaled(width, height)
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+
+        mp.playBackground()
 
         println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.activePlayerPlanet}")
 
@@ -216,5 +218,6 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     private fun closeMessage() {
         notEnoughDialog.removeFromParent()
     }
+
 }
 

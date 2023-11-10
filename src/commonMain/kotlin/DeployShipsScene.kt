@@ -8,7 +8,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
     private lateinit var terraFormerReadout: Text
     private lateinit var colonyReadout: Text
     private lateinit var corvetteReadout: Text
@@ -17,6 +17,9 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private lateinit var galleonReadout: Text
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+
+        mp.playBackground()
+
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
@@ -229,4 +232,6 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         battleshipReadout.text = "Battleships: ${ps.chosenBattleship}"
         galleonReadout.text = "Galleons: ${ps.chosenGalleon}"
     }
+
+
 }

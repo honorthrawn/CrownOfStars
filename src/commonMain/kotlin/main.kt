@@ -18,16 +18,17 @@ object ConfigModule : Module() {
         mapInstance(GalaxyState())
         mapInstance(EmpireState())
         mapInstance(PlayerState())
+        mapSingleton { MusicPlayer() }
         mapInstance(AICore(get(), get()))
-        mapPrototype { MainMenu(get(), get(), get()) }
-        mapPrototype { PlanetsScene(get(), get(), get()) }
-        mapPrototype { PlanetScene(get(), get(), get()) }
-        mapPrototype { StarsScene(get(), get(), get(), get()) }
-        mapPrototype { BuyShipScene(get(), get(), get()) }
-        mapPrototype { DeployShipsScene(get(), get(), get()) }
-        mapPrototype { ColonyScene(get(), get(), get()) }
-        mapPrototype { terraformingScene(get(), get(), get()) }
-        mapPrototype { CreditsScene() }
+        mapPrototype { MainMenu(get(), get(), get(), get()) }
+        mapPrototype { PlanetsScene(get(), get(), get(), get()) }
+        mapPrototype { PlanetScene(get(), get(), get(), get()) }
+        mapPrototype { StarsScene(get(), get(), get(), get(), get()) }
+        mapPrototype { BuyShipScene(get(), get(), get(), get()) }
+        mapPrototype { DeployShipsScene(get(), get(), get(), get()) }
+        mapPrototype { ColonyScene(get(), get(), get(), get()) }
+        mapPrototype { terraformingScene(get(), get(), get(), get()) }
+        mapPrototype { CreditsScene(get()) }
     }
 
 }
