@@ -129,17 +129,19 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
             //For now, do the simple thing and select the next star system - slowing marching backwards towards Sol
             val x = startStar.xloc
             val y = startStar.yloc
-            val startloc = (x * 10 + y)
+            val startloc = (y * 10 + x)
             var destination = startloc - 1
             //Probably won't happen but just in case
             if(destination <= 0) {
-                //TODO This is probably bad.   If there is a player fleet, they will be able to blow the AI colonizer out
-                //of space
-                var shipMoving = gs.stars[startloc]!!.enemyFleet!!.removeShipFromFleetForMove(shipType.COLONY_ENEMY)
-                if (shipMoving != null) {
-                    shipMoving.hasMoved = true
-                    gs.stars[destination]!!.enemyFleet!!.add(shipMoving)
-                }
+                destination = 0
+            }
+            println("Destination sector: $destination")
+            //TODO This is probably bad.   If there is a player fleet, they will be able to blow the AI colonizer out
+            //of space
+            var shipMoving = startStar.enemyFleet.removeShipFromFleetForMove(shipType.COLONY_ENEMY)
+            if (shipMoving != null) {
+                shipMoving.hasMoved = true
+                gs.stars[destination]!!.enemyFleet.add(shipMoving)
             }
         }
     }
