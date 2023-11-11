@@ -116,12 +116,13 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
     private fun moveColonyShip(startStar: Star) {
         println("MOVING A COLONY SHIP")
         //first see if the star the ship is at has uncolonized worlds
-        var unsettledPlanets = startStar.planets.filter { it.value.ownerIndex == Allegiance.Unoccupied }
+        var unsettledPlanets = startStar.planets.values.filter {
+            planet: Planet -> planet.ownerIndex == Allegiance.Unoccupied }
         if(unsettledPlanets.isNotEmpty()) {
             println("ESTABLISHING COLONY IN SYSTEM")
             //TODO: Bad -- could be colonizing barren or toxic world when plenty of good worlds around
-            unsettledPlanets[0]!!.ownerIndex = Allegiance.Enemy
-            unsettledPlanets[0]!!.farmers = 1u
+            unsettledPlanets[0].ownerIndex = Allegiance.Enemy
+            unsettledPlanets[0].farmers = 1u
             startStar.enemyFleet.destroyShip(shipType.COLONY_ENEMY)
         } else {
             println("COLONY SHIP MOVING")
