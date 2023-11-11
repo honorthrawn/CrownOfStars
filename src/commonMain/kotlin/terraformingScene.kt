@@ -18,7 +18,7 @@ class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: Player
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
-        mp.playBackground()
+        mp.playBackground(this@terraformingScene)
 
         val message = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.name
         val turnsNeeded = "It will take ${gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.turnsLeftTerraform} turns to complete"

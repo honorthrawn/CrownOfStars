@@ -16,7 +16,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         println("ACTIVE STAR: ${ps.activePlayerStar}")
 
-        mp.playBackground()
+        mp.playBackground(this@PlanetsScene)
 
         val startx = 200
         var starty = 600
@@ -72,6 +72,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             scale(0.5)
             position(width / 2, 800.00)
         }
+        //TODO: Need to fix this to be allegiance color for system
         text(gs.stars[ps.activePlayerStar]!!.name, 50.00, Colors.CYAN, font) {
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)

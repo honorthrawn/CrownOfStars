@@ -15,7 +15,7 @@ class CreditsScene(val mp: MusicPlayer) : Scene() {
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
-        mp.playBackground()
+        mp.playBackground(this@CreditsScene)
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         uiVerticalStack {

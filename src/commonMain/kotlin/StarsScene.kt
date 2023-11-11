@@ -23,7 +23,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             setSizeScaled(width, height)
         }
 
-        mp.playBackground()
+        mp.playBackground(this@StarsScene)
 
         val yellowStar = resourcesVfs["stars/Star cK gK eg9.bmp"].readBitmap()
         val blueStar = resourcesVfs["stars/Star B supeg5.bmp"].readBitmap()

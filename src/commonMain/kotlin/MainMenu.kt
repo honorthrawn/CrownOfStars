@@ -19,9 +19,9 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, va
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        mp.playBackground()
+        mp.playBackground(this@MainMenu)
 
-        text("Crown of Stars", 60.00, Colors.GOLD, font) {
+        text("Crown of Stars", 60.00, Colors.DARKSLATEGRAY, font) {
             position(width/2, 100.00)
             centerXOnStage()
         }

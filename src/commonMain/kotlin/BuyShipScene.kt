@@ -20,7 +20,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        mp.playBackground()
+        mp.playBackground(this@BuyShipScene)
 
         val terraformerCosts = getCosts(shipType.TERRAFORMATTER_HUMAN)
         val terraFormer = image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {

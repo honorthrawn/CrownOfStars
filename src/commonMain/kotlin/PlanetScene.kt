@@ -22,7 +22,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState,
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        mp.playBackground()
+        mp.playBackground(this@PlanetScene)
 
         println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.activePlayerPlanet}")
 
@@ -46,6 +46,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState,
             alignTopToTopOf(planetImage, 12.0)
         }
 
+        //TODO: this base readout conflicts with the longer planet names and gets jumbled
         uiVerticalStack {
             position(300, 0)
             centerXOn(background)
