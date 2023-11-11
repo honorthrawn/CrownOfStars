@@ -72,11 +72,17 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             scale(0.5)
             position(width / 2, 800.00)
         }
-        //TODO: Need to fix this to be allegiance color for system
-        text(gs.stars[ps.activePlayerStar]!!.name, 50.00, Colors.CYAN, font) {
+
+        val starTextColor = when (gs.stars[ps.activePlayerStar]!!.getAllegiance()) {
+            Allegiance.Unoccupied -> Colors.WHITE
+            Allegiance.Player -> Colors.CYAN
+            Allegiance.Enemy -> Colors.RED
+        }
+        text(gs.stars[ps.activePlayerStar]!!.name, 50.00, starTextColor, font) {
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
         }
+
         uiButton("BACK") {
             alignBottomToBottomOf(background)
             textColor = Colors.GOLD
