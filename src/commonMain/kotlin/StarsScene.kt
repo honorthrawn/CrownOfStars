@@ -7,7 +7,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: AICore, val mp: MusicPlayer)
+class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: AICore)
     : BasicScene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
@@ -22,8 +22,6 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             position(0, 0)
             setSizeScaled(width, height)
         }
-
-        mp.playBackground(this@StarsScene)
 
         val yellowStar = resourcesVfs["stars/Star cK gK eg9.bmp"].readBitmap()
         val blueStar = resourcesVfs["stars/Star B supeg5.bmp"].readBitmap()

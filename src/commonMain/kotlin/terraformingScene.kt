@@ -8,7 +8,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
+class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
@@ -17,8 +17,6 @@ class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: Player
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
-
-        mp.playBackground(this@terraformingScene)
 
         val message = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.name
         val turnsNeeded = "It will take ${gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.turnsLeftTerraform} turns to complete"

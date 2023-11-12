@@ -8,14 +8,12 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class CreditsScene(val mp: MusicPlayer) : Scene() {
+class CreditsScene() : Scene() {
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap())  {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
-
-        mp.playBackground(this@CreditsScene)
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         uiVerticalStack {

@@ -7,7 +7,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : BasicScene() {
+class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var defenseReadout: Text
@@ -21,8 +21,6 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState,
             setSizeScaled(width, height)
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
-        mp.playBackground(this@PlanetScene)
 
         println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.activePlayerPlanet}")
 

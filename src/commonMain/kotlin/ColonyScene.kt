@@ -7,11 +7,9 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val mp: MusicPlayer) : Scene() {
+class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
-        mp.playBackground(this@ColonyScene)
 
         val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.getLandscapeImagePath()
         val planetImage = image(resourcesVfs[fileName].readBitmap()) {
