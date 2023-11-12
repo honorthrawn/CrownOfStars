@@ -26,7 +26,7 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             setSizeScaled(width, height)
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
+        val topLine = "Bombardment of ${gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.name}"
         val playerInitiative = Random.nextInt(1, 6)
         val aiInitiative = Random.nextInt(1, 6)
 
@@ -45,6 +45,7 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             scaledWidth = sceneWidth.toDouble()
             scaledHeight = sceneHeight.toDouble()
 
+            text(topLine, 20.00, Colors.CYAN, font)
             text(intiativeMessage, 20.00, Colors.CYAN, font)
             text(bombMessage, 20.00, Colors.CYAN, font)
             text(basesMessage, 20.00, Colors.CYAN, font)
@@ -54,6 +55,7 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             text(cruisersLostMessage, 20.00, Colors.CYAN, font)
             text(battleShipsLostMessage, 20.00, Colors.CYAN, font)
             text(colonyStatus, 20.00, Colors.CYAN, font)
+
             uiButton("CLOSE") {
                 textColor = Colors.GOLD
                 textFont = font

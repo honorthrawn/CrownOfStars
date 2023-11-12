@@ -7,8 +7,8 @@ suspend fun main() = Korge(title = "Crown of Stars",
     height = 1200,
     virtualWidth = 768,
     virtualHeight =  1024,
-    iconPath = "ui/CrownOfStars.jpg"
-   ) {
+    iconPath = "ui/crown.png",
+) {
     injector.mapInstance(GalaxyState())
     injector.mapInstance(EmpireState())
     injector.mapInstance(PlayerState())
