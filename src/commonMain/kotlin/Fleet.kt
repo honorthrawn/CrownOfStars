@@ -43,6 +43,14 @@ class Fleet {
         return corvettes.isNotEmpty() || cruisers.isNotEmpty() || battleships.isNotEmpty()
     }
 
+    fun isGalleonsPresent(): Boolean {
+        return galleons.isNotEmpty()
+    }
+
+    fun getGalleonCombatCount(): Int {
+        return galleons.count()
+    }
+
     fun getCorvetteCombatCount(): Int {
         return corvettes.count()
     }

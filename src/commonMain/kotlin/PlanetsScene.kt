@@ -124,6 +124,11 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                             centerOnStage()
                             uiVerticalStack {
                                 scaledWidth = sceneWidth / 2.00
+                                uiButton("VIEW") {
+                                    textColor = Colors.GOLD
+                                    textFont = font
+                                    onClick { showEnemyPlanet(index) }
+                                }
                                 uiButton("BOMBARD") {
                                     textColor = Colors.GOLD
                                     textFont = font
@@ -189,6 +194,13 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ps.operation = operationType.SELECTION
     }
 
+    private suspend fun showEnemyPlanet(index: Int) {
+        selectOperationDialog?.removeFromParent()
+        showingSelectOperationDialog = false
+        ps.bombardIndex = index
+        sceneContainer.changeTo<EnemyPlanetScene>()
+    }
+
     private suspend fun bombardPlanet(index: Int) {
         selectOperationDialog?.removeFromParent()
         showingSelectOperationDialog = false
@@ -211,7 +223,17 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private suspend fun invadePlanet(index: Int) {
         selectOperationDialog?.removeFromParent()
         showingSelectOperationDialog = false
-        showNoGo("Planetary Invasion: Not implemented yet")
+        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Enemy) {
+            if (gs.stars[ps.activePlayerStar]!!.playerFleet.isGalleonsPresent()) {
+            ps.bombardIndex = index
+            ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCombatCount()
+            sceneContainer.changeTo<InvadeScene>()
+            } else {
+                showNoGo("You must have galleons present to invade an enemy held world")
+            }
+        } else {
+            showNoGo("Your generals will only invade enemy held worlds")
+        }
     }
 
     private fun updatePlanet(planet: Image, index: Int) {

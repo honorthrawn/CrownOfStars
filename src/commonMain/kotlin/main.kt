@@ -16,12 +16,14 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { MainMenu(get(), get(), get()) }
     injector.mapPrototype { PlanetsScene(get(), get(), get()) }
     injector.mapPrototype { PlanetScene(get(), get(), get()) }
+    injector.mapPrototype { EnemyPlanetScene(get(), get(), get()) }
     injector.mapPrototype { StarsScene(get(), get(), get(), get()) }
     injector.mapPrototype { BuyShipScene(get(), get(), get()) }
     injector.mapPrototype { DeployShipsScene(get(), get(), get()) }
     injector.mapPrototype { ColonyScene(get(), get(), get()) }
     injector.mapPrototype { TerraformingScene(get(), get(), get()) }
     injector.mapPrototype { BombardScene(get(), get(), get()) }
+    injector.mapPrototype { InvadeScene(get(), get(), get()) }
     injector.mapPrototype { CreditsScene() }
     injector.mapPrototype { MusicScene() }
     val musicSceneContainer = sceneContainer().changeTo<MusicScene>()
