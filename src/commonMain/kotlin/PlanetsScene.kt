@@ -141,10 +141,10 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             if (gs.stars[ps.activePlayerStar]!!.playerFleet.isTerraformersPresent()) {
                 if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.type != PlanetType.SUPERTERRAN) {
                     if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform == -1) {
-                        ps.terraformingIndex = index
-                        gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.startTerraforming()
+                        ps.terraformIndex = index
+                        gs.stars[ps.activePlayerStar]!!.planets[ps.terraformIndex]!!.startTerraforming()
                         gs.stars[ps.activePlayerStar]!!.playerFleet.destroyShip(shipType.TERRAFORMATTER_HUMAN)
-                        sceneContainer.changeTo<terraformingScene>()
+                        sceneContainer.changeTo<TerraformingScene>()
                     } else {
                         showNoGo("This world is already being terraformed!")
                     }
@@ -181,7 +181,20 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
     private suspend fun bombardPlanet(index: Int) {
         selectOperationDialog?.removeFromParent()
-        showNoGo("Planetary Bombardment: Not implemented yet")
+        if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Enemy) {
+            if (gs.stars[ps.activePlayerStar]!!.playerFleet.isWarshipsPresent()) {
+                if(gs.stars[ps.activePlayerStar]!!.playerFleet.isWarshipsCanBombard()) {
+                    ps.bombardIndex = index
+                    sceneContainer.changeTo<BombardScene>()
+                } else {
+                    showNoGo("Your warships may only bombard once per turn")
+                }
+            } else {
+                showNoGo("You must have warships present to bombard an enemy held world")
+            }
+        } else {
+            showNoGo("Your admirals will only bombard enemy held worlds")
+        }
     }
 
     private suspend fun invadePlanet(index: Int) {

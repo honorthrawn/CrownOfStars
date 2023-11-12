@@ -8,18 +8,18 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class terraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class TerraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
     override suspend fun SContainer.sceneInit() {
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.getLandscapeImagePath()
+        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformIndex]!!.getLandscapeImagePath()
         val planetImage = image(resourcesVfs[fileName].readBitmap())  {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
-        val message = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.name
-        val turnsNeeded = "It will take ${gs.stars[ps.activePlayerStar]!!.planets[ps.terraformingIndex]!!.turnsLeftTerraform} turns to complete"
+        val message = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformIndex]!!.name
+        val turnsNeeded = "It will take ${gs.stars[ps.activePlayerStar]!!.planets[ps.terraformIndex]!!.turnsLeftTerraform} turns to complete"
         uiVerticalStack {
             scaledWidth = sceneWidth.toDouble()
             scaledHeight = sceneHeight.toDouble()

@@ -46,12 +46,13 @@ class shipFactory {
             var fields = record.split(sep)
             if (fields[0].trim() == key) {
                 val hits = fields[1].toUInt()
-                val moves = fields[2].toUInt()
-                return Ship(shipType, hits, moves)
+                val bombRacks = fields[2].toUInt()
+                val gunMounts = fields[3].toUInt()
+                return Ship(shipType, hits, bombRacks, gunMounts)
             }
         }
         println("Ship factory returning default ship")
-        return Ship(shipType, 0u, 0u)
+        return Ship(shipType, 0u, 0u, 0u)
     }
 
     suspend fun init() {
@@ -61,8 +62,8 @@ class shipFactory {
 
 
 @Serializable
-data class Ship(val theType: shipType, val maxHP: UInt, val maxMoves: UInt) {
-    var movesLeft = maxMoves
-    var currentHP = maxHP
+data class Ship(val theType: shipType, val maxHP: UInt, val bombRacks: UInt, val gunMounts: UInt) {
+    var currentHP = maxHP.toInt()
     var hasMoved = false
+    var hasBombed = false
 }

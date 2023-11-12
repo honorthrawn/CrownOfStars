@@ -273,4 +273,32 @@ data class Planet(val star: String) {
     fun canGrowPopulation(): Boolean {
         return( getTotalPopulation() < getPopulationLimit())
     }
+
+    //function to reduce population if we can.   For causalities from bombardment and invasions
+    fun decreasePopulation() : Boolean {
+        var reducedPop = true
+        if(workerPool > 0u ) {
+            workerPool--
+        }
+        else if(farmers > 0u ) {
+            farmers--
+        }
+        else if(defworkers > 0u) {
+            defworkers--
+        }
+        else if(shipbuilders > 0u) {
+            shipbuilders--
+        } else if(scientists > 0u) {
+            scientists--
+        } else {
+            reducedPop = false
+        }
+
+        //If population goes back to zero, colony is destroyed and goes back to unoccupied
+        if (getTotalPopulation() == 0u) {
+            ownerIndex = Allegiance.Unoccupied
+        }
+
+        return reducedPop
+    }
 }

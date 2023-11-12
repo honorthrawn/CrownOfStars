@@ -17,7 +17,8 @@ class PlayerState {
     var chosenBattleship = 0
     var chosenGalleon = 0
     var operation = operationType.SELECTION
-    var terraformingIndex = 0
+    var terraformIndex = 0
+    var bombardIndex = 0
 
     fun reset() {
         operation = operationType.SELECTION
