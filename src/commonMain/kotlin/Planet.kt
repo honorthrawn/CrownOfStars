@@ -1,6 +1,6 @@
 
-import kotlinx.serialization.Serializable
-import kotlin.random.Random
+import kotlinx.serialization.*
+import kotlin.random.*
 
 @Serializable
 enum class PlanetType {
@@ -48,6 +48,33 @@ data class Planet(val star: String) {
         }
         return retval
     }
+
+    fun getImagePath() : String {
+        val retval = when(type) {
+            PlanetType.TOXIC -> "planets/toxicPlanet.jpg"
+            PlanetType.OCEAN -> "planets/oceanPlanet.jpg"
+            PlanetType.TERRAN -> "planets/terranPlanet.jpg"
+            PlanetType.DESSERT -> "planets/desertPlanet.jpg"
+            PlanetType.VOLCANIC -> "planets/volcanicPlanet.jpg"
+            PlanetType.BARREN -> "planets/barrenPlanet.jpg"
+            PlanetType.SUPERTERRAN -> "planets/paradisePlanet.jpg"
+            PlanetType.TROPICAL -> "planets/tropicalPlanet.jpg"
+        }
+        return retval
+    }
+
+    //old images for planets:
+    /* val fileName = when (planet.type) {
+            PlanetType.TOXIC -> "planets/planet1.png"
+            PlanetType.OCEAN -> "planets/planet2.png"
+            PlanetType.TERRAN -> "planets/planet3.png"
+            PlanetType.DESSERT -> "planets/planet4.png"
+            PlanetType.VOLCANIC -> "planets/planet5.png"
+            PlanetType.BARREN -> "planets/planet6.png"
+            PlanetType.SUPERTERRAN -> "planets/planet7.png"
+            PlanetType.TROPICAL -> "planets/planet10.png"
+        }*/
+
 
     fun roll(pos: Int)  {
         type = PlanetType.values()[Random.nextInt(0, PlanetType.values().count())]

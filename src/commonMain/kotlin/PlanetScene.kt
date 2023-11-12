@@ -24,16 +24,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
 
         println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.activePlayerPlanet}")
 
-        val fileName = when(gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.type) {
-            PlanetType.TOXIC -> "planets/planet1.png"
-            PlanetType.OCEAN -> "planets/planet2.png"
-            PlanetType.TERRAN -> "planets/planet3.png"
-            PlanetType.DESSERT -> "planets/planet4.png"
-            PlanetType.VOLCANIC -> "planets/planet5.png"
-            PlanetType.BARREN -> "planets/planet6.png"
-            PlanetType.SUPERTERRAN -> "planets/planet7.png"
-            PlanetType.TROPICAL -> "planets/planet10.png"
-        }
+        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.getImagePath()
         val planetImage = image(resourcesVfs[fileName].readBitmap()) {
             position(0, 0)
         }
