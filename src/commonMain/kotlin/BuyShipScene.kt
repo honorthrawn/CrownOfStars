@@ -16,7 +16,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         shipFactory.init()
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
-            setSizeScaled(width, height)
+            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
@@ -170,6 +170,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             farmerReadout = text(Organic, 50.00, Colors.CYAN, font)
         }
 
+        //TODO: Add a home button go all the way bach to the main/stars screen
         uiButton("BACK") {
             textColor = Colors.GOLD
             textFont = font

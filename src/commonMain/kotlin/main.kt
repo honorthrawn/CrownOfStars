@@ -2,11 +2,13 @@
 import com.soywiz.korge.*
 import com.soywiz.korge.scene.*
 
+//TODO: see if better resolution setting that can look better
 suspend fun main() = Korge(title = "Crown of Stars",
     width =  2000,
     height = 1200,
     virtualWidth = 768,
     virtualHeight =  1024,
+    //virtualHeight =  1200,
     iconPath = "ui/crown.png",
 ) {
     injector.mapInstance(GalaxyState())
@@ -20,6 +22,7 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { StarsScene(get(), get(), get(), get()) }
     injector.mapPrototype { BuyShipScene(get(), get(), get()) }
     injector.mapPrototype { DeployShipsScene(get(), get(), get()) }
+    injector.mapPrototype { ViewShipsScene(get(),get(),get()) }
     injector.mapPrototype { ColonyScene(get(), get(), get()) }
     injector.mapPrototype { TerraformingScene(get(), get(), get()) }
     injector.mapPrototype { BombardScene(get(), get(), get()) }

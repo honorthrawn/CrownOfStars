@@ -22,7 +22,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
-            setSizeScaled(width, height)
+            //setSizeScaled(width, height)
+            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
         for ((i, planet) in gs.stars[ps.activePlayerStar]!!.planets.values.withIndex()) {

@@ -13,7 +13,7 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["ui/CrownofStars.jpg"].readBitmap()) {
             position(0, 0)
-            setSizeScaled(width, height)
+            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()

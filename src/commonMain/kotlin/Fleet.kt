@@ -47,6 +47,10 @@ class Fleet {
         return galleons.isNotEmpty()
     }
 
+    fun getColonyCombatCount(): Int {
+        return colonyShips.count()
+    }
+
     fun getGalleonCombatCount(): Int {
         return galleons.count()
     }

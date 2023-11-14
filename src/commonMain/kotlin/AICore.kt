@@ -2,10 +2,13 @@ import rule.*
 
 class AICore(val gs: GalaxyState, val es: EmpireState){
 
+    //TODO: need to make this much better.   Perhaps have goals and then run changes to achieve those goals?
+    //What decides the goals?   Random?   Mostly random determined by a personality?
     private var popRule: Rule<Planet>
     private var assignRule: Rule<Planet>
     private var buildColonyShipRule: Rule<Empire>
     private var dispatchColonyShip: Rule<Star>
+    private var buildCorvetteRule: Rule<Empire>
     private var shipFactory = shipFactory()
     private lateinit var colonyCosts: shipCosts
     private lateinit var corvetteCosts: shipCosts
@@ -14,6 +17,14 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
     private lateinit var galleonCosts: shipCosts
 
     init {
+        buildCorvetteRule = rule("buildCorvettesRule") {
+            name = "buildCorvettesRule"
+            description = "start cranking out warships"
+            condition = { canbuildShip(shipType.CORVETTE_ENEMY, it)}
+            action = { buildCorvette() }
+        }
+
+
         popRule = rule("populationAddRule") {
             name = "populationAddRule"
             description = "This is the rule for adding population"
@@ -47,6 +58,16 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         }
     }
 
+    private fun buildCorvette() {
+        println("BUILDING A CORVETTE SHIP")
+        var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
+        if(aiStars.isNotEmpty()) {
+            es.empires[Allegiance.Enemy.ordinal]!!.buyShip(corvetteCosts)
+            var newCorvette = shipFactory.getShip(shipType.CORVETTE_ENEMY)
+            aiStars[0].enemyFleet.add(newCorvette)
+        }
+    }
+
     private fun assignPopulation() {
         println("ASSIGNING POPS")
         var aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
@@ -75,18 +96,18 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
         var retval = false
         var costToBuild: shipCosts
         when(type) {
-            shipType.COLONY_ENEMY -> costToBuild = colonyCosts;
-            shipType.CORVETTE_ENEMY -> costToBuild = corvetteCosts;
-            shipType.CRUISER_ENEMY -> costToBuild = cruiserCosts;
-            shipType.BATTLESHIP_ENEMY -> costToBuild = battleshipCosts;
-            shipType.GALLEON_ENEMY -> costToBuild = galleonCosts;
+            shipType.COLONY_ENEMY -> costToBuild = colonyCosts
+            shipType.CORVETTE_ENEMY -> costToBuild = corvetteCosts
+            shipType.CRUISER_ENEMY -> costToBuild = cruiserCosts
+            shipType.BATTLESHIP_ENEMY -> costToBuild = battleshipCosts
+            shipType.GALLEON_ENEMY -> costToBuild = galleonCosts
             //These don't matter, AI won't be building human ships
-            shipType.TERRAFORMATTER_HUMAN -> costToBuild = colonyCosts;
-            shipType.COLONY_HUMAN -> costToBuild = colonyCosts;
-            shipType.CORVETTE_HUMAN -> costToBuild = colonyCosts;
-            shipType.CRUISER_HUMAN -> costToBuild = colonyCosts;
-            shipType.BATTLESHIP_HUMAN -> costToBuild = colonyCosts;
-            shipType.GALLEON_HUMAN -> costToBuild = colonyCosts;
+            shipType.TERRAFORMATTER_HUMAN -> costToBuild = colonyCosts
+            shipType.COLONY_HUMAN -> costToBuild = colonyCosts
+            shipType.CORVETTE_HUMAN -> costToBuild = colonyCosts
+            shipType.CRUISER_HUMAN -> costToBuild = colonyCosts
+            shipType.BATTLESHIP_HUMAN -> costToBuild = colonyCosts
+            shipType.GALLEON_HUMAN -> costToBuild = colonyCosts
         }
         if(empire.shipPoints >= costToBuild.metal && empire.organicPoints >= costToBuild.organics) {
             retval = true
@@ -149,6 +170,13 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
     fun takeTurn() {
         println("AI PLAYER RUNNING")
         println("AI HAS: ORGANICS: ${es.empires[Allegiance.Enemy.ordinal]!!.organicPoints} METAL:  ${es.empires[Allegiance.Enemy.ordinal]!!.shipPoints}")
+
+        //Just as a test, start cranking out corvettes fast
+        var builtCorvette = buildCorvetteRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
+        while(  builtCorvette) {
+            builtCorvette = buildCorvetteRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
+        }
+
         //If we can build colony ships, build them
         var builtColony = buildColonyShipRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
         while(builtColony) {

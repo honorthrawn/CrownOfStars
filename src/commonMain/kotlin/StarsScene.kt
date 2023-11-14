@@ -20,7 +20,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
-            setSizeScaled(width, height)
+            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
         val yellowStar = resourcesVfs["stars/Star cK gK eg9.bmp"].readBitmap()
@@ -239,6 +239,15 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         println("we clicked an enemy fleet")
         //TODO need logics for clicking enemy fleet
         ps.activePlayerStar = x * 10 + y
-        sceneContainer.changeTo<DeployShipsScene>()
+        sceneContainer.changeTo<ViewShipsScene>()
     }
 }
+
+
+//TODO: Research screens
+//TODO: Fleet to fleet combat
+//TODO: power graphs?
+//TODO: Save/quit button
+//TODO: settings like turn music on or off or color preference?
+//TODO: Random events?
+//TODO: Rename ships to metal/mining
