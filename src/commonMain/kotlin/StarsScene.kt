@@ -209,6 +209,9 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             }
             ps.chosenBattleship--
         }
+        //TODO:  If we moved into an area with enemy fleet, resolve the combat
+
+        sceneContainer.changeTo<FleetCombatScene>()
         updateScreen()
     }
 
@@ -237,7 +240,6 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
 
     private suspend fun clickedEnemyFleet(x: Int, y: Int) {
         println("we clicked an enemy fleet")
-        //TODO need logics for clicking enemy fleet
         ps.activePlayerStar = x * 10 + y
         sceneContainer.changeTo<ViewShipsScene>()
     }

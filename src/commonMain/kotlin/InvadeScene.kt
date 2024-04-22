@@ -81,7 +81,8 @@ class InvadeScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     private suspend fun landTroops() {
         //First make sure some have been selected to land
         if (ps.chosenGalleon > 0) {
-
+            //TODO: refactor this and create code so that AI player can invade.   Or decide AI doesn't do that
+            //and just blows up the colony.
             //if there are defense bases left on the world, they have a chance to blow up the galleons
             val missileTubes = gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.defenseBases.toInt() * 5
             var hits = 0

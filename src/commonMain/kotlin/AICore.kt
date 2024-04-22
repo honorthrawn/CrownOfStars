@@ -7,6 +7,7 @@ class AICore(val gs: GalaxyState, val es: EmpireState){
     private var popRule: Rule<Planet>
     private var assignRule: Rule<Planet>
     private var buildColonyShipRule: Rule<Empire>
+
     private var dispatchColonyShip: Rule<Star>
     private var buildCorvetteRule: Rule<Empire>
     private var shipFactory = shipFactory()

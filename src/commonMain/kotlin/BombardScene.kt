@@ -64,6 +64,7 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
     }
 
+    //TODO: refactor this and allow the AI player to bombard human colonies.
     private fun resolveBombs() {
         val bombRacks = gs.stars[ps.activePlayerStar]!!.playerFleet.getBombRackCount()
         var hits = 0
