@@ -14,7 +14,7 @@ data class Star(val name: String) {
     var planets = mutableMapOf<Int, Planet>()
     var playerFleet = Fleet()
     var enemyFleet = Fleet()
-    //Location in galaxy, used to help AICore and such
+    //Location in galaxy, used to help ComputerPlayerCore and such
     var xloc = 0
     var yloc = 0
 

@@ -47,6 +47,22 @@ class Fleet {
         return galleons.isNotEmpty()
     }
 
+    fun isCorvettesPresent(): Boolean {
+        return corvettes.isNotEmpty()
+    }
+
+    fun isCruisersPresent(): Boolean {
+        return cruisers.isNotEmpty()
+    }
+
+    fun isBatteshipsPresent(): Boolean {
+        return battleships.isNotEmpty()
+    }
+
+    fun getTerraformerCombatCount(): Int {
+        return terraformers.count()
+    }
+
     fun getColonyCombatCount(): Int {
         return colonyShips.count()
     }
@@ -89,6 +105,54 @@ class Fleet {
         return corvettes.filterNot { it.hasBombed }.count() * racksPerCorvette +
             cruisers.filterNot { it.hasBombed }.count() * racksPerCruiser +
             battleships.filterNot { it.hasBombed }.count() * racksPerBattleShip
+    }
+
+    fun getGunMountCount(shipsShooting: shipType): Int {
+        val gunsPerShip = when(shipsShooting) {
+            shipType.TERRAFORMATTER_HUMAN -> terraformers[0].gunMounts.toInt()
+            shipType.COLONY_HUMAN -> colonyShips[0].gunMounts.toInt()
+            shipType.CORVETTE_HUMAN -> corvettes[0].gunMounts.toInt()
+            shipType.CRUISER_HUMAN -> cruisers[0].gunMounts.toInt()
+            shipType.BATTLESHIP_HUMAN -> battleships[0].gunMounts.toInt()
+            shipType.GALLEON_HUMAN -> galleons[0].gunMounts.toInt()
+            shipType.COLONY_ENEMY ->  colonyShips[0].gunMounts.toInt()
+            shipType.CORVETTE_ENEMY ->  corvettes[0].gunMounts.toInt()
+            shipType.CRUISER_ENEMY -> cruisers[0].gunMounts.toInt()
+            shipType.BATTLESHIP_ENEMY -> battleships[0].gunMounts.toInt()
+            shipType.GALLEON_ENEMY ->  galleons[0].gunMounts.toInt()
+        }
+
+        val numOfShips = when(shipsShooting) {
+            shipType.TERRAFORMATTER_HUMAN -> terraformers.count()
+            shipType.COLONY_HUMAN -> colonyShips.count()
+            shipType.CORVETTE_HUMAN -> corvettes.count()
+            shipType.CRUISER_HUMAN -> cruisers.count()
+            shipType.BATTLESHIP_HUMAN -> battleships.count()
+            shipType.GALLEON_HUMAN -> galleons.count()
+            shipType.COLONY_ENEMY -> colonyShips.count()
+            shipType.CORVETTE_ENEMY -> corvettes.count()
+            shipType.CRUISER_ENEMY -> cruisers.count()
+            shipType.BATTLESHIP_ENEMY -> battleships.count()
+            shipType.GALLEON_ENEMY -> galleons.count()
+        }
+        return gunsPerShip * numOfShips
+    }
+
+    fun canFire(shipsShooting: shipType) : Boolean {
+        val canShoot = when(shipsShooting) {
+            shipType.TERRAFORMATTER_HUMAN -> terraformers.filterNot { it.hasShot }.isNotEmpty()
+            shipType.COLONY_HUMAN -> colonyShips.filterNot { it.hasShot }.isNotEmpty()
+            shipType.CORVETTE_HUMAN -> terraformers.filterNot { it.hasShot }.isNotEmpty()
+            shipType.CRUISER_HUMAN -> cruisers.filterNot { it.hasShot }.isNotEmpty()
+            shipType.BATTLESHIP_HUMAN -> battleships.filterNot { it.hasShot }.isNotEmpty()
+            shipType.GALLEON_HUMAN -> galleons.filterNot { it.hasShot }.isNotEmpty()
+            shipType.COLONY_ENEMY -> colonyShips.filterNot { it.hasShot }.isNotEmpty()
+            shipType.CORVETTE_ENEMY -> corvettes.filterNot { it.hasShot }.isNotEmpty()
+            shipType.CRUISER_ENEMY -> cruisers.filterNot { it.hasShot }.isNotEmpty()
+            shipType.BATTLESHIP_ENEMY -> battleships.filterNot { it.hasShot }.isNotEmpty()
+            shipType.GALLEON_ENEMY -> galleons.filterNot { it.hasShot }.isNotEmpty()
+        }
+        return(canShoot)
     }
 
     //Changed these functions to return count that hasn't moved already, that way neither player
@@ -345,6 +409,35 @@ class Fleet {
         corvettes.map { it.hasBombed = true }
         cruisers.map { it.hasBombed = true }
         battleships.map { it.hasBombed = true }
+    }
+
+    fun setFiredGuns(shipsShooting: shipType) {
+        when(shipsShooting) {
+            shipType.TERRAFORMATTER_HUMAN -> terraformers.map { it.hasShot = true }
+            shipType.COLONY_HUMAN ->  colonyShips.map { it.hasShot = true }
+            shipType.CORVETTE_HUMAN ->  corvettes.map { it.hasShot = true }
+            shipType.CRUISER_HUMAN ->  cruisers.map { it.hasShot = true }
+            shipType.BATTLESHIP_HUMAN -> battleships.map { it.hasShot = true }
+            shipType.GALLEON_HUMAN -> galleons.map { it.hasShot = true }
+            shipType.COLONY_ENEMY -> colonyShips.map { it.hasShot = true }
+            shipType.CORVETTE_ENEMY -> corvettes.map { it.hasShot = true }
+            shipType.CRUISER_ENEMY -> cruisers.map { it.hasShot = true }
+            shipType.BATTLESHIP_ENEMY -> battleships.map { it.hasShot = true }
+            shipType.GALLEON_ENEMY -> galleons.map { it.hasShot = true }
+        }
+    }
+
+    fun nextCombatTurn() {
+        terraformers.map { it.hasShot = false }
+        colonyShips.map { it.hasShot = false }
+        corvettes.map { it.hasShot = false }
+        cruisers.map { it.hasShot = false }
+        battleships.map { it.hasShot = false }
+        galleons.map { it.hasShot = false }
+
+        corvettes.map { it.hasShot = false }
+        cruisers.map { it.hasShot = false }
+        battleships.map { it.hasShot = false }
     }
 
     fun nextTurn() {

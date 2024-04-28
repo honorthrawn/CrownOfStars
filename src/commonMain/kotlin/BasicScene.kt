@@ -36,6 +36,22 @@ open class BasicScene() : Scene() {
         }
     }
 
+    suspend fun showHighlight(img: Image, color: RGBA) : RoundRect {
+        /*  roundRect( battleShipImage.scaledWidth, battleShipImage.scaledHeight, 5.00, 5.00,
+                  Colors.TRANSPARENT_BLACK, Colors.GOLD, 5.00, )
+        {
+            x = battleShipImage.globalX
+            y =battleShipImage.globalY
+        }*/
+        var highlight = this.sceneContainer.container().roundRect(img.scaledWidth, img.scaledHeight, 5.00, 5.00,
+            Colors.TRANSPARENT_BLACK, color, 5.00 ) {
+            x = img.globalX
+            y = img.globalY
+        }
+        return highlight
+    }
+
+
     override suspend fun sceneBeforeLeaving() {
         showingNotEnough = false
         notEnoughDialog?.removeFromParent()

@@ -39,7 +39,7 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 colonyReadout = text("Colony: ${enemyFleet.getColonyCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/Frigate.png"].readBitmap()) {
-                   // scale(0.5, 0.5)
+                    scale(0.5, 0.5)
                 }
             }
 
@@ -47,7 +47,7 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 corvetteReadout = text("Corvettes: ${enemyFleet.getCorvetteCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/Corvette.png"].readBitmap())  {
-                   // scale(0.5, 0.5)
+                   scale(0.5, 0.5)
                 }
             }
 
@@ -55,7 +55,7 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 cruiserReadout = text("Cruisers: ${enemyFleet.getCruiserCombatCount()}", 25.00, Colors.RED, font)
                   image(resourcesVfs["ships/Cruiser.png"].readBitmap()) {
-                  //  scale(0.5, 0.5)
+                    scale(0.5, 0.5)
                 }
             }
 
@@ -63,7 +63,7 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 battleshipReadout = text("Battleships: ${enemyFleet.getBattleShipCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/Battleship.png"].readBitmap()) {
-                 //   scale(0.5, 0.5)
+                   scale(0.5, 0.5)
                 }
             }
 
@@ -71,7 +71,7 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 galleonReadout = text("Galleons: ${enemyFleet.getGalleonCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/Destroyer.png"].readBitmap())  {
-                //    scale(0.5, 0.5)
+                    scale(0.5, 0.5)
                 }
             }
 

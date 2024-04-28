@@ -1,6 +1,6 @@
 import rule.*
 
-class AICore(val gs: GalaxyState, val es: EmpireState){
+class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState){
 
     //TODO: need to make this much better.   Perhaps have goals and then run changes to achieve those goals?
     //What decides the goals?   Random?   Mostly random determined by a personality?

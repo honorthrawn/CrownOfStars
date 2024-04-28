@@ -66,4 +66,5 @@ data class Ship(val theType: shipType, val maxHP: UInt, val bombRacks: UInt, val
     var currentHP = maxHP.toInt()
     var hasMoved = false
     var hasBombed = false
+    var hasShot = false
 }

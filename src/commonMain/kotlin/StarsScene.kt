@@ -7,7 +7,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: AICore)
+class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: ComputerPlayerCore, val cps: ComputerPlayerState)
     : BasicScene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
@@ -210,7 +210,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             ps.chosenBattleship--
         }
         //TODO:  If we moved into an area with enemy fleet, resolve the combat
-
+        cps.activeBattleStar = ps.activePlayerStar;
         sceneContainer.changeTo<FleetCombatScene>()
         updateScreen()
     }

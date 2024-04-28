@@ -128,12 +128,14 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             }
             while(hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCombatCount() > 0 ) {
                 hitsToAsses--
+                //TODO: Fix this -- it appears like one missle from ground can take whole cruiser
                 if(gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(shipType.CRUISER_HUMAN, 20)) {
                     cruisersLost++
                 }
             }
             while(hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCombatCount() > 0 ) {
                 hitsToAsses--
+                //TODO: Fix this -- it appears like one missle from ground can take whole battleship
                 if(gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(shipType.BATTLESHIP_HUMAN, 20)) {
                     battleShipsLost++
                 }

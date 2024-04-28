@@ -75,7 +75,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
 
         uiButton("BACK") {
-            alignBottomToBottomOf(background)
+            //TODO: consider rearranging this button the commented out code makes it disappear
+            //alignBottomToBottomOf(background)
             textColor = Colors.GOLD
             textFont = font
             onClick { sceneContainer.changeTo<StarsScene>() }
