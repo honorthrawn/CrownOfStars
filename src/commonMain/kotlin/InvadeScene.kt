@@ -1,5 +1,6 @@
 
 import com.soywiz.korge.input.*
+import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
@@ -15,6 +16,7 @@ class InvadeScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     private lateinit var causultiesReadout: Text
     private lateinit var victoryReadout: Text
     override suspend fun SContainer.sceneInit() {
+        sceneContainer().changeTo<WarMusicScene>()
         val background = image(resourcesVfs["ui/planetInvaded.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(width, height)
@@ -53,7 +55,8 @@ class InvadeScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             uiButton("CLOSE") {
                 textColor = Colors.GOLD
                 textFont = font
-                onClick { sceneContainer.changeTo<PlanetsScene>() }
+                onClick { ps.musicSceneContainer?.changeTo<MusicScene>()
+                    sceneContainer.changeTo<PlanetsScene>() }
             }
 
             //Don't ask me why but gotta put spaces or something in there or it won't get drawn

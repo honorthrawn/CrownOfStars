@@ -21,6 +21,7 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private lateinit var colonyStatus: String
 
     override suspend fun SContainer.sceneInit() {
+        ps.musicSceneContainer?.changeTo<WarMusicScene>()
         val background = image(resourcesVfs["ui/planetBombed.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
@@ -59,7 +60,9 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             uiButton("CLOSE") {
                 textColor = Colors.GOLD
                 textFont = font
-                onClick { sceneContainer.changeTo<PlanetsScene>() }
+                onClick {
+                    ps.musicSceneContainer?.changeTo<MusicScene>()
+                    sceneContainer.changeTo<PlanetsScene>() }
             }
         }
     }

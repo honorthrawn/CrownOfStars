@@ -4,24 +4,20 @@ import com.soywiz.korge.scene.*
 import com.soywiz.korge.view.*
 import com.soywiz.korio.file.std.*
 
-class MusicScene() : Scene() {
-
-    private var tunes = mutableListOf<Sound>()
+class WarMusicScene() : Scene() {
+    private var warTunes = mutableListOf<Sound>()
     private var currentTune: SoundChannel? = null
     private var currentSong = 0
     override suspend fun SContainer.sceneInit() {
         println("Loading music")
-        tunes.add(resourcesVfs["music/Badlands.mp3"].readMusic())
-        tunes.add(resourcesVfs["music/Cassette.mp3"].readMusic())
-        tunes.add(resourcesVfs["music/Powerful.mp3"].readMusic())
-        tunes.add(resourcesVfs["music/Soprano.mp3"].readMusic())
-        tunes.shuffle()
+       // tunes.shuffle()
+        warTunes.add(resourcesVfs["music/ToWar.mp3"].readMusic())
     }
 
     private fun chooseNextSong() {
         println("Choosing next song")
         currentSong++
-        if (currentSong >= tunes.count()) {
+        if (currentSong >= warTunes.count()) {
             currentSong = 0
         }
         val pb = PlaybackParameters(times = PlaybackTimes(1),
@@ -29,15 +25,10 @@ class MusicScene() : Scene() {
                 println("on finish")
                 chooseNextSong()
             })
-        currentTune = tunes[currentSong].play(this.coroutineContext, pb)
+        currentTune = warTunes[currentSong].play(this.coroutineContext, pb)
     }
 
     override suspend fun SContainer.sceneMain() {
         chooseNextSong()
-    }
-
-    override suspend fun sceneBeforeLeaving() {
-        println("Leaving music scene, trying to stop")
-        currentTune?.stop()
     }
 }

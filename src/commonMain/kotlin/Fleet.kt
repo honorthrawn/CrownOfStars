@@ -142,7 +142,7 @@ class Fleet {
         val canShoot = when(shipsShooting) {
             shipType.TERRAFORMATTER_HUMAN -> terraformers.filterNot { it.hasShot }.isNotEmpty()
             shipType.COLONY_HUMAN -> colonyShips.filterNot { it.hasShot }.isNotEmpty()
-            shipType.CORVETTE_HUMAN -> terraformers.filterNot { it.hasShot }.isNotEmpty()
+            shipType.CORVETTE_HUMAN -> corvettes.filterNot { it.hasShot }.isNotEmpty()
             shipType.CRUISER_HUMAN -> cruisers.filterNot { it.hasShot }.isNotEmpty()
             shipType.BATTLESHIP_HUMAN -> battleships.filterNot { it.hasShot }.isNotEmpty()
             shipType.GALLEON_HUMAN -> galleons.filterNot { it.hasShot }.isNotEmpty()

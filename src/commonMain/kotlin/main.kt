@@ -26,12 +26,20 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { DeployShipsScene(get(), get(), get()) }
     injector.mapPrototype { ViewShipsScene(get(),get(),get()) }
     injector.mapPrototype { FleetCombatScene(get(),get(),get(),get()) }
+    injector.mapPrototype { LoseFleetCombatScene(get(), get()) }
+    injector.mapPrototype { WinFleetCombatScene(get(), get()) }
     injector.mapPrototype { ColonyScene(get(), get(), get()) }
     injector.mapPrototype { TerraformingScene(get(), get(), get()) }
     injector.mapPrototype { BombardScene(get(), get(), get()) }
     injector.mapPrototype { InvadeScene(get(), get(), get()) }
     injector.mapPrototype { CreditsScene() }
     injector.mapPrototype { MusicScene() }
-    val musicSceneContainer = sceneContainer().changeTo<MusicScene>()
-    val mainSceneContainer = sceneContainer().changeTo<MainMenu>()
+    injector.mapPrototype { WarMusicScene() }
+    //This feels like a hack but we need the same scene container so we can stop the regular music and go to
+    //war songs when we switch to a battle scene
+    var musicSceneContainer = sceneContainer()
+    var mainSceneContainer = sceneContainer().changeTo<MainMenu>()
+    musicSceneContainer.changeTo<MusicScene>()
+    var ps = injector.get<PlayerState>()
+    ps.musicSceneContainer = musicSceneContainer
 }
