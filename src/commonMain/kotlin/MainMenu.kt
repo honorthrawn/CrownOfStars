@@ -8,7 +8,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ts: TechTree) : Scene() {
 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["ui/CrownofStars.jpg"].readBitmap()) {
@@ -26,7 +26,7 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : 
         uiButton("New Game") {
             position(width/2, 200.00)
             centerXOnStage()
-            onClick { gs.rollGalaxy(); es.rollEmpires(); sceneContainer.changeTo<StarsScene>() }
+            onClick { gs.rollGalaxy(); ts.loadTrees(); es.rollEmpires(ts); sceneContainer.changeTo<StarsScene>() }
             textFont = font
             textColor = Colors.GOLD
         }
@@ -34,7 +34,7 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : 
         uiButton("Continue Game") {
             position(width/2, 300.00)
             centerXOnStage()
-            onClick { gs.load(); es.load(); sceneContainer.changeTo<StarsScene>() }
+            onClick { gs.load(); ts.loadTrees(); es.load(); sceneContainer.changeTo<StarsScene>() }
             textFont = font
             textColor = Colors.GOLD
         }

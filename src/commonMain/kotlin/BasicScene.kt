@@ -6,10 +6,13 @@ import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korio.file.std.*
+import com.soywiz.korio.lang.*
 
 open class BasicScene() : Scene() {
 
     private var notEnoughDialog: RoundRect? = null
+    private var confirmationDialog: RoundRect? = null
+    //private var showingconfirmDialog = false
     private var showingNotEnough = false
 
     suspend fun showNoGo(requirements: String) {
@@ -36,7 +39,48 @@ open class BasicScene() : Scene() {
         }
     }
 
-    suspend fun showHighlight(img: Image, color: RGBA) : RoundRect {
+    suspend fun showConfirmDialog(msg: String){
+        val len = msg.length
+        var line1 = ""
+        var line2 = ""
+        if(len > 20 ) {
+            line1 = msg.substr(0, 40)
+            line2 = msg.substr(41, len - 40)
+        } else {
+            line1 = msg
+        }
+        //if(!showingconfirmDialog) {
+            val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+            confirmationDialog =
+                this.sceneContainer.container().roundRect(
+                    sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+                    Colors.BLACK
+                ) {
+                    centerOnStage()
+                    uiVerticalStack {
+                        scaledWidth = sceneWidth / 2.00
+                        text(line1, 20.00, Colors.CYAN, font)
+                        text(line2, 20.00, Colors.CYAN, font)
+                        uiButton("NO") {
+                            textFont = font
+                            textColor = Colors.GOLD
+                            onClick { confirmationDialog?.removeFromParent() }  //don't know why can't just set yesClicked to true but can't
+                        }
+
+                        uiButton("YES") {
+                            textFont = font
+                            textColor = Colors.GOLD
+                            onClick {  confirmationDialog?.removeFromParent()
+                                actionConfirmed()
+                            }
+                        }
+                    }
+                }
+        //    showingconfirmDialog = true
+        //}
+    }
+
+   suspend fun showHighlight(img: Image, color: RGBA) : RoundRect {
         /*  roundRect( battleShipImage.scaledWidth, battleShipImage.scaledHeight, 5.00, 5.00,
                   Colors.TRANSPARENT_BLACK, Colors.GOLD, 5.00, )
         {
@@ -62,4 +106,6 @@ open class BasicScene() : Scene() {
         notEnoughDialog?.removeFromParent()
     }
 
+    open fun actionConfirmed() {
+    }
 }

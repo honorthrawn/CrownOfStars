@@ -5,9 +5,11 @@ import kotlinx.serialization.json.*
 class EmpireState {
    var empires = mutableMapOf<Int, Empire>()
 
-    fun rollEmpires() {
+    fun rollEmpires(techTree: TechTree) {
         val playerEmpire = Empire(Allegiance.Player)
         val enemyEmpire = Empire(Allegiance.Enemy)
+        playerEmpire.popTagsStartingTechs(techTree)
+        enemyEmpire.popTagsStartingTechs(techTree)
         empires[Allegiance.Player.ordinal] = playerEmpire
         empires[Allegiance.Enemy.ordinal] = enemyEmpire
     }

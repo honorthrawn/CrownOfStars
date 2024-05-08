@@ -15,9 +15,10 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapInstance(EmpireState())
     injector.mapInstance(PlayerState())
     injector.mapInstance(ComputerPlayerState())
+    injector.mapInstance(TechTree())
     injector.mapPrototype { ComputerPlayerCombat(get(), get(), get())}
     injector.mapPrototype { ComputerPlayerCore(get(), get())}
-    injector.mapPrototype { MainMenu(get(), get(), get()) }
+    injector.mapPrototype { MainMenu(get(), get(), get(), get()) }
     injector.mapPrototype { PlanetsScene(get(), get(), get()) }
     injector.mapPrototype { PlanetScene(get(), get(), get()) }
     injector.mapPrototype { EnemyPlanetScene(get(), get(), get()) }
@@ -32,6 +33,10 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { TerraformingScene(get(), get(), get()) }
     injector.mapPrototype { BombardScene(get(), get(), get()) }
     injector.mapPrototype { InvadeScene(get(), get(), get()) }
+    injector.mapPrototype { ChooseResearchRealm(get()) }
+    injector.mapPrototype { ComputerResearchScene( get(), get()) }
+    injector.mapPrototype { WeaponsResearchScene( get(), get()) }
+    injector.mapPrototype { DefenseResearchScene( get(), get()) }
     injector.mapPrototype { CreditsScene() }
     injector.mapPrototype { MusicScene() }
     injector.mapPrototype { WarMusicScene() }

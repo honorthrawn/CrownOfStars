@@ -1,0 +1,3 @@
+4|AFTERBURNERS|Afterburners 1 evasion|100|false|1|0
+5|ECM|Electronic Counter Measures 2 evasion|200|false|2|0
+6|SCREENS 1|Basic Polarization Screens 1 soak|150|false|0|1

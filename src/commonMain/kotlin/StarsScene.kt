@@ -105,11 +105,22 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             }
         }
 
-        uiButton("NEXT TURN") {
+        uiHorizontalStack {
             position(0.00, y + 2 * cellHeight)
-            textColor = Colors.GOLD
-            textFont = font
-            onClick { nextTurn() }
+            padding = 10.00
+
+            uiButton("NEXT TURN") {
+                textColor = Colors.GOLD
+                textFont = font
+                onClick { nextTurn() }
+            }
+
+            uiButton("TECH") {
+                textColor = Colors.GOLD
+                textFont = font
+                onClick { sceneContainer.changeTo<ChooseResearchRealm>()  }
+            }
+
         }
     }
 
@@ -209,9 +220,13 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             }
             ps.chosenBattleship--
         }
-        //TODO:  If we moved into an area with enemy fleet, resolve the combat
-        cps.activeBattleStar = ps.activePlayerStar;
-        sceneContainer.changeTo<FleetCombatScene>()
+
+        // If we moved into an area with enemy fleet, resolve the combat
+        if( gs.stars[destination]!!.playerFleet!!.isPresent() &&  gs.stars[destination]!!.enemyFleet!!.isPresent()) {
+            ps.activePlayerStar = destination
+            cps.activeBattleStar = ps.activePlayerStar;
+            sceneContainer.changeTo<FleetCombatScene>()
+        }
         updateScreen()
     }
 
@@ -247,9 +262,9 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
 
 
 //TODO: Research screens
-//TODO: Fleet to fleet combat
 //TODO: power graphs?
 //TODO: Save/quit button
 //TODO: settings like turn music on or off or color preference?
 //TODO: Random events?
 //TODO: Rename ships to metal/mining
+//TODO: what if computer player moves its fleet to attack?

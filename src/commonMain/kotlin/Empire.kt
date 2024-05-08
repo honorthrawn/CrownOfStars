@@ -14,6 +14,8 @@ data class Empire(val id: Allegiance) {
     var researchPoints = 0u
     var defensePoints = 0u
 
+    var techTags: MutableList<Int> = mutableListOf()
+
     fun addProduction(gs: GalaxyState) {
         for( star in gs.stars.values) {
             for( planet in star.planets.values) {
@@ -63,4 +65,36 @@ data class Empire(val id: Allegiance) {
         }
         return retval
     }
-}
+
+    fun popTagsStartingTechs(techTree: TechTree) {
+        for( computer in techTree.computersTree) {
+            if (computer.starting) {
+                techTags.add(computer.id)
+            }
+        }
+
+        for (weapon in techTree.weaponsTree) {
+            if(weapon.starting) {
+                techTags.add(weapon.id)
+            }
+        }
+    }
+
+    fun buyTech(tech: Tech) : Boolean {
+        var retval = false
+        if(researchPoints >= tech.cost ) {
+            researchPoints -= tech.cost
+            techTags.add(tech.id)
+            retval = true
+        }
+        return retval
+    }
+
+    fun canBuyTech(tech: Tech) : Boolean {
+        var retval = false
+        if(researchPoints >= tech.cost ) {
+            retval = true
+        }
+        return retval
+        }
+    }

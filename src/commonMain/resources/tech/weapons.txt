@@ -1,0 +1,2 @@
+2|Space Artillery|Primitive mass driver|0|true|2|8
+3|Mass Driver|Improved mass driver|200|false|3|12

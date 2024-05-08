@@ -1,0 +1,2 @@
+0|ELECTRONIC|Electronic Computer|0|true|0|0
+1|OPTICAL|Optical Computer 1 to accuracy|100|false|1|0
