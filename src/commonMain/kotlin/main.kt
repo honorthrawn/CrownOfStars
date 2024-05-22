@@ -33,10 +33,9 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { TerraformingScene(get(), get(), get()) }
     injector.mapPrototype { BombardScene(get(), get(), get()) }
     injector.mapPrototype { InvadeScene(get(), get(), get()) }
-    injector.mapPrototype { ChooseResearchRealm(get()) }
-    injector.mapPrototype { ComputerResearchScene( get(), get()) }
-    injector.mapPrototype { WeaponsResearchScene( get(), get()) }
-    injector.mapPrototype { DefenseResearchScene( get(), get()) }
+    injector.mapPrototype { ChooseResearchRealm(get(), get()) }
+    injector.mapPrototype { BuyTechScene(get(),get(),get()) }
+    injector.mapPrototype { TechInfoScene(get(),get()) }
     injector.mapPrototype { CreditsScene() }
     injector.mapPrototype { MusicScene() }
     injector.mapPrototype { WarMusicScene() }

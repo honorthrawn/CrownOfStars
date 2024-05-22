@@ -1,0 +1,6 @@
+7|FISSION|Nuclear Fission Drive|0|true|1
+9|FUSION|Nuclear Fusion Drive|100|false|2
+10|EM|EM Drive|200|false|3
+11|WARP|Warp Drive|400|false|4
+12|DRUNK|Malfunctioning Jump Drive|800|false|6
+13|JUMP|Jump Drive|1600|false|10

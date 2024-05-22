@@ -7,7 +7,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class ChooseResearchRealm(val es: EmpireState) : BasicScene() {
+class ChooseResearchRealm(val es: EmpireState, val ps: PlayerState) : BasicScene() {
     private lateinit var researchPoints: Text
 
     override suspend fun SContainer.sceneMain() {
@@ -29,32 +29,44 @@ class ChooseResearchRealm(val es: EmpireState) : BasicScene() {
             uiButton("COMPUTERS") {
                 textColor = Colors.GOLD
                 textFont = font
-                onClick { sceneContainer.changeTo<ComputerResearchScene>() }
+                onClick {
+                    ps.techRealmChosen = TechRealm.COMPUTERS
+                    sceneContainer.changeTo<BuyTechScene>()
+                }
             }
 
             uiButton("WEAPONS") {
                 textColor = Colors.GOLD
                 textFont = font
-                onClick { sceneContainer.changeTo<WeaponsResearchScene>()  }
+                onClick {
+                    ps.techRealmChosen = TechRealm.WEAPONS
+                    sceneContainer.changeTo<BuyTechScene>()
+                }
             }
 
             uiButton("DEFENSE") {
                 textColor = Colors.GOLD
                 textFont = font
-                onClick { sceneContainer.changeTo<DefenseResearchScene>()  }
+                onClick {
+                    ps.techRealmChosen = TechRealm.DEFENSE
+                    sceneContainer.changeTo<BuyTechScene>()
+                }
             }
 
             uiButton("PROPULSION") {
                 textColor = Colors.GOLD
                 textFont = font
-               //  onClick {  }
+                onClick {
+                    ps.techRealmChosen = TechRealm.PROPULSION
+                    sceneContainer.changeTo<BuyTechScene>()
+                }
             }
-
 
             uiButton("BACK") {
                 textColor = Colors.GOLD
                 textFont = font
-                onClick { sceneContainer.changeTo<StarsScene>() }
+                onClick { sceneContainer.changeTo<StarsScene>()
+                }
             }
 
             researchPoints = text("Research Points left: ${es.empires[Allegiance.Player.ordinal]?.researchPoints}") {

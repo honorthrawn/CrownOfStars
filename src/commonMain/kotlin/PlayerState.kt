@@ -29,6 +29,9 @@ class PlayerState {
     var shipsLost = 0
     var enemyShipsDestroyed = 0
 
+    var techRealmChosen = TechRealm.COMPUTERS
+    var techQueryId = 0
+
     fun reset() {
         operation = operationType.SELECTION
         chosenTerraformers = 0

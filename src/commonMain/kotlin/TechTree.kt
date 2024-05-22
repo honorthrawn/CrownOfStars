@@ -11,6 +11,7 @@ class TechTree {
         loadComputers()
         loadWeapons()
         loadDefenses()
+        loadDrives()
     }
 
     suspend fun loadComputers() {
@@ -72,6 +73,46 @@ class TechTree {
                 defenseTree.add(defenseTech)
             }
         }
+    }
+
+    suspend fun loadDrives() {
+        val driveList = resourcesVfs["tech/drives.txt"].readLines(UTF8)
+        //Don't know why couldn't get tab to work but \t and \\t didn't work.   So, I just decided to use |
+        val sep = "|"
+        for (record in driveList) {
+            var fields = record.split(sep)
+            if(fields.count() == 6) {
+                val id = fields[0].toInt()
+                val name = fields[1].trim()
+                val desc = fields[2].trim()
+                val cost = fields[3].toUInt()
+                val start = fields[4].toBoolean()
+                val speed = fields[5].toInt()
+                val driveTech = PropulsionTech(id, name, desc, cost, start, speed)
+                println("READ: ${id} ${name} ${desc} C ${cost} ${start} S ${speed}")
+                propulsionTree.add(driveTech)
+            }
+        }
+    }
+
+    suspend fun findTech(id: Int, realm: TechRealm) : Tech? {
+
+        var foundTech : Tech? = null
+
+        var tree = when(realm) {
+            TechRealm.COMPUTERS -> computersTree
+            TechRealm.WEAPONS -> weaponsTree
+            TechRealm.DEFENSE -> defenseTree
+            TechRealm.PROPULSION -> propulsionTree
+        }
+
+        for(tech in tree) {
+            if(tech.id == id) {
+                foundTech = tech
+                break
+            }
+        }
+        return foundTech
     }
 
 }

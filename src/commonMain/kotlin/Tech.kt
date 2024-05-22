@@ -1,12 +1,11 @@
 import kotlinx.serialization.*
 
-/*
 enum class TechRealm {
     COMPUTERS,
     WEAPONS,
     DEFENSE,
     PROPULSION
-}*/
+}
 
 sealed class Tech() {
   //  abstract var realm: TechRealm
