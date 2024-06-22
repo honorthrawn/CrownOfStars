@@ -12,7 +12,6 @@ open class BasicScene() : Scene() {
 
     private var notEnoughDialog: RoundRect? = null
     private var confirmationDialog: RoundRect? = null
-    //private var showingconfirmDialog = false
     private var showingNotEnough = false
 
     suspend fun showNoGo(requirements: String) {
@@ -49,7 +48,6 @@ open class BasicScene() : Scene() {
         } else {
             line1 = msg
         }
-        //if(!showingconfirmDialog) {
             val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
             confirmationDialog =
                 this.sceneContainer.container().roundRect(
@@ -76,17 +74,9 @@ open class BasicScene() : Scene() {
                         }
                     }
                 }
-        //    showingconfirmDialog = true
-        //}
     }
 
    suspend fun showHighlight(img: Image, color: RGBA) : RoundRect {
-        /*  roundRect( battleShipImage.scaledWidth, battleShipImage.scaledHeight, 5.00, 5.00,
-                  Colors.TRANSPARENT_BLACK, Colors.GOLD, 5.00, )
-        {
-            x = battleShipImage.globalX
-            y =battleShipImage.globalY
-        }*/
         var highlight = this.sceneContainer.container().roundRect(img.scaledWidth, img.scaledHeight, 5.00, 5.00,
             Colors.TRANSPARENT_BLACK, color, 5.00 ) {
             x = img.globalX

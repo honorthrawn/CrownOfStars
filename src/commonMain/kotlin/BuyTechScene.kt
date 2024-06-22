@@ -31,26 +31,26 @@ class BuyTechScene(val es: EmpireState, val techTree: TechTree, val ps: PlayerSt
             alignTopToTopOf(background)
             padding = 50.00
 
-            //TODO: filter out techs already bought
-             for (tech in tree) {
-                 uiHorizontalStack {
-                     padding = 40.00
+            for (tech in tree) {
+                 if(!es.empires[Allegiance.Player.ordinal]?.techTags?.contains(tech.id)!!) {
+                     uiHorizontalStack {
+                         padding = 40.00
 
-                    text(tech.name, 25.00, Colors.CYAN, font)
+                         text(tech.name, 25.00, Colors.CYAN, font)
 
-                    uiButton("BUY") {
-                        textColor = Colors.GOLD
-                        textFont = font
-                        onClick { buyTech(tech) }
-                    }
+                         uiButton("BUY") {
+                             textColor = Colors.GOLD
+                             textFont = font
+                             onClick { buyTech(tech) }
+                         }
 
-                    uiButton("INFO") {
-                        textColor = Colors.GOLD
-                        textFont = font
-                        onClick { getInfo(tech) }
-                    }
-
-                }
+                         uiButton("INFO") {
+                             textColor = Colors.GOLD
+                             textFont = font
+                             onClick { getInfo(tech) }
+                         }
+                     }
+                 }
             }
 
             researchPoints = text("Research Points left: ${es.empires[Allegiance.Player.ordinal]?.researchPoints}") {

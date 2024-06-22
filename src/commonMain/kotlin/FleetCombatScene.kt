@@ -8,7 +8,7 @@ import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 import kotlin.random.*
 
-class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val cp: ComputerPlayerCombat) : BasicScene() {
+class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val cp: ComputerPlayerCombat, val techTree: TechTree) : BasicScene() {
 
     private var terraformerCounter: Text? = null
     private var terraformerImage: Image? = null
@@ -66,8 +66,24 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private var enemyGalleonCount = 0
 
     private var round = 1
+    private var playerInitiative = 0
+    private var enemyInitiative = 0
+    private var playerAccuray = 0
+    private var enemyAccuracy = 0
+    private var playerLowDamage = 0
+    private var playerHighDamage = 0
+    private var enemyLowDamage = 0
+    private var enemyHighDamage = 0
+    private var playerEvasion = 0
+    private var playerSoak = 0
+    private var enemyEvasion = 0
+    private var enemySoak = 0
+    private var playerWeapon = "wooden sword"
+    private var enemyWeapon = "wooden sword"
 
     override suspend fun SContainer.sceneMain() {
+        setupBonuses()
+
         ps.musicSceneContainer?.changeTo<WarMusicScene>()
 
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
@@ -293,6 +309,11 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         //Just doing it lazy way is bad because you can other ships for tiny time slice and then they just disappear
         //it's grating.
         //updateScreen()
+        val playerInitiativeRoll = Random.nextInt(1, 6) + playerInitiative
+        val enemyRoll = Random.nextInt(1, 6) + enemyInitiative
+        if(enemyRoll > playerInitiativeRoll) {
+            resolveEnemyFire()
+        }
     }
 
     private suspend fun getCounts() {
@@ -371,12 +392,13 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 for (i in 1..gunsFiring) {
                     val roll = Random.nextInt(1, 10)
                     println("Rolled: ${roll}")
-                    //TODO: get defensive bonuses from enemy
-                    //TODO: get offensive bonuses
-                    if(roll > 5) {
-                        //TODO: get damage dice
+                    val adjustedRoll = roll - enemyEvasion + playerAccuray
+                    if(adjustedRoll > 5) {
                         hits++
-                        val damageRolled = Random.nextInt(2, 8)
+                        var damageRolled = Random.nextInt(playerLowDamage, playerHighDamage) - enemySoak
+                        if(damageRolled <= 0 ) {
+                            damageRolled = 1
+                        }
                         totaldamage += damageRolled
                         println("Rolled damage: ${damageRolled}")
                         val destroyed = gs.stars[ps.activePlayerStar]!!.enemyFleet.damageShip(enemyShipTypeChosen!!, damageRolled)
@@ -402,6 +424,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                                 break
                             }
                         }
+
                     }
                 }
                 ps.totalDamageDealt += totaldamage
@@ -413,8 +436,8 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 enemyShipHighLight = null
                 playerShipTypeChosen = null
                 enemyShipTypeChosen = null
-                messageLine.text = "We fired Space Artillery ${gunsFiring} times ${hits} hits ${totaldamage} damage"
-                println("We fired Space Artillery ${gunsFiring} times ${hits} hits ${totaldamage} damage")
+                messageLine.text = "We fired ${gunsFiring} times ${hits} hits ${totaldamage} damage"
+                println("We fired ${playerWeapon} ${gunsFiring} times ${hits} hits ${totaldamage} damage")
             }
         }
     }
@@ -431,13 +454,14 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             for (i in 1..gunsFiring) {
                 val roll = Random.nextInt(1, 10)
                 println("Rolled: ${roll}")
-                //TODO: get defensive bonuses from player
-                //TODO: get offensive bonuses
-                if (roll > 5) {
-                    //TODO: get damage dice
+                val adjustedRoll = roll + enemyAccuracy - playerEvasion
+                if (adjustedRoll > 5) {
                     hits++
-                    val damageRolled = Random.nextInt(2, 8)
-                    totaldamage += damageRolled
+                    val damageRolled = Random.nextInt(enemyLowDamage, enemyHighDamage)
+                    totaldamage += (damageRolled - playerSoak)
+                    if(totaldamage <= 0) {
+                        totaldamage = 1
+                    }
                     println("Rolled damage: ${damageRolled}")
                     val destroyed = gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(targetShips!!, damageRolled)
                     if(destroyed) {
@@ -467,8 +491,8 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
            // need to mark that the ship type has fired
             gs.stars[ps.activePlayerStar]!!.enemyFleet.setFiredGuns(firingShips!!)
             messageLine2.text =
-                "Enemy fired Space Artillery ${gunsFiring} times ${hits} hits doing ${totaldamage} damage"
-            println("enemy fired Space Artillery ${gunsFiring} times ${hits} hits doing ${totaldamage} damage")
+                "Enemy fired ${enemyWeapon} ${gunsFiring} times ${hits} hits doing ${totaldamage} damage"
+            println("enemy fired  ${enemyWeapon} ${gunsFiring} times ${hits} hits doing ${totaldamage} damage")
         }
     }
 
@@ -593,6 +617,26 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         }
 
         return(roundOver)
+    }
+
+    suspend fun setupBonuses() {
+        val bonusCalculator = BonusCalculator(es,techTree)
+        playerInitiative = bonusCalculator.getInitiativeBonus(Allegiance.Player)
+        enemyInitiative = bonusCalculator.getInitiativeBonus(Allegiance.Enemy)
+        playerAccuray = bonusCalculator.getAccuracyBonus(Allegiance.Player)
+        enemyAccuracy = bonusCalculator.getAccuracyBonus(Allegiance.Enemy)
+        val playerDamageCode = bonusCalculator.getDamageCode(Allegiance.Player)
+        playerLowDamage = playerDamageCode.first
+        playerHighDamage = playerDamageCode.second
+        playerWeapon = playerDamageCode.third
+        val enemyDamageCode = bonusCalculator.getDamageCode(Allegiance.Enemy)
+        enemyLowDamage = enemyDamageCode.first
+        enemyHighDamage = enemyDamageCode.second
+        enemyWeapon = enemyDamageCode.third
+        playerEvasion = bonusCalculator.getEvasion(Allegiance.Player)
+        enemyEvasion = bonusCalculator.getEvasion(Allegiance.Enemy)
+        playerSoak = bonusCalculator.getDamageSoaked(Allegiance.Player)
+        enemySoak = bonusCalculator.getDamageSoaked(Allegiance.Enemy)
     }
 }
 

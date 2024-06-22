@@ -26,7 +26,7 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { BuyShipScene(get(), get(), get()) }
     injector.mapPrototype { DeployShipsScene(get(), get(), get()) }
     injector.mapPrototype { ViewShipsScene(get(),get(),get()) }
-    injector.mapPrototype { FleetCombatScene(get(),get(),get(),get()) }
+    injector.mapPrototype { FleetCombatScene(get(),get(),get(),get(),get()) }
     injector.mapPrototype { LoseFleetCombatScene(get(), get()) }
     injector.mapPrototype { WinFleetCombatScene(get(), get()) }
     injector.mapPrototype { ColonyScene(get(), get(), get()) }
