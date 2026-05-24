@@ -1,5 +1,6 @@
 import kotlinx.serialization.*
 
+@Serializable
 enum class TechRealm {
     COMPUTERS,
     WEAPONS,
@@ -7,8 +8,8 @@ enum class TechRealm {
     PROPULSION
 }
 
+@Serializable
 sealed class Tech() {
-  //  abstract var realm: TechRealm
     abstract var id: Int
     abstract var name: String
     abstract var description: String

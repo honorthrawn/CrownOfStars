@@ -7,7 +7,7 @@ enum class PlanetType {
     TOXIC,
     OCEAN,
     TERRAN,
-    DESSERT,
+    DESERT,
     VOLCANIC,
     BARREN,
     SUPERTERRAN,
@@ -40,7 +40,7 @@ data class Planet(val star: String) {
             PlanetType.TOXIC -> "landscapes/toxicWorld.jpg"
             PlanetType.OCEAN -> "landscapes/oceanWorld.jpg"
             PlanetType.TERRAN -> "landscapes/terranWorld.jpg"
-            PlanetType.DESSERT -> "landscapes/desertWorld.jpg"
+            PlanetType.DESERT -> "landscapes/desertWorld.jpg"
             PlanetType.VOLCANIC -> "landscapes/volcanicWorld.jpg"
             PlanetType.BARREN -> "landscapes/barrenWorld.jpg"
             PlanetType.SUPERTERRAN -> "landscapes/paradiseWorld.jpg"
@@ -54,7 +54,7 @@ data class Planet(val star: String) {
             PlanetType.TOXIC -> "planets/toxicPlanet.jpg"
             PlanetType.OCEAN -> "planets/oceanPlanet.jpg"
             PlanetType.TERRAN -> "planets/terranPlanet.jpg"
-            PlanetType.DESSERT -> "planets/desertPlanet.jpg"
+            PlanetType.DESERT -> "planets/desertPlanet.jpg"
             PlanetType.VOLCANIC -> "planets/volcanicPlanet.jpg"
             PlanetType.BARREN -> "planets/barrenPlanet.jpg"
             PlanetType.SUPERTERRAN -> "planets/paradisePlanet.jpg"
@@ -62,18 +62,6 @@ data class Planet(val star: String) {
         }
         return retval
     }
-
-    //old images for planets:
-    /* val fileName = when (planet.type) {
-            PlanetType.TOXIC -> "planets/planet1.png"
-            PlanetType.OCEAN -> "planets/planet2.png"
-            PlanetType.TERRAN -> "planets/planet3.png"
-            PlanetType.DESSERT -> "planets/planet4.png"
-            PlanetType.VOLCANIC -> "planets/planet5.png"
-            PlanetType.BARREN -> "planets/planet6.png"
-            PlanetType.SUPERTERRAN -> "planets/planet7.png"
-            PlanetType.TROPICAL -> "planets/planet10.png"
-        }*/
 
 
     fun roll(pos: Int)  {
@@ -149,8 +137,8 @@ data class Planet(val star: String) {
                 PlanetType.TOXIC -> PlanetType.BARREN
                 PlanetType.OCEAN -> PlanetType.TERRAN
                 PlanetType.TERRAN -> PlanetType.SUPERTERRAN
-                PlanetType.DESSERT -> PlanetType.TROPICAL
-                PlanetType.VOLCANIC -> PlanetType.DESSERT
+                PlanetType.DESERT -> PlanetType.TROPICAL
+                PlanetType.VOLCANIC -> PlanetType.DESERT
                 PlanetType.BARREN -> PlanetType.VOLCANIC
                 PlanetType.SUPERTERRAN -> PlanetType.SUPERTERRAN //Cannot be terraformed further
                 PlanetType.TROPICAL -> PlanetType.SUPERTERRAN
@@ -164,7 +152,7 @@ data class Planet(val star: String) {
             PlanetType.TOXIC -> 25
             PlanetType.OCEAN -> 10
             PlanetType.TERRAN -> 10
-            PlanetType.DESSERT -> 15
+            PlanetType.DESERT -> 15
             PlanetType.VOLCANIC -> 15
             PlanetType.BARREN -> 5
             PlanetType.SUPERTERRAN -> -1
@@ -210,7 +198,7 @@ data class Planet(val star: String) {
             PlanetType.TOXIC -> 1
             PlanetType.OCEAN -> 6
             PlanetType.TERRAN -> 6
-            PlanetType.DESSERT -> 4
+            PlanetType.DESERT -> 4
             PlanetType.VOLCANIC -> 2
             PlanetType.BARREN -> 1
             PlanetType.SUPERTERRAN -> 8
@@ -224,7 +212,7 @@ data class Planet(val star: String) {
             PlanetType.TOXIC -> 4
             PlanetType.OCEAN -> 4
             PlanetType.TERRAN -> 6
-            PlanetType.DESSERT -> 4
+            PlanetType.DESERT -> 4
             PlanetType.VOLCANIC -> 8
             PlanetType.BARREN -> 6
             PlanetType.SUPERTERRAN -> 8
@@ -243,7 +231,7 @@ data class Planet(val star: String) {
             PlanetType.TOXIC -> 1
             PlanetType.OCEAN -> 6
             PlanetType.TERRAN -> 6
-            PlanetType.DESSERT -> 6
+            PlanetType.DESERT -> 6
             PlanetType.VOLCANIC -> 6
             PlanetType.BARREN -> 4
             PlanetType.SUPERTERRAN -> 8
@@ -257,7 +245,7 @@ data class Planet(val star: String) {
             PlanetType.TOXIC -> 5u
             PlanetType.OCEAN -> 10u
             PlanetType.TERRAN -> 12u
-            PlanetType.DESSERT -> 8u
+            PlanetType.DESERT -> 8u
             PlanetType.VOLCANIC -> 6u
             PlanetType.BARREN -> 6u
             PlanetType.SUPERTERRAN -> 20u
@@ -301,4 +289,21 @@ data class Planet(val star: String) {
 
         return reducedPop
     }
+
+     fun getColonyValue(): Int {
+        var score = 0
+        score += getPopulationLimit().toInt() * 5
+        score += when(type) {
+             PlanetType.TOXIC -> -100
+             PlanetType.OCEAN -> 0
+             PlanetType.TERRAN -> 50
+             PlanetType.DESERT -> 0
+             PlanetType.VOLCANIC -> 6
+             PlanetType.BARREN -> -20
+             PlanetType.SUPERTERRAN -> 100
+             PlanetType.TROPICAL -> 60
+         }
+        return score
+    }
+
 }

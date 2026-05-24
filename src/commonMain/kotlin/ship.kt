@@ -18,6 +18,7 @@ enum class shipType {
     GALLEON_ENEMY
 }
 
+@Serializable
 data class shipCosts(val metal: UInt, val organics: UInt)
 
 suspend fun getCosts(shipType: shipType) : shipCosts {

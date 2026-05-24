@@ -27,3 +27,15 @@ korge {
     //targetAndroidDirect()
 //    bundle("https://github.com/korlibs/korlibs-bundle-source-extensions.git::text-terminal::8a6d8af9c5cbd7be3acccfac145d0671f4477588")
 }
+
+// Gradle 8+ validation: jvmProcessResources consumes KorGE processed resources outputs.
+// Declare explicit dependencies so Gradle can order tasks deterministically.
+//tasks.matching { it.name == "korgeProcessedResourcesMetadataMain" }.configureEach {
+//    dependsOn(tasks.matching { t -> t.name.startsWith("korgeProcessedResourcesMetadataCommonMain") })
+//}
+
+//tasks.matching { it.name == "jvmProcessResources" }.configureEach {
+//    dependsOn(tasks.matching { t -> t.name.startsWith("korgeProcessedResources") })
+//}
+
+

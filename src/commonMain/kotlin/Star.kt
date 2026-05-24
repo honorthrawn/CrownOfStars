@@ -18,7 +18,7 @@ data class Star(val name: String) {
     var xloc = 0
     var yloc = 0
 
-    private val numPlanets = 4
+    val numPlanets = 4
 
     fun roll() {
         type = StarType.values()[Random.nextInt(0, StarType.values().count())]

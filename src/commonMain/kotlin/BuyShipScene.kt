@@ -7,6 +7,7 @@ import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
 class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
+    @Transient
     private var shipFactory = shipFactory()
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text

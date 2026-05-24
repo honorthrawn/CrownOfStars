@@ -95,11 +95,11 @@ class TechTree {
         }
     }
 
-    suspend fun findTech(id: Int, realm: TechRealm) : Tech? {
+    fun findTech(id: Int, realm: TechRealm) : Tech? {
 
         var foundTech : Tech? = null
 
-        var tree = when(realm) {
+        val tree = when(realm) {
             TechRealm.COMPUTERS -> computersTree
             TechRealm.WEAPONS -> weaponsTree
             TechRealm.DEFENSE -> defenseTree
@@ -115,4 +115,12 @@ class TechTree {
         return foundTech
     }
 
+    fun getUndiscoveredTechs(foundTechIds: List<Int>) : List<Tech> {
+        val undiscoveredTechs = mutableListOf<Tech>()
+        undiscoveredTechs.addAll(computersTree.filter { tech -> foundTechIds.contains(tech.id) })
+        undiscoveredTechs.addAll(defenseTree.filter { tech -> foundTechIds.contains(tech.id) })
+        undiscoveredTechs.addAll(weaponsTree.filter { tech -> foundTechIds.contains(tech.id) })
+        undiscoveredTechs.addAll(propulsionTree.filter { tech -> foundTechIds.contains(tech.id) })
+        return undiscoveredTechs
+    }
 }

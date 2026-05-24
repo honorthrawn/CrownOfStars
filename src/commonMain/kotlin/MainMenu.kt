@@ -50,7 +50,12 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, va
         uiButton("Quit Game")  {
             position(width/2, 500.00)
             centerXOnStage()
-            onClick { views.gameWindow.close() }
+            onClick {
+                //views.closeSuspend();
+                // views.gameWindow.exitProcessOnExit = true;
+                //views.gameWindow.close()
+                kotlin.system.exitProcess(0)
+                 }
             textFont = font
             textColor = Colors.GOLD
         }
