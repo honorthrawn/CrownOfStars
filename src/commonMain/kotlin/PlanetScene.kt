@@ -15,6 +15,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
     private lateinit var unassignedReadout: Text
     private lateinit var baseReadout: Text
 
+    private lateinit var organicsReadout: Text
+    private lateinit var metalReadout: Text
+    private lateinit var sciencePointsReadout: Text
+    private lateinit var defensePointsReadout: Text
+
+
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
@@ -69,7 +75,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
                     textFont = font
                     onClick { onWorkerDown(WorkerType.SHIPS) }
                 }
-                shipsReadout = text("SHIPS:   00", 50.00, Colors.CYAN, font)
+                shipsReadout = text("MINING:   00", 50.00, Colors.CYAN, font)
             }
             uiHorizontalStack {
                 padding = 10.00
@@ -103,6 +109,15 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
                 padding = 10.00
                 unassignedReadout= text("UNASSIGNED: 00", 50.00, Colors.CYAN, font)
             }
+
+            text("GENERAL STORES", 50.00, Colors.CYAN, font)
+
+            metalReadout = text(        "                  ", 50.00, Colors.CYAN, font)
+            organicsReadout = text(     "                  ", 50.00, Colors.CYAN, font)
+            sciencePointsReadout = text("                  ", 50.00, Colors.CYAN, font)
+            defensePointsReadout = text("                  ", 50.00, Colors.CYAN, font)
+
+
             uiHorizontalStack {
                 padding = 10.00
                  uiButton("POPULATION") {
@@ -125,10 +140,12 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
                     textFont = font
                     onClick { sceneContainer.changeTo<PlanetsScene>() }
                 }
-            }
-
-            //TODO: Add a stores readout here
-
+                uiButton("MAP") {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { sceneContainer.changeTo<StarsScene>() }
+                }
+           }
         }
         updateReadouts()
     }
@@ -146,6 +163,15 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         unassignedReadout.text = unassignedReadoutString
         val baseReadoutString = "BASES: ${gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.defenseBases}"
         baseReadout.text = baseReadoutString
+
+        val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}  "
+        val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}  "
+        val Organic = "ORGANIC: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}  "
+        val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints}  "
+        metalReadout.text = Ship
+        organicsReadout.text = Organic
+        sciencePointsReadout.text = Research
+        defensePointsReadout.text = defense
     }
 
     private fun onWorkerUp(workertype: WorkerType) {

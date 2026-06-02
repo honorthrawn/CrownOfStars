@@ -23,10 +23,11 @@ class EmpireState {
         }
     }
 
-    suspend fun load(): EmpireState {
+    suspend fun load() {
         val jsonIn = applicationDataVfs["empireState.json"].readString()
         val json = Json { prettyPrint = true }
-        return json.decodeFromString(EmpireState.serializer(), jsonIn)
+        val loaded = json.decodeFromString(EmpireState.serializer(), jsonIn)
+        empires = loaded.empires
     }
 
     suspend fun save() {

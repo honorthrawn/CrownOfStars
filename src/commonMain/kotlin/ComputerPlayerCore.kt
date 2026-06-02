@@ -324,7 +324,6 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
 
         println("[AI] Posture: ${assessment.posture}")
         println("[AI] Worlds: enemy=${assessment.computerWorldCount}, player=${assessment.playerWorldCount}, empty=${assessment.unoccupiedWorldCount}")
-        println("COMPUTER HAS: ORGANICS: ${es.empires[Allegiance.Enemy.ordinal]!!.organicPoints} METAL:  ${es.empires[Allegiance.Enemy.ordinal]!!.shipPoints}")
 
         if (!::colonyCosts.isInitialized) {
             setShipCosts()
@@ -334,6 +333,7 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             laborGovernor.init()
             laborInitialized = true
         }
+        println("[AI] HAS: ORGANICS: ${es.empires[Allegiance.Enemy.ordinal]!!.organicPoints} METAL:  ${es.empires[Allegiance.Enemy.ordinal]!!.shipPoints}")
 
         /*
         val newGovernor = governors.getNextGovernor(assessment.posture)

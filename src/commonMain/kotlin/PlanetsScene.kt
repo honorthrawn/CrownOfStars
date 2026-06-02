@@ -22,7 +22,6 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
-            //setSizeScaled(width, height)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
@@ -74,12 +73,15 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             alignTopToTopOf(starImage, 12.0)
         }
 
-        uiButton("BACK") {
-            //TODO: consider rearranging this button the commented out code makes it disappear
-            //alignBottomToBottomOf(background)
-            textColor = Colors.GOLD
-            textFont = font
-            onClick { sceneContainer.changeTo<StarsScene>() }
+        uiHorizontalStack {
+            position(0, sceneHeight - 200)
+            padding = 10.00
+
+            uiButton("BACK") {
+                textColor = Colors.GOLD
+                textFont = font
+                onClick { sceneContainer.changeTo<StarsScene>() }
+            }
         }
 }
 
@@ -112,6 +114,13 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                                     textFont = font
                                     onClick { terraformPlanet(index) }
                                 }
+                                uiButton("BACK") {
+                                    textColor = Colors.GOLD
+                                    textFont = font
+                                    onClick {
+                                        showingSelectOperationDialog = false
+                                        selectOperationDialog?.removeFromParent() }
+                                }
                             }
                         }
 
@@ -141,6 +150,12 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                                     textFont = font
                                     onClick { invadePlanet(index) }
                                 }
+                                uiButton("BACK") {
+                                    textColor = Colors.GOLD
+                                    textFont = font
+                                    showingSelectOperationDialog = false
+                                    onClick {  selectOperationDialog?.removeFromParent() }
+                                }
                             }
                         }
                 }
@@ -149,8 +164,6 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     }
 
     private suspend fun terraformPlanet(index: Int) {
-        //val message = "turns left: ${gs.stars[ps.activePlayerStar]!!.planets[index]!!.turnsLeftTerraform}"
-        //println(message)
         selectOperationDialog?.removeFromParent()
         showingSelectOperationDialog = false
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Unoccupied) {
@@ -267,12 +280,9 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         planetTexts[index].color = planetTextColor
     }
 
-
     override suspend fun sceneBeforeLeaving() {
         super.sceneBeforeLeaving()
         showingSelectOperationDialog = false
         selectOperationDialog?.removeFromParent()
     }
-
-
 }

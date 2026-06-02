@@ -1,6 +1,5 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
@@ -8,7 +7,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ts: TechTree) : Scene() {
+class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ts: TechTree) : BasicScene() {
 
     override suspend fun SContainer.sceneInit() {
         val background = image(resourcesVfs["ui/CrownofStars.jpg"].readBitmap()) {
@@ -26,15 +25,15 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, va
         uiButton("New Game") {
             position(width/2, 200.00)
             centerXOnStage()
-            onClick { gs.rollGalaxy(); ts.loadTrees(); es.rollEmpires(ts); sceneContainer.changeTo<StarsScene>() }
+            onClick { newGame() }
             textFont = font
             textColor = Colors.GOLD
         }
 
-        uiButton("Continue Game") {
+        uiButton("Load Game") {
             position(width/2, 300.00)
             centerXOnStage()
-            onClick { gs.load(); ts.loadTrees(); es.load(); sceneContainer.changeTo<StarsScene>() }
+            onClick { loadGame() }
             textFont = font
             textColor = Colors.GOLD
         }
@@ -51,14 +50,29 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, va
             position(width/2, 500.00)
             centerXOnStage()
             onClick {
-                //views.closeSuspend();
-                // views.gameWindow.exitProcessOnExit = true;
-                //views.gameWindow.close()
                 kotlin.system.exitProcess(0)
-                 }
+             }
             textFont = font
             textColor = Colors.GOLD
         }
     }
 
+    private suspend fun loadGame() {
+        if (!gs.hasSaveGame()) {
+            showNoGo("No Saved Game to Load")
+            return
+        }
+
+        ts.loadTrees()
+        gs.load()
+        es.load()
+        sceneContainer.changeTo<StarsScene>()
+    }
+
+    private suspend fun newGame() {
+        ts.loadTrees()
+        gs.rollGalaxy()
+        es.rollEmpires(ts)
+        sceneContainer.changeTo<StarsScene>()
+    }
 }

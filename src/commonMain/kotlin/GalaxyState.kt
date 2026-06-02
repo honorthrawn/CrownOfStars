@@ -62,4 +62,9 @@ class GalaxyState {
         val jsonOut = json.encodeToString(GalaxyState.serializer(), this)
         applicationDataVfs["galaxyState.json"].writeString(jsonOut)
     }
+
+    suspend fun hasSaveGame(): Boolean {
+        return localCurrentDirVfs["galaxyState.json"].exists()
+    }
+
 }

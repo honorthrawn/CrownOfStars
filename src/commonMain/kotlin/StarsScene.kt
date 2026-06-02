@@ -86,41 +86,48 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             y += cellHeight
         }
 
-        val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}  "
-        val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}  "
-        val Organic = "ORGANIC: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}  "
-        val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints}  "
-
         uiVerticalStack {
-            position(0.00, y + cellHeight)
-            uiHorizontalStack {
-                padding = 10.00
-                shipsReadout = text(Ship, 50.00, Colors.CYAN, font)
-                farmerReadout = text(Organic, 50.00, Colors.CYAN, font)
-            }
-            uiHorizontalStack {
-                padding = 10.00
-                scienceReadout = text(Research, 50.00, Colors.CYAN, font)
-                defenseReadout = text(defense, 50.00, Colors.CYAN, font)
-            }
-        }
-
-        uiHorizontalStack {
-            position(0.00, y + 2 * cellHeight)
+            position(5.00, y + cellHeight)
             padding = 10.00
 
-            uiButton("NEXT TURN") {
-                textColor = Colors.GOLD
-                textFont = font
-                onClick { nextTurn() }
-            }
+            val Ship = "METAL: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
+            val Research = "RESEARCH: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}"
+            val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
+            val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints} "
 
-            uiButton("TECH") {
-                textColor = Colors.GOLD
-                textFont = font
-                onClick { sceneContainer.changeTo<ChooseResearchRealm>()  }
-            }
+            shipsReadout = text(Ship, 50.00, Colors.CYAN, font)
+            farmerReadout = text(Organic, 50.00, Colors.CYAN, font)
+            scienceReadout = text(Research, 50.00, Colors.CYAN, font)
+            defenseReadout = text(defense, 50.00, Colors.CYAN, font)
 
+            uiHorizontalStack {
+                uiButton("NEXT TURN") {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { nextTurn() }
+                }
+
+                uiButton("TECH") {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { sceneContainer.changeTo<ChooseResearchRealm>() }
+                }
+
+                uiButton("SAVE") {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick {
+                        es.save()
+                        gs.save()
+                    }
+                }
+
+                uiButton("QUIT") {
+                    textColor = Colors.GOLD
+                    textFont = font
+                    onClick { kotlin.system.exitProcess(0) }
+                }
+            }
         }
     }
 
@@ -130,14 +137,12 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         es.addProduction(gs)
         gs.nextTurn()
         updateScreen()
-        es.save()
-        gs.save()
     }
 
-    private fun updateScreen() {
-        val Ship = "SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
-        val Research = "SCIENCE: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}"
-        val Organic = "ORGANIC: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
+    private fun updateScreen() {Ship
+        val Ship = "METAL: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints} "
+        val Research = "RESEARCH: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints} "
+        val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints} "
         val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints}  "
         defenseReadout.text = defense
         shipsReadout.text = Ship
@@ -260,10 +265,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     }
 }
 
-
-//TODO: Research screens
 //TODO: power graphs?
-//TODO: Save/quit button
 //TODO: settings like turn music on or off or color preference?
 //TODO: Random events?
 //TODO: Rename ships to metal/mining

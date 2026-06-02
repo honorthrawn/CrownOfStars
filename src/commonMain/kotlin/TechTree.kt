@@ -43,8 +43,8 @@ class TechTree {
             var fields = record.split(sep)
             if(fields.count() == 7) {
                 val id = fields[0].toInt()
-                val name = fields[1]
-                val desc = fields[2]
+                val name = fields[1].trim()
+                val desc = fields[2].trim()
                 val cost = fields[3].toUInt()
                 val start = fields[4].toBoolean()
                 val lowDamage = fields[5].toInt()
@@ -63,8 +63,8 @@ class TechTree {
             var fields = record.split(sep)
             if(fields.count() == 7) {
                 val id = fields[0].toInt()
-                val name = fields[1]
-                val desc = fields[2]
+                val name = fields[1].trim()
+                val desc = fields[2].trim()
                 val cost = fields[3].toUInt()
                 val start = fields[4].toBoolean()
                 val evasion = fields[5].toInt()
@@ -116,11 +116,14 @@ class TechTree {
     }
 
     fun getUndiscoveredTechs(foundTechIds: List<Int>) : List<Tech> {
+        val foundSet = foundTechIds.toSet()
         val undiscoveredTechs = mutableListOf<Tech>()
-        undiscoveredTechs.addAll(computersTree.filter { tech -> foundTechIds.contains(tech.id) })
-        undiscoveredTechs.addAll(defenseTree.filter { tech -> foundTechIds.contains(tech.id) })
-        undiscoveredTechs.addAll(weaponsTree.filter { tech -> foundTechIds.contains(tech.id) })
-        undiscoveredTechs.addAll(propulsionTree.filter { tech -> foundTechIds.contains(tech.id) })
+
+        undiscoveredTechs.addAll(computersTree.filter { tech -> tech.id !in foundSet })
+        undiscoveredTechs.addAll(defenseTree.filter { tech -> tech.id !in foundSet })
+        undiscoveredTechs.addAll(weaponsTree.filter { tech -> tech.id !in foundSet })
+        undiscoveredTechs.addAll(propulsionTree.filter { tech -> tech.id !in foundSet })
+
         return undiscoveredTechs
     }
 }
