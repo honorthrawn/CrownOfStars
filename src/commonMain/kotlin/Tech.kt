@@ -11,6 +11,7 @@ enum class TechRealm {
 @Serializable
 sealed class Tech() {
     abstract var id: Int
+    abstract var key: String
     abstract var name: String
     abstract var description: String
     abstract var cost: UInt
@@ -20,6 +21,7 @@ sealed class Tech() {
 @Serializable
 data class ComputerTech(
     override var id: Int,
+    override var key: String,
     override var name: String, override var description: String,
     override var cost: UInt, override var starting: Boolean, var accuracy: Int, var initiative: Int)
     : Tech()
@@ -28,6 +30,7 @@ data class ComputerTech(
 @Serializable
 data class WeaponsTech(
     override var id: Int,
+    override var key: String,
     override var name: String, override var description: String,
     override var cost: UInt, override var starting: Boolean, var lowDamage: Int, var highDamage: Int)
     : Tech()
@@ -36,6 +39,7 @@ data class WeaponsTech(
 @Serializable
 data class DefenseTech(
     override var id: Int,
+    override var key: String,
     override var name: String, override var description: String,
     override var cost: UInt, override var starting: Boolean, var evasion: Int, var damageSoak: Int)
     : Tech()
@@ -44,6 +48,7 @@ data class DefenseTech(
 @Serializable
 data class PropulsionTech(
     override var id: Int,
+    override var key: String,
     override var name: String, override var description: String,
     override var cost: UInt, override var starting: Boolean, var speed: Int)
     : Tech()

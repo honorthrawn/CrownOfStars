@@ -96,6 +96,6 @@ open class BasicScene() : Scene() {
         notEnoughDialog?.removeFromParent()
     }
 
-    open fun actionConfirmed() {
+    open suspend fun actionConfirmed() {
     }
 }

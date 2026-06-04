@@ -20,15 +20,16 @@ class TechTree {
         val sep = "|"
         for (record in computerList) {
             var fields = record.split(sep)
-            if(fields.count() == 7) {
+            if(fields.count() == 8) {
                 val id = fields[0].toInt()
-                val name = fields[1].trim()
-                val desc = fields[2].trim()
-                val cost = fields[3].toUInt()
-                val start = fields[4].toBoolean()
-                val accuracy = fields[5].toInt()
-                val initiative = fields[6].toInt()
-                val computerTech = ComputerTech(id, name, desc, cost, start, accuracy, initiative)
+                val key = fields[1].trim()
+                val name = fields[2].trim()
+                val desc = fields[3].trim()
+                val cost = fields[4].toUInt()
+                val start = fields[5].toBoolean()
+                val accuracy = fields[6].toInt()
+                val initiative = fields[7].toInt()
+                val computerTech = ComputerTech(id, key, name, desc, cost, start, accuracy, initiative)
                 println("READ: ${id} ${name} ${desc} C ${cost} ${start} A ${accuracy} I ${initiative}")
                 computersTree.add(computerTech)
             }
@@ -41,15 +42,16 @@ class TechTree {
             //Don't know why couldn't get tab to work but \t and \\t didn't work.   So, I just decided to use |
             val sep = "|"
             var fields = record.split(sep)
-            if(fields.count() == 7) {
+            if(fields.count() == 8) {
                 val id = fields[0].toInt()
-                val name = fields[1].trim()
-                val desc = fields[2].trim()
-                val cost = fields[3].toUInt()
-                val start = fields[4].toBoolean()
-                val lowDamage = fields[5].toInt()
-                val highDamage = fields[6].toInt()
-                val weaponTech = WeaponsTech(id, name, desc, cost, start, lowDamage, highDamage)
+                val key = fields[1].trim()
+                val name = fields[2].trim()
+                val desc = fields[3].trim()
+                val cost = fields[4].toUInt()
+                val start = fields[5].toBoolean()
+                val lowDamage = fields[6].toInt()
+                val highDamage = fields[7].toInt()
+                val weaponTech = WeaponsTech(id, key, name, desc, cost, start, lowDamage, highDamage)
                 weaponsTree.add(weaponTech)
             }
         }
@@ -61,15 +63,16 @@ class TechTree {
             //Don't know why couldn't get tab to work but \t and \\t didn't work.   So, I just decided to use |
             val sep = "|"
             var fields = record.split(sep)
-            if(fields.count() == 7) {
+            if(fields.count() == 8) {
                 val id = fields[0].toInt()
-                val name = fields[1].trim()
-                val desc = fields[2].trim()
-                val cost = fields[3].toUInt()
-                val start = fields[4].toBoolean()
-                val evasion = fields[5].toInt()
-                val damageSoak = fields[6].toInt()
-                val defenseTech = DefenseTech(id, name, desc, cost, start, evasion, damageSoak)
+                val key = fields[1].trim()
+                val name = fields[2].trim()
+                val desc = fields[3].trim()
+                val cost = fields[4].toUInt()
+                val start = fields[5].toBoolean()
+                val evasion = fields[6].toInt()
+                val damageSoak = fields[7].toInt()
+                val defenseTech = DefenseTech(id, key, name, desc, cost, start, evasion, damageSoak)
                 defenseTree.add(defenseTech)
             }
         }
@@ -81,14 +84,15 @@ class TechTree {
         val sep = "|"
         for (record in driveList) {
             var fields = record.split(sep)
-            if(fields.count() == 6) {
+            if(fields.count() == 7) {
                 val id = fields[0].toInt()
-                val name = fields[1].trim()
-                val desc = fields[2].trim()
-                val cost = fields[3].toUInt()
-                val start = fields[4].toBoolean()
-                val speed = fields[5].toInt()
-                val driveTech = PropulsionTech(id, name, desc, cost, start, speed)
+                val key = fields[1].trim()
+                val name = fields[2].trim()
+                val desc = fields[3].trim()
+                val cost = fields[4].toUInt()
+                val start = fields[5].toBoolean()
+                val speed = fields[6].toInt()
+                val driveTech = PropulsionTech(id, key, name, desc, cost, start, speed)
                 println("READ: ${id} ${name} ${desc} C ${cost} ${start} S ${speed}")
                 propulsionTree.add(driveTech)
             }
