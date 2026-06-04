@@ -1,6 +1,6 @@
-7|FISSION|Nuclear Fission Drive|0|true|1
-9|FUSION|Nuclear Fusion Drive|100|false|2
-10|EM|EM Drive|200|false|3
-11|WARP|Warp Drive|400|false|4
-12|DRUNK|Malfunctioning Jump Drive|800|false|6
-13|JUMP|Jump Drive|1600|false|10
+50|FISSION|Nuclear Fission Drive|Strategic speed 1|0|true|1
+51|FUSION|Nuclear Fusion Drive|Strategic speed 2|100|false|2
+52|EM|EM Drive|Strategic speed 3|200|false|3
+53|ANTI|Antimatter Drive|Strategic speed 4|400|false|4
+54|DRUNK|Malfunctioning Quantum Drive|Strategic speed 6, unstable|800|false|6
+55|QDRIVE|True Quantum Drive|Strategic speed 10|1600|false|10

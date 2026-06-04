@@ -1,2 +1,6 @@
-2|Space Artillery|Primitive mass driver|0|true|2|8
-3|Mass Driver|Improved mass driver|200|false|3|12
+100|SPACE_ARTILLERY|Space Artillery|Primitive mass driver|0|true|2|8
+101|MASS_DRIVER|Mass Driver|Improved mass driver|200|false|3|12
+102|RAILGUN|Railgun|High-velocity kinetic weapon|400|false|4|16
+103|PLASMA_CANNON|Plasma Cannon|heavier damage|600|false|8|14
+104|PARTICLE_BEAM|Particle Beam|Reliable energy weapon|900|false|10|18
+105|ANTIMATTER_TORPEDO|Antimatter Torpedo|Devastating late weapon|1600|false|18|32

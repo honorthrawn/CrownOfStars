@@ -1,3 +1,6 @@
-4|AFTERBURNERS|Afterburners 1 evasion|100|false|1|0
-5|ECM|Electronic Counter Measures 2 evasion|200|false|2|0
-6|SCREENS 1|Basic Polarization Screens 1 soak|150|false|0|1
+25|AFTERBURNERS|Afterburners|1 evasion|100|false|1|0
+26|ECM|Electronic Counter Measures|2 evasion|200|false|2|0
+27|SCREENS_1|Basic Polarization Screens|1 soak|150|false|0|1
+28|SCREENS_2|Improved Polarization Screens|2 soak|350|false|0|2
+29|POINT_DEFENSE|Point Defense Grid|1 evasion, 1 soak|500|false|1|1
+30|PHASE_SCREENS|Phase Screens|3 soak|900|false|0|3
