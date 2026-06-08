@@ -28,7 +28,8 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         for ((i, planet) in gs.stars[ps.activePlayerStar]!!.planets.values.withIndex()) {
             val fileName = planet.getImagePath()
             val planetImage = image(resourcesVfs[fileName].readBitmap()) {
-                scale(0.5)
+                scaledWidth = 80.0
+                scaledHeight = 80.0
                 position(startx, starty)
             }
             direction.add(i, false)
@@ -53,14 +54,12 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             starty -= 200
         }
 
-        val fileName = when (gs.stars[ps.activePlayerStar]!!.type) {
-            StarType.YELLOW -> "stars/Star cK gK eg9.bmp"
-            StarType.BLUE -> "stars/Star B supeg5.bmp"
-            StarType.RED -> "stars/Star M supeg5.bmp"
-        }
+        val fileName = StarType.getImagePath(gs.stars[ps.activePlayerStar]!!.type)
         val starImage = image(resourcesVfs[fileName].readBitmap()) {
-            scale(0.5)
-            position(width / 2, 800.00)
+            //scale(0.5)
+            //position(width / 2, 800.00)
+            centerXOnStage()
+            alignBottomToBottomOf(background)
         }
 
         val starTextColor = when (gs.stars[ps.activePlayerStar]!!.getAllegiance()) {

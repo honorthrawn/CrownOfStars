@@ -41,8 +41,9 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textFont = font
                     onClick { onShipDown(shipType.TERRAFORMATTER_HUMAN) }
                 }
-               image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
-                   scale(0.5, 0.5)
+               //image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
+               image(resourcesVfs["ships/player_terraformer.png"].readBitmap()) {
+                   scale(0.1, 0.1)
                }
             }
             uiHorizontalStack {
@@ -58,8 +59,9 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textFont = font
                     onClick { onShipDown(shipType.COLONY_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Battlecruiser.png"].readBitmap()) {
-                    scale(0.5, 0.5)
+                image(resourcesVfs["ships/player_colony_ship.png"].readBitmap()) {
+                    //scale(0.5, 0.5)
+                    scale(0.1, 0.1)
                 }
             }
 
@@ -76,8 +78,9 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textFont = font
                     onClick { onShipDown(shipType.CORVETTE_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Corvette.png"].readBitmap())  {
-                    scale(0.5, 0.5)
+                image(resourcesVfs["ships/player_corvette.png"].readBitmap())  {
+                   // scale(0.5, 0.5)
+                    scale(0.1, 0.1)
                 }
             }
 
@@ -94,8 +97,9 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textFont = font
                     onClick { onShipDown(shipType.CRUISER_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Cruiser.png"].readBitmap()) {
-                    scale(0.5, 0.5)
+                image(resourcesVfs["ships/player_cruiser.png"].readBitmap()) {
+                   // scale(0.5, 0.5)
+                    scale(0.1, 0.1)
                 }
             }
 
@@ -112,8 +116,9 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textFont = font
                     onClick { onShipDown(shipType.BATTLESHIP_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Battleship.png"].readBitmap()) {
-                    scale(0.5, 0.5)
+                image(resourcesVfs["ships/player_battleship.png"].readBitmap()) {
+                    //scale(0.5, 0.5)
+                    scale(0.1, 0.1)
                 }
             }
 
@@ -130,8 +135,9 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textFont = font
                     onClick { onShipDown(shipType.GALLEON_HUMAN) }
                 }
-                image(resourcesVfs["ships/Human-Frigate.png"].readBitmap())  {
-                    scale(0.5, 0.5)
+                image(resourcesVfs["ships/player_galleon.png"].readBitmap())  {
+                   // scale(0.5, 0.5)
+                    scale(0.1, 0.1)
                 }
             }
 

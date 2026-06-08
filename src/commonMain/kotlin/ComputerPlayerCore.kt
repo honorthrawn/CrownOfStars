@@ -439,10 +439,10 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
     fun inferStrategicPosture(computerWorlds: Int, playerWorlds: Int, unoccupiedWorlds : Int, totalWorlds : Int ) : StrategicPosture {
         var retval = StrategicPosture.EXPAND //Start with assumption it is early game
         if( unoccupiedWorlds <= totalWorlds * .50) {
-            retval = StrategicPosture.BALANCED
+            retval = StrategicPosture.EXPAND
         }
         if( unoccupiedWorlds <= totalWorlds * .25) {
-            retval = StrategicPosture.AGGRESSIVE
+            retval = StrategicPosture.BALANCED
         }
         if (computerWorlds > playerWorlds * 1.5) {
             retval = StrategicPosture.AGGRESSIVE

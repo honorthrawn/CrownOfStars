@@ -6,85 +6,122 @@ import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korio.file.std.*
-import com.soywiz.korio.lang.*
 
 open class BasicScene() : Scene() {
 
-    private var notEnoughDialog: RoundRect? = null
-    private var confirmationDialog: RoundRect? = null
+    private var notEnoughDialog: Container? = null
+    private var confirmationDialog: Container? = null
     private var showingNotEnough = false
 
     suspend fun showNoGo(requirements: String) {
-        if(!showingNotEnough) {
+        if (!showingNotEnough) {
             val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-            notEnoughDialog =
-                this.sceneContainer.container().roundRect(
-                    sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+
+            notEnoughDialog = sceneContainer.container {
+                centerOnStage()
+
+                roundRect(
+                    sceneWidth / 2.0,
+                    sceneHeight / 4.0,
+                    5.0,
+                    5.0,
                     Colors.BLACK
-                ) {
-                    centerOnStage()
-                    uiVerticalStack {
-                        scaledWidth = sceneWidth / 2.00
-                        text(requirements, 50.00, Colors.CYAN, font)
-                        uiButton("CLOSE")
-                        {
-                            textFont = font
-                            textColor = Colors.GOLD
-                            onClick { closeMessage() }
-                        }
+                )
+
+                uiVerticalStack {
+                    position(20.0, 20.0)
+                    scaledWidth = sceneWidth / 2.0 - 40.0
+
+                    text(requirements, 50.0, Colors.CYAN, font)
+
+                    uiButton("CLOSE") {
+                        textFont = font
+                        textColor = Colors.GOLD
+                        onClick { closeMessage() }
                     }
                 }
+            }
+
             showingNotEnough = true
         }
     }
 
-    suspend fun showConfirmDialog(msg: String){
-        val len = msg.length
-        var line1 = ""
-        var line2 = ""
-        if(len > 20 ) {
-            line1 = msg.substr(0, 40)
-            line2 = msg.substr(41, len - 40)
+    suspend fun showConfirmDialog(msg: String) {
+        confirmationDialog?.removeFromParent()
+
+        val line1: String
+        val line2: String
+
+        if (msg.length > 40) {
+            line1 = msg.substring(0, 40)
+            line2 = msg.substring(40)
         } else {
             line1 = msg
+            line2 = ""
         }
-            val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-            confirmationDialog =
-                this.sceneContainer.container().roundRect(
-                    sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                    Colors.BLACK
-                ) {
-                    centerOnStage()
-                    uiVerticalStack {
-                        scaledWidth = sceneWidth / 2.00
-                        text(line1, 20.00, Colors.CYAN, font)
-                        text(line2, 20.00, Colors.CYAN, font)
-                        uiButton("NO") {
-                            textFont = font
-                            textColor = Colors.GOLD
-                            onClick { confirmationDialog?.removeFromParent() }  //don't know why can't just set yesClicked to true but can't
-                        }
 
-                        uiButton("YES") {
-                            textFont = font
-                            textColor = Colors.GOLD
-                            onClick {  confirmationDialog?.removeFromParent()
-                                actionConfirmed()
-                            }
-                        }
+        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+
+        confirmationDialog = sceneContainer.container {
+            centerOnStage()
+
+            roundRect(
+                sceneWidth / 2.0,
+                sceneHeight / 4.0,
+                5.0,
+                5.0,
+                Colors.BLACK
+            )
+
+            uiVerticalStack {
+                position(20.0, 20.0)
+                scaledWidth = sceneWidth / 2.0 - 40.0
+
+                text(line1, 20.0, Colors.CYAN, font)
+
+                if (line2.isNotBlank()) {
+                    text(line2, 20.0, Colors.CYAN, font)
+                }
+
+                uiButton("NO") {
+                    textFont = font
+                    textColor = Colors.GOLD
+                    onClick {
+                        confirmationDialog?.removeFromParent()
+                        confirmationDialog = null
                     }
                 }
-    }
 
-   suspend fun showHighlight(img: Image, color: RGBA) : RoundRect {
-        var highlight = this.sceneContainer.container().roundRect(img.scaledWidth, img.scaledHeight, 5.00, 5.00,
-            Colors.TRANSPARENT_BLACK, color, 5.00 ) {
-            x = img.globalX
-            y = img.globalY
+                uiButton("YES") {
+                    textFont = font
+                    textColor = Colors.GOLD
+                    onClick {
+                        confirmationDialog?.removeFromParent()
+                        confirmationDialog = null
+                        actionConfirmed()
+                    }
+                }
+            }
         }
-        return highlight
     }
 
+
+    fun showHighlight(target: View, color: RGBA): RoundRect {
+        val parent = target.parent
+            ?: throw IllegalStateException("Cannot highlight a view with no parent")
+
+        return parent.roundRect(
+            target.scaledWidth + 8.0,
+            target.scaledHeight + 8.0,
+            rx = 10.0,
+            ry = 10.0,
+            fill = Colors.TRANSPARENT_BLACK,
+            stroke = color,
+            strokeThickness = 3.0
+        ) {
+            position(target.x - 4.0, target.y - 4.0)
+        }
+    }
 
     override suspend fun sceneBeforeLeaving() {
         showingNotEnough = false
@@ -94,6 +131,7 @@ open class BasicScene() : Scene() {
     private fun closeMessage() {
         showingNotEnough = false
         notEnoughDialog?.removeFromParent()
+        notEnoughDialog = null
     }
 
     open suspend fun actionConfirmed() {

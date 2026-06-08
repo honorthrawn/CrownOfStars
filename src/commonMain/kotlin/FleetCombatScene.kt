@@ -1,6 +1,5 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
@@ -9,6 +8,19 @@ import com.soywiz.korio.file.std.*
 import kotlin.random.*
 
 class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val cp: ComputerPlayerCombat, val techTree: TechTree) : BasicScene() {
+
+    private var terraformerSlot: Container? = null
+    private var colonyShipSlot: Container? = null
+    private var galleonSlot: Container? = null
+    private var corvetteSlot: Container? = null
+    private var cruiserSlot: Container? = null
+    private var battleShipSlot: Container? = null
+
+    private var enemyColonyShipSlot: Container? = null
+    private var enemyGalleonSlot: Container? = null
+    private var enemyCorvetteSlot: Container? = null
+    private var enemyCruiserSlot: Container? = null
+    private var enemyBattleShipSlot: Container? = null
 
     private var terraformerCounter: Text? = null
     private var terraformerImage: Image? = null
@@ -46,7 +58,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private var playerShipHighLight: RoundRect? = null
     private var enemyShipHighLight: RoundRect? = null
     private var playerShipTypeChosen: shipType? = null
-    private var enemyShipTypeChosen:  shipType? = null
+    private var enemyShipTypeChosen: shipType? = null
     private lateinit var header: Text
     private lateinit var messageLine: Text
     private lateinit var messageLine2: Text
@@ -80,6 +92,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private var enemySoak = 0
     private var playerWeapon = "wooden sword"
     private var enemyWeapon = "wooden sword"
+    private var resolvingCombat = false
 
     override suspend fun SContainer.sceneMain() {
         setupBonuses()
@@ -97,222 +110,247 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             alignTopToTopOf(background)
             centerXOnStage()
         }
-        messageLine = text("Click on your ship on left, then on enemy to fire on right", 25.00, Colors.GOLD, font ) {
+        messageLine = text("Click on your ship on left, then on enemy to fire on right", 25.00, Colors.GOLD, font) {
             alignTopToBottomOf(header)
             alignLeftToLeftOf(background)
         }
-        messageLine2= text("", 25.00, Colors.GOLD, font ) {
+        messageLine2 = text("", 25.00, Colors.GOLD, font) {
             alignTopToBottomOf(messageLine)
             alignLeftToLeftOf(background)
         }
 
-        val usefulHeight = sceneHeight.toDouble() - header.scaledHeight
-        - messageLine.scaledHeight - messageLine2.scaledHeight
+        val usefulHeight =
+            sceneHeight.toDouble() - header.scaledHeight - messageLine.scaledHeight - messageLine2.scaledHeight
 
         getCounts()
         ps.resetBattleStats()
 
-        uiVerticalStack {
-            alignTopToBottomOf(messageLine2)
-            positionX(150)
-            padding = 25.00
-            scaledHeight = usefulHeight
+        println("PLAYER SHIPS: terraformers=$playerTerrafomers colony=$colonyShipCount corvette=$corvetteCount cruiser=$cruiserCount battleship=$battleShipCount galleon=$galleonCount")
+        println("ENEMY SHIPS: colony=$enemyColonyShipCount corvette=$enemyCorvetteCount cruiser=$enemyCruiserCount battleship=$enemyBattleShipCount galleon=$enemyGalleonCount")
 
-            if(playerTerrafomers > 0) {
-                terraformerImage = image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickOnPlayerShip(shipType.TERRAFORMATTER_HUMAN) }
-                }
-            }
+        var playerY = messageLine2.y + messageLine2.scaledHeight + 10.0
+        val playerX = 60.0
 
-            if(colonyShipCount > 0) {
-                colonyShipImage = image(resourcesVfs["ships/Human-Battlecruiser.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickOnPlayerShip(shipType.COLONY_HUMAN) }
-                }
-            }
-
-            if(corvetteCount > 0) {
-                corvetteImage = image(resourcesVfs["ships/Human-Corvette.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickOnPlayerShip(shipType.CORVETTE_HUMAN) }
-                }
-            }
-
-            if(cruiserCount > 0) {
-                cruiserImage = image(resourcesVfs["ships/Human-Cruiser.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickOnPlayerShip(shipType.CRUISER_HUMAN) }
-                }
-            }
-
-            if(battleShipCount > 0) {
-                battleShipImage = image(resourcesVfs["ships/Human-Battleship.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickOnPlayerShip(shipType.BATTLESHIP_HUMAN) }
-                }
-            }
-
-            if( galleonCount > 0) {
-                galleonImage = image(resourcesVfs["ships/Human-Frigate.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickOnPlayerShip(shipType.GALLEON_HUMAN) }
-                }
-            }
-        }
-
-        uiVerticalStack {
-            alignRightToRightOf(background)
-            alignTopToBottomOf(messageLine2)
-            padding = 25.00
-            scaledHeight = usefulHeight
-
-            if(enemyColonyShipCount > 0) {
-                enemyColonyShipImage = image(resourcesVfs["ships/Frigate.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickonEnemyShip(shipType.COLONY_ENEMY) }
-                }
-            }
-
-            if(enemyCorvetteCount > 0) {
-                enemyCorvetteImage = image(resourcesVfs["ships/Corvette.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickonEnemyShip(shipType.CORVETTE_ENEMY) }
-                }
-            }
-
-            if(enemyCruiserCount > 0) {
-                enemyCruiserImage = image(resourcesVfs["ships/Cruiser.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickonEnemyShip(shipType.CRUISER_ENEMY) }
-                }
-            }
-
-            if(enemyBattleShipCount > 0) {
-                enemyBattleShipImage = image(resourcesVfs["ships/Battleship.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickonEnemyShip(shipType.BATTLESHIP_ENEMY) }
-                }
-            }
-
-            if(enemyGalleonCount > 0) {
-                enemyGalleonImage = image(resourcesVfs["ships/Destroyer.png"].readBitmap()) {
-                    scale(0.5, 0.5)
-                    onClick { clickonEnemyShip(shipType.GALLEON_ENEMY) }
-                }
-            }
-        }
-
-        //This is also weird.   The counters won't be where I want them to be if I put them in the stack, even with
-        //the centerOn call
-        if(playerTerrafomers > 0) {
-            terraformerCounter = text(
-                gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformerCombatCount().toString(),
-                25.00, Colors.CYAN, font
+        if (playerTerrafomers > 0) {
+            val view = combatShipSlot(
+                playerX,
+                playerY,
+                "ships/player_terraformer.png",
+                playerTerrafomers,
+                Colors.CYAN,
+                font,
+                faceLeft = false
             ) {
-                centerOn(terraformerImage!!)
+                clickOnPlayerShip(shipType.TERRAFORMATTER_HUMAN)
             }
+
+            terraformerSlot = view.slot
+            terraformerImage = view.image
+            terraformerCounter = view.counter
+
+
+            playerY += 120.0
         }
 
-        if(colonyShipCount > 0) {
-            colonyShipCounter = text(
-                gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyCombatCount().toString(),
-                25.00, Colors.CYAN, font
+        if (colonyShipCount > 0) {
+            val view = combatShipSlot(
+                playerX,
+                playerY,
+                "ships/player_colony_ship.png",
+                colonyShipCount,
+                Colors.CYAN,
+                font,
+                faceLeft = false
             ) {
-                centerOn(colonyShipImage!!)
+                clickOnPlayerShip(shipType.COLONY_HUMAN)
             }
+
+            colonyShipSlot = view.slot
+            colonyShipImage = view.image
+            colonyShipCounter = view.counter
+            playerY += 120.0
         }
 
-        if(galleonCount > 0) {
-            galleonCounter = text(
-                gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCombatCount().toString(),
-                25.00, Colors.CYAN, font
+        if (corvetteCount > 0) {
+            val view = combatShipSlot(
+                playerX,
+                playerY,
+                "ships/player_corvette.png",
+                corvetteCount,
+                Colors.CYAN,
+                font,
+                faceLeft = false
             ) {
-                centerOn(galleonImage!!)
+                clickOnPlayerShip(shipType.CORVETTE_HUMAN)
             }
+
+            corvetteSlot = view.slot
+            corvetteImage = view.image
+            corvetteCounter = view.counter
+            playerY += 120.0
         }
 
-        if(corvetteCount > 0) {
-            corvetteCounter = text(
-                gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCombatCount().toString(),
-                25.00, Colors.CYAN, font
+        if (cruiserCount > 0) {
+            val view = combatShipSlot(
+                playerX,
+                playerY,
+                "ships/player_cruiser.png",
+                cruiserCount,
+                Colors.CYAN,
+                font,
+                faceLeft = false
             ) {
-                centerOn(corvetteImage!!)
+                clickOnPlayerShip(shipType.CRUISER_HUMAN)
             }
+
+            cruiserSlot = view.slot
+            cruiserImage = view.image
+            cruiserCounter = view.counter
+            playerY += 120.0
         }
 
-        if(cruiserCount > 0) {
-            cruiserCounter = text(
-                gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCombatCount().toString(),
-                25.00, Colors.CYAN, font
+        if (battleShipCount > 0) {
+            val view = combatShipSlot(
+                playerX,
+                playerY,
+                "ships/player_battleship.png",
+                battleShipCount,
+                Colors.CYAN,
+                font,
+                faceLeft = false
             ) {
-                centerOn(cruiserImage!!)
+                clickOnPlayerShip(shipType.BATTLESHIP_HUMAN)
             }
+
+            battleShipSlot = view.slot
+            battleShipImage = view.image
+            battleShipCounter = view.counter
+            playerY += 120.0
         }
 
-        if(battleShipCount > 0) {
-            battleShipCounter = text(
-                gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCombatCount().toString(),
-                25.00, Colors.CYAN, font
+        if (galleonCount > 0) {
+            val view = combatShipSlot(
+                playerX,
+                playerY,
+                "ships/player_galleon.png",
+                galleonCount,
+                Colors.CYAN,
+                font,
+                faceLeft = false
             ) {
-                centerOn(battleShipImage!!)
+                clickOnPlayerShip(shipType.GALLEON_HUMAN)
             }
+
+            galleonSlot = view.slot
+            galleonImage = view.image
+            galleonCounter = view.counter
         }
 
+        var enemyY = messageLine2.y + messageLine2.scaledHeight + 10.0
+        val enemyX = sceneWidth - 170.0
 
-        if(enemyColonyShipCount > 0) {
-            enemyColonyShipCounter = text(
-                gs.stars[ps.activePlayerStar]!!.enemyFleet.getColonyCombatCount().toString(),
-                25.00, Colors.RED, font
+        if (enemyColonyShipCount > 0) {
+            val view = combatShipSlot(
+                enemyX,
+                enemyY,
+                "ships/enemy_colony_ship.png",
+                enemyColonyShipCount,
+                Colors.RED,
+                font,
+                faceLeft = true
             ) {
-                centerOn(enemyColonyShipImage!!)
+                clickonEnemyShip(shipType.COLONY_ENEMY)
             }
+
+            enemyColonyShipSlot = view.slot
+            enemyColonyShipImage = view.image
+            enemyColonyShipCounter = view.counter
+            enemyY += 120.0
         }
 
-        if(enemyGalleonCount > 0) {
-            enemyGalleonCounter = text(
-                gs.stars[ps.activePlayerStar]!!.enemyFleet.getGalleonCombatCount().toString(),
-                25.00, Colors.RED, font
+        if (enemyCorvetteCount > 0) {
+            val view = combatShipSlot(
+                enemyX,
+                enemyY,
+                "ships/enemy_corvette.png",
+                enemyCorvetteCount,
+                Colors.RED,
+                font,
+                faceLeft = true
             ) {
-                centerOn(enemyGalleonImage!!)
+                clickonEnemyShip(shipType.CORVETTE_ENEMY)
             }
+
+            enemyCorvetteSlot = view.slot
+            enemyCorvetteImage = view.image
+            enemyCorvetteCounter = view.counter
+            enemyY += 120.0
         }
 
-        if(enemyCorvetteCount > 0) {
-            enemyCorvetteCounter = text(
-                gs.stars[ps.activePlayerStar]!!.enemyFleet.getCorvetteCombatCount().toString(),
-                25.00, Colors.RED, font
+        if (enemyCruiserCount > 0) {
+            val view = combatShipSlot(
+                enemyX,
+                enemyY,
+                "ships/enemy_cruiser.png",
+                enemyCruiserCount,
+                Colors.RED,
+                font,
+                faceLeft = true
             ) {
-                centerOn(enemyCorvetteImage!!)
+                clickonEnemyShip(shipType.CRUISER_ENEMY)
             }
+
+            enemyCruiserSlot = view.slot
+            enemyCruiserImage = view.image
+            enemyCruiserCounter = view.counter
+            enemyY += 120.0
         }
 
-        if(enemyCruiserCount > 0) {
-            enemyCruiserCounter = text(
-                gs.stars[ps.activePlayerStar]!!.enemyFleet.getCruiserCombatCount().toString(),
-                25.00, Colors.RED, font
+        if (enemyBattleShipCount > 0) {
+            val view = combatShipSlot(
+                enemyX,
+                enemyY,
+                "ships/enemy_battleship.png",
+                enemyBattleShipCount,
+                Colors.RED,
+                font,
+                faceLeft = true
             ) {
-                centerOn(enemyCruiserImage!!)
+                clickonEnemyShip(shipType.BATTLESHIP_ENEMY)
             }
+
+            enemyBattleShipSlot = view.slot
+            enemyBattleShipImage = view.image
+            enemyBattleShipCounter = view.counter
+            enemyY += 120.0
         }
 
-        if(enemyBattleShipCount > 0) {
-            enemyBattleShipCounter = text(
-                gs.stars[ps.activePlayerStar]!!.enemyFleet.getBattleShipCombatCount().toString(),
-                25.00, Colors.RED, font
+        if (enemyGalleonCount > 0) {
+            val view = combatShipSlot(
+                enemyX,
+                enemyY,
+                "ships/enemy_galleon.png",
+                enemyGalleonCount,
+                Colors.RED,
+                font,
+                faceLeft = true
             ) {
-                centerOn(enemyBattleShipImage!!)
+                clickonEnemyShip(shipType.GALLEON_ENEMY)
             }
+
+            enemyGalleonSlot = view.slot
+            enemyGalleonImage = view.image
+            enemyGalleonCounter = view.counter
         }
 
-        //Lazy way of removing ship images of ships that aren't at the battle
-        //Just doing it lazy way is bad because you can other ships for tiny time slice and then they just disappear
-        //it's grating.
-        //updateScreen()
         val playerInitiativeRoll = Random.nextInt(1, 6) + playerInitiative
         val enemyRoll = Random.nextInt(1, 6) + enemyInitiative
-        if(enemyRoll > playerInitiativeRoll) {
+        if (enemyRoll > playerInitiativeRoll) {
             resolveEnemyFire()
+            getCounts()
+            updateScreen()
+            checkForBattleOver()
+            checkForNewRound()
         }
     }
 
@@ -338,18 +376,18 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         messageLine.text = ""
         messageLine2.text = ""
 
-        if(gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipTypeClicked) ) {
+        if (gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipTypeClicked)) {
             playerShipHighLight?.removeFromParent()
 
             playerShipTypeChosen = shipTypeClicked
 
             playerShipHighLight = when (shipTypeClicked) {
-                shipType.TERRAFORMATTER_HUMAN -> showHighlight(terraformerImage!!, Colors.GREEN)
-                shipType.COLONY_HUMAN -> showHighlight(colonyShipImage!!, Colors.GREEN)
-                shipType.CORVETTE_HUMAN -> showHighlight(corvetteImage!!, Colors.GREEN)
-                shipType.CRUISER_HUMAN -> showHighlight(cruiserImage!!, Colors.GREEN)
-                shipType.BATTLESHIP_HUMAN -> showHighlight(battleShipImage!!, Colors.GREEN)
-                shipType.GALLEON_HUMAN -> showHighlight(galleonImage!!, Colors.GREEN)
+                shipType.TERRAFORMATTER_HUMAN -> showHighlight(terraformerSlot!!, Colors.GREEN)
+                shipType.COLONY_HUMAN -> showHighlight(colonyShipSlot!!, Colors.GREEN)
+                shipType.CORVETTE_HUMAN -> showHighlight(corvetteSlot!!, Colors.GREEN)
+                shipType.CRUISER_HUMAN -> showHighlight(cruiserSlot!!, Colors.GREEN)
+                shipType.BATTLESHIP_HUMAN -> showHighlight(battleShipSlot!!, Colors.GREEN)
+                shipType.GALLEON_HUMAN -> showHighlight(galleonSlot!!, Colors.GREEN)
                 else -> null
             }
         } else {
@@ -359,50 +397,68 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
 
 
     private suspend fun clickonEnemyShip(shipTypeClicked: shipType) {
-        enemyShipHighLight?.removeFromParent()
+        if (resolvingCombat) return
 
-        enemyShipTypeChosen = shipTypeClicked
-
-        enemyShipHighLight = when (shipTypeClicked) {
-            shipType.COLONY_ENEMY -> showHighlight(enemyColonyShipImage!!, Colors.RED)
-            shipType.CORVETTE_ENEMY -> showHighlight(enemyCorvetteImage!!, Colors.RED)
-            shipType.CRUISER_ENEMY -> showHighlight(enemyCruiserImage!!, Colors.RED)
-            shipType.BATTLESHIP_ENEMY -> showHighlight(enemyBattleShipImage!!, Colors.RED)
-            shipType.GALLEON_ENEMY -> showHighlight(enemyGalleonImage!!, Colors.RED)
-            else -> null
+        if (playerShipTypeChosen == null) {
+            messageLine.text = "Choose one of your ships first"
+            return
         }
 
-        fire()
-        getCounts()
-        updateScreen()
-        resolveEnemyFire()
-        getCounts()
-        updateScreen()
-        checkForBattleOver()
-        checkForNewRound()
+        resolvingCombat = true
+        try {
+            enemyShipHighLight?.removeFromParent()
+
+            enemyShipTypeChosen = shipTypeClicked
+
+            enemyShipHighLight = when (shipTypeClicked) {
+                shipType.COLONY_ENEMY -> showHighlight(enemyColonyShipSlot!!, Colors.RED)
+                shipType.CORVETTE_ENEMY -> showHighlight(enemyCorvetteSlot!!, Colors.RED)
+                shipType.CRUISER_ENEMY -> showHighlight(enemyCruiserSlot!!, Colors.RED)
+                shipType.BATTLESHIP_ENEMY -> showHighlight(enemyBattleShipSlot!!, Colors.RED)
+                shipType.GALLEON_ENEMY -> showHighlight(enemyGalleonSlot!!, Colors.RED)
+                else -> null
+            }
+
+            fire()
+            getCounts()
+            updateScreen()
+
+            checkForBattleOver()
+            //if (isBattleOver()) return
+
+            resolveEnemyFire()
+            getCounts()
+            updateScreen()
+            checkForBattleOver()
+           // if (isBattleOver()) return
+            checkForNewRound()
+        } finally {
+            resolvingCombat = false
+        }
     }
 
     private suspend fun fire() {
-        if(playerShipTypeChosen != null) {
+        if (playerShipTypeChosen != null) {
             val gunsFiring = gs.stars[ps.activePlayerStar]!!.playerFleet.getGunMountCount(playerShipTypeChosen!!)
             println("Number of guns: ${gunsFiring}")
             var hits = 0
             var totaldamage = 0
-            if(enemyShipTypeChosen != null) {
+            if (enemyShipTypeChosen != null) {
                 for (i in 1..gunsFiring) {
                     val roll = Random.nextInt(1, 10)
                     println("Rolled: ${roll}")
                     val adjustedRoll = roll - enemyEvasion + playerAccuray
-                    if(adjustedRoll > 5) {
+                    if (adjustedRoll > 5) {
                         hits++
-                        var damageRolled = Random.nextInt(playerLowDamage, playerHighDamage) - enemySoak
-                        if(damageRolled <= 0 ) {
+                        var damageRolled = Random.nextInt(playerLowDamage, playerHighDamage + 1) - enemySoak
+                        if (damageRolled <= 0) {
                             damageRolled = 1
                         }
                         totaldamage += damageRolled
                         println("Rolled damage: ${damageRolled}")
-                        val destroyed = gs.stars[ps.activePlayerStar]!!.enemyFleet.damageShip(enemyShipTypeChosen!!, damageRolled)
-                        if(destroyed) {
+                        val destroyed =
+                            gs.stars[ps.activePlayerStar]!!.enemyFleet.damageShip(enemyShipTypeChosen!!, damageRolled)
+                        if (destroyed) {
                             ps.enemyShipsDestroyed++
                             val countRemaining = when (enemyShipTypeChosen) {
                                 shipType.COLONY_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getColonyCombatCount()
@@ -425,7 +481,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                             }
                         }
 
-                    }
+                    }isBattleOver
                 }
                 ps.totalDamageDealt += totaldamage
                 //need to mark that the ship type has fired
@@ -457,38 +513,37 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 val adjustedRoll = roll + enemyAccuracy - playerEvasion
                 if (adjustedRoll > 5) {
                     hits++
-                    val damageRolled = Random.nextInt(enemyLowDamage, enemyHighDamage)
-                    totaldamage += (damageRolled - playerSoak)
-                    if(totaldamage <= 0) {
-                        totaldamage = 1
-                    }
-                    println("Rolled damage: ${damageRolled}")
-                    val destroyed = gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(targetShips!!, damageRolled)
-                    if(destroyed) {
+                    var damageApplied = Random.nextInt(enemyLowDamage, enemyHighDamage + 1) - playerSoak
+                    if (damageApplied <= 0) damageApplied = 1
+
+                    totaldamage += damageApplied
+                    val destroyed =
+                        gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(targetShips!!, damageApplied)
+                    if (destroyed) {
                         ps.shipsLost++
-                        val countRemaining = when(targetShips) {
+                        val countRemaining = when (targetShips) {
                             shipType.TERRAFORMATTER_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformerCombatCount()
                             shipType.COLONY_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyCombatCount()
                             shipType.CORVETTE_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCombatCount()
                             shipType.CRUISER_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCombatCount()
                             shipType.BATTLESHIP_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCombatCount()
-                            shipType.GALLEON_HUMAN ->gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCombatCount()
+                            shipType.GALLEON_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCombatCount()
                             //Enemy shouldn't fire on itself so this kinda silly
                             shipType.COLONY_ENEMY -> 0
-                            shipType.CORVETTE_ENEMY ->0
+                            shipType.CORVETTE_ENEMY -> 0
                             shipType.CRUISER_ENEMY -> 0
                             shipType.BATTLESHIP_ENEMY -> 0
                             shipType.GALLEON_ENEMY -> 0
                         }
                         //If we destroyed the last ship, then don't evaluate more damage
-                        if(countRemaining == 0) {
+                        if (countRemaining == 0) {
                             break
                         }
                     }
                 }
             }
             ps.totalDamgeReceived = totaldamage
-           // need to mark that the ship type has fired
+            // need to mark that the ship type has fired
             gs.stars[ps.activePlayerStar]!!.enemyFleet.setFiredGuns(firingShips!!)
             messageLine2.text =
                 "Enemy fired ${enemyWeapon} ${gunsFiring} times ${hits} hits doing ${totaldamage} damage"
@@ -497,7 +552,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     }
 
     private suspend fun updateScreen() {
-           //Update all counters
+        //Update all counters
         terraformerCounter?.text = playerTerrafomers.toString()
         colonyShipCounter?.text = colonyShipCount.toString()
         corvetteCounter?.text = corvetteCount.toString()
@@ -509,69 +564,88 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         enemyCorvetteCounter?.text = enemyCorvetteCount.toString()
         enemyCruiserCounter?.text = enemyCruiserCount.toString()
         enemyBattleShipCounter?.text = enemyBattleShipCount.toString()
+        enemyGalleonCounter?.text = enemyGalleonCount.toString()
 
-        //Remove images and counter if ships have blown up (or retreated, if we add that option)
-        if(playerTerrafomers == 0 && terraformerImage != null) {
-            terraformerImage!!.removeFromParent()
-            terraformerCounter?.removeFromParent()
-            terraformerImage = null
-        }
-        if(colonyShipCount == 0 && colonyShipImage != null) {
-            colonyShipImage!!.removeFromParent()
-            colonyShipCounter?.removeFromParent()
-            colonyShipImage = null
-        }
-        if(corvetteCount == 0 && corvetteImage != null) {
-            corvetteImage!!.removeFromParent()
-            corvetteCounter?.removeFromParent()
+        if (corvetteCount == 0 && corvetteSlot != null) {
+            corvetteSlot!!.removeFromParent()
+            corvetteSlot = null
             corvetteImage = null
+            corvetteCounter = null
         }
-        if(cruiserCount == 0 && cruiserImage != null) {
-            cruiserImage!!.removeFromParent()
-            cruiserCounter?.removeFromParent()
-            cruiserImage = null
-        }
-        if(battleShipCount == 0 && battleShipImage != null) {
-            battleShipImage!!.removeFromParent()
-            battleShipCounter?.removeFromParent()
-            battleShipImage = null
-        }
-        if(galleonCount == 0 && galleonImage != null) {
-            galleonImage!!.removeFromParent()
-            galleonCounter?.removeFromParent()
-            galleonImage = null
+        if (playerTerrafomers == 0 && terraformerSlot != null) {
+            terraformerSlot!!.removeFromParent()
+            terraformerSlot = null
+            terraformerImage = null
+            terraformerCounter = null
         }
 
-        //Renove enemy images and counters if those have been destroyed
-        if(enemyColonyShipCount == 0 && enemyColonyShipImage != null) {
-            enemyColonyShipImage!!.removeFromParent()
-            enemyColonyShipCounter?.removeFromParent()
+        if (colonyShipCount == 0 && colonyShipSlot != null) {
+            colonyShipSlot!!.removeFromParent()
+            colonyShipSlot = null
+            colonyShipImage = null
+            colonyShipCounter = null
+        }
+
+        if (cruiserCount == 0 && cruiserSlot != null) {
+            cruiserSlot!!.removeFromParent()
+            cruiserSlot = null
+            cruiserImage = null
+            cruiserCounter = null
+        }
+
+        if (battleShipCount == 0 && battleShipSlot != null) {
+            battleShipSlot!!.removeFromParent()
+            battleShipSlot = null
+            battleShipImage = null
+            battleShipCounter = null
+        }
+
+        if (galleonCount == 0 && galleonSlot != null) {
+            galleonSlot!!.removeFromParent()
+            galleonSlot = null
+            galleonImage = null
+            galleonCounter = null
+        }
+
+        if (enemyColonyShipCount == 0 && enemyColonyShipSlot != null) {
+            enemyColonyShipSlot!!.removeFromParent()
+            enemyColonyShipSlot = null
             enemyColonyShipImage = null
+            enemyColonyShipCounter = null
         }
-        if(enemyCorvetteCount == 0 && enemyCorvetteImage != null) {
-            enemyCorvetteImage!!.removeFromParent()
-            enemyCorvetteCounter?.removeFromParent()
+
+        if (enemyCorvetteCount == 0 && enemyCorvetteSlot != null) {
+            enemyCorvetteSlot!!.removeFromParent()
+            enemyCorvetteSlot = null
             enemyCorvetteImage = null
+            enemyCorvetteCounter = null
         }
-        if(enemyCruiserCount == 0 && enemyCruiserImage != null) {
-            enemyCruiserImage!!.removeFromParent()
-            enemyCruiserCounter?.removeFromParent()
+
+        if (enemyCruiserCount == 0 && enemyCruiserSlot != null) {
+            enemyCruiserSlot!!.removeFromParent()
+            enemyCruiserSlot = null
             enemyCruiserImage = null
+            enemyCruiserCounter = null
         }
-        if(enemyBattleShipCount == 0 && enemyBattleShipImage != null) {
-            enemyBattleShipImage!!.removeFromParent()
-            enemyBattleShipCounter?.removeFromParent()
+
+        if (enemyBattleShipCount == 0 && enemyBattleShipSlot != null) {
+            enemyBattleShipSlot!!.removeFromParent()
+            enemyBattleShipSlot = null
             enemyBattleShipImage = null
+            enemyBattleShipCounter = null
         }
-        if(enemyGalleonCount == 0 && enemyGalleonImage != null) {
-            enemyGalleonImage!!.removeFromParent()
-            enemyGalleonCounter?.removeFromParent()
+
+        if (enemyGalleonCount == 0 && enemyGalleonSlot != null) {
+            enemyGalleonSlot!!.removeFromParent()
+            enemyGalleonSlot = null
             enemyGalleonImage = null
+            enemyGalleonCounter = null
         }
+
     }
 
     private suspend fun checkForNewRound() {
-        if(isRoundOver()) {
+        if (isRoundOver()) {
             round++
             gs.stars[ps.activePlayerStar]!!.playerFleet.nextCombatTurn()
             gs.stars[ps.activePlayerStar]!!.enemyFleet.nextCombatTurn()
@@ -581,46 +655,46 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
 
     private suspend fun checkForBattleOver() {
         ps.totalRounds = round
-        if( gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent() && !gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent()) {
+        if (gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent() && !gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent()) {
             sceneContainer.changeTo<LoseFleetCombatScene>()
-        } else if ( gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent() && !gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent() ) {
+        } else if (gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent() && !gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent()) {
             sceneContainer.changeTo<WinFleetCombatScene>()
         }
         //Otherwise continue
     }
 
-    private suspend fun isRoundOver() : Boolean {
+    private suspend fun isRoundOver(): Boolean {
         //Start with the assumption that the round is over
         var roundOver = true
 
         //There's a new round if all ships still present have fired -- EXCEPT for terraformers which have no Gun Mounts
-        if (colonyShipCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.COLONY_HUMAN) ) {
+        if (colonyShipCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.COLONY_HUMAN)) {
             roundOver = false
-        } else if (corvetteCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.CORVETTE_HUMAN) ) {
+        } else if (corvetteCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.CORVETTE_HUMAN)) {
             roundOver = false
-        } else if (cruiserCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.CRUISER_HUMAN) ) {
+        } else if (cruiserCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.CRUISER_HUMAN)) {
             roundOver = false
-        } else if (battleShipCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.BATTLESHIP_HUMAN) ) {
+        } else if (battleShipCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.BATTLESHIP_HUMAN)) {
             roundOver = false
-        } else if (galleonCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.GALLEON_HUMAN) ) {
+        } else if (galleonCount > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.canFire(shipType.GALLEON_HUMAN)) {
             roundOver = false
-        } else if (enemyColonyShipCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.COLONY_ENEMY) ) {
+        } else if (enemyColonyShipCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.COLONY_ENEMY)) {
             roundOver = false
-        } else if (enemyCorvetteCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.CORVETTE_ENEMY) ) {
+        } else if (enemyCorvetteCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.CORVETTE_ENEMY)) {
             roundOver = false
-        } else if (enemyCruiserCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.CRUISER_ENEMY) ) {
+        } else if (enemyCruiserCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.CRUISER_ENEMY)) {
             roundOver = false
-        } else if (enemyBattleShipCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.BATTLESHIP_ENEMY) ) {
+        } else if (enemyBattleShipCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.BATTLESHIP_ENEMY)) {
             roundOver = false
-        } else if (enemyGalleonCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.GALLEON_ENEMY) ) {
+        } else if (enemyGalleonCount > 0 && gs.stars[ps.activePlayerStar]!!.enemyFleet.canFire(shipType.GALLEON_ENEMY)) {
             roundOver = false
         }
 
-        return(roundOver)
+        return (roundOver)
     }
 
     suspend fun setupBonuses() {
-        val bonusCalculator = BonusCalculator(es,techTree)
+        val bonusCalculator = BonusCalculator(es, techTree)
         playerInitiative = bonusCalculator.getInitiativeBonus(Allegiance.Player)
         enemyInitiative = bonusCalculator.getInitiativeBonus(Allegiance.Enemy)
         playerAccuray = bonusCalculator.getAccuracyBonus(Allegiance.Player)
@@ -638,5 +712,55 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         playerSoak = bonusCalculator.getDamageSoaked(Allegiance.Player)
         enemySoak = bonusCalculator.getDamageSoaked(Allegiance.Enemy)
     }
-}
+    private data class CombatShipView(
+        val slot: Container,
+        val image: Image,
+        val counter: Text
+    )
 
+    private suspend fun Container.combatShipSlot(
+        x: Double,
+        y: Double,
+        path: String,
+        count: Int,
+        counterColor: RGBA,
+        font: Font,
+        faceLeft: Boolean = false,
+        onClickHandler: suspend () -> Unit
+    ): CombatShipView {
+        val slotSize = 110.0
+        val maxShipWidth = 96.0
+        val maxShipHeight = 88.0
+
+        val slot = container {
+            position(x, y)
+
+            // Keep this visible while testing.
+            // Change to Colors.TRANSPARENT after it works.
+            solidRect(slotSize, slotSize, Colors.TRANSPARENT_BLACK) {
+                onClick { onClickHandler() }
+            }
+        }
+
+        val bitmap = resourcesVfs[path].readBitmap()
+
+        val scaleAmount = minOf(
+            maxShipWidth / bitmap.width.toDouble(),
+            maxShipHeight / bitmap.height.toDouble()
+        )
+
+        val ship = slot.image(bitmap) {
+            anchor(0.5, 0.5)
+            position(slotSize / 2.0, slotSize / 2.0)
+
+            scaleX = if (faceLeft) -scaleAmount else scaleAmount
+            scaleY = scaleAmount
+        }
+
+        val counter = slot.text(count.toString(), 25.0, counterColor, font) {
+            centerOn(slot)
+        }
+
+        return CombatShipView(slot, ship, counter)
+    }
+}

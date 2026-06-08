@@ -5,7 +5,18 @@ import kotlin.random.*
 enum class StarType {
     YELLOW,
     BLUE,
-    RED
+    RED;
+
+    companion object {
+        fun getImagePath(type: StarType) : String {
+            val retval = when(type) {
+                RED -> "stars/red_star.png"
+                BLUE ->  "stars/blue_star.png"
+                YELLOW ->  "stars/yellow_star.png"
+            }
+            return retval
+        }
+    }
 }
 
 @Serializable

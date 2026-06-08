@@ -51,14 +51,14 @@ data class Planet(val star: String) {
 
     fun getImagePath() : String {
         val retval = when(type) {
-            PlanetType.TOXIC -> "planets/toxicPlanet.jpg"
-            PlanetType.OCEAN -> "planets/oceanPlanet.jpg"
-            PlanetType.TERRAN -> "planets/terranPlanet.jpg"
-            PlanetType.DESERT -> "planets/desertPlanet.jpg"
-            PlanetType.VOLCANIC -> "planets/volcanicPlanet.jpg"
-            PlanetType.BARREN -> "planets/barrenPlanet.jpg"
-            PlanetType.SUPERTERRAN -> "planets/paradisePlanet.jpg"
-            PlanetType.TROPICAL -> "planets/tropicalPlanet.jpg"
+            PlanetType.TOXIC -> "planets/toxic_planet_128.png"
+            PlanetType.OCEAN -> "planets/ocean_planet_128.png"
+            PlanetType.TERRAN -> "planets/terran_planet_128.png"
+            PlanetType.DESERT -> "planets/desert_planet_128.png"
+            PlanetType.VOLCANIC -> "planets/volcanic_planet_128.png"
+            PlanetType.BARREN -> "planets/barren_planet_128.png"
+            PlanetType.SUPERTERRAN -> "planets/super_terran_planet_128.png"
+            PlanetType.TROPICAL -> "planets/tropical_planet_128.png"
         }
         return retval
     }

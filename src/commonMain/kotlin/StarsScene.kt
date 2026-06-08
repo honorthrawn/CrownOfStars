@@ -9,24 +9,28 @@ import com.soywiz.korio.file.std.*
 
 class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: ComputerPlayerCore, val cps: ComputerPlayerState)
     : BasicScene() {
+    private lateinit var font: Font
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
     private lateinit var defenseReadout: Text
+    private lateinit var systemActionsPanel: Container
     private var friendlyFleets = arrayListOf<Image>()
     private var enemyFleets = arrayListOf<Image>()
 
     override suspend fun SContainer.sceneInit() {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
-        val yellowStar = resourcesVfs["stars/Star cK gK eg9.bmp"].readBitmap()
-        val blueStar = resourcesVfs["stars/Star B supeg5.bmp"].readBitmap()
-        val redStar = resourcesVfs["stars/Star M supeg5.bmp"].readBitmap()
-        val fleet = resourcesVfs["ui/med-head-scout.png"].readBitmap()
+        val yellowStar = resourcesVfs[StarType.getImagePath(StarType.YELLOW)].readBitmap()
+        val blueStar = resourcesVfs[StarType.getImagePath(StarType.BLUE)].readBitmap()
+        val redStar = resourcesVfs[StarType.getImagePath(StarType.RED)].readBitmap()
+
+        val ourFlag = resourcesVfs["ui/player_fleet_banner.png"].readBitmap()
+        val enemyFlag = resourcesVfs["ui/enemy_fleet_banner.png"].readBitmap()
 
         val cellSize = views.virtualWidth / 10.0
         val cellHeight = views.virtualHeight / 10.0
@@ -38,47 +42,46 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             for (j in 0..9) {
                 val rect = roundRect(cellSize, cellHeight, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 5.00) {
                     position(x, y)
-                    onClick { clickedSector(i, j) } //for some weird reason trying to use nI always results in 40
+                    onClick { showSystemActions(i, j) } //for some weird reason trying to use nI always results in 40
                 }
 
-                uiVerticalStack(cellSize, UI_DEFAULT_PADDING, false) {
-                    centerXOn(rect)
+                val fleetImage = image(ourFlag) {
+                    visible = gs.stars[nI]!!.playerFleet.isPresent()
+                    scaledHeight = cellHeight / 2.0
+                    scaledWidth = cellSize / 2.0
                     alignTopToTopOf(rect)
-                    scaledHeight = cellHeight
-                    scaledWidth = cellSize
-                    uiHorizontalStack {
-                        alignTopToTopOf(rect)
-                        val fleetImage = image(fleet) {
-                            colorMul = Colors.CYAN
-                            onClick { clickedFleet(i, j) }
-                            visible = gs.stars[nI]!!.playerFleet.isPresent()
-                        }
-                        friendlyFleets.add(fleetImage)
-                        val enemyfleetImage = image(fleet) {
-                            colorMul = Colors.RED
-                            onClick { clickedEnemyFleet(i, j) }
-                            visible = gs.stars[nI]!!.enemyFleet.isPresent()
-                        }
-                        enemyFleets.add(enemyfleetImage)
-                    }
+                    alignLeftToLeftOf(rect)
+                }
+                friendlyFleets.add(fleetImage)
 
-                    val textColor = when(gs.stars[nI]!!.getAllegiance()) {
-                        Allegiance.Unoccupied -> Colors.WHITE
-                        Allegiance.Player -> Colors.CYAN
-                        Allegiance.Enemy -> Colors.RED
-                    }
-                    text(gs.stars[nI]!!.name, 11.00, textColor, font)
-                    //Trying to put star first pushed the text and the fleet down to bottom of screen
-                    // outside of rect don't understand
-                    var starImage = image(
-                        when (gs.stars[nI]!!.type) {
-                            StarType.YELLOW -> yellowStar
-                            StarType.BLUE -> blueStar
-                            StarType.RED -> redStar
-                        } ) {
-                        scaledWidth = 30.0
-                        scaledHeight = 30.0
-                    }
+                val enemyFleetImage = image(enemyFlag) {
+                    visible = gs.stars[nI]!!.enemyFleet.isPresent()
+                    scaledHeight = cellHeight / 2.0
+                    scaledWidth = cellSize / 2.0
+                    alignTopToTopOf(rect)
+                    alignRightToRightOf(rect)
+                }
+                enemyFleets.add(enemyFleetImage)
+
+                val textColor = when(gs.stars[nI]!!.getAllegiance()) {
+                    Allegiance.Unoccupied -> Colors.WHITE
+                    Allegiance.Player -> Colors.CYAN
+                    Allegiance.Enemy -> Colors.RED
+                }
+                text(gs.stars[nI]!!.name, 11.00, textColor, font) {
+                    centerXOn(rect)
+                    alignBottomToBottomOf(rect, 2.00)
+                }
+
+                var starImage = image(
+                    when (gs.stars[nI]!!.type) {
+                        StarType.YELLOW -> yellowStar
+                        StarType.BLUE -> blueStar
+                        StarType.RED -> redStar
+                    } ) {
+                    scaledWidth = 30.0
+                    scaledHeight = 30.0
+                    centerOn(rect)
                 }
                 x += cellSize
                 nI++
@@ -139,7 +142,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         updateScreen()
     }
 
-    private fun updateScreen() {Ship
+    private fun updateScreen() {
         val Ship = "METAL: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints} "
         val Research = "RESEARCH: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints} "
         val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints} "
@@ -151,24 +154,63 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
         for (i in 0..gs.stars.count() - 1) {
             enemyFleets[i].visible = gs.stars[i]!!.enemyFleet.isPresent()
             friendlyFleets[i].visible = gs.stars[i]!!.playerFleet.isPresent()
-            // println("FLEET HUMAN ${gs.stars[i]!!.playerFleet.isPresent()} ENEMY: ${gs.stars[i]!!.enemyFleet.isPresent()}")
         }
     }
 
-    private suspend fun clickedSector(x: Int, y: Int) {
-        when (ps.operation) {
-            operationType.SELECTION -> {
-                ps.activePlayerStar = x * 10 + y
-                sceneContainer.changeTo<PlanetsScene>()
-            }
+    private suspend fun showSystemActions(x: Int, y: Int) {
+        //Special case, we already selected our fleet
+        if(ps.operation == operationType.MOVINGFLEET) {
+            movechosenShips(x,y)
+            return
+        }
 
-            operationType.MOVINGFLEET -> {
-                movechosenShips(x, y)
-                ps.reset()
+        systemActionsPanel = this.sceneContainer.container()
+
+        systemActionsPanel.roundRect(
+            sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+            Colors.BLACK
+        ) {
+               uiVerticalStack {
+                scaledWidth = sceneWidth / 2.00
+                text("SYSTEM OPERATIONS", 50.00, Colors.CYAN, font)
+
+               uiButton("PLANETS")
+               {
+                   textFont = font
+                   textColor = Colors.GOLD
+                   onClick {
+                       ps.operation = operationType.SELECTION
+                       ps.activePlayerStar = x * 10 + y
+                       sceneContainer.changeTo<PlanetsScene>()
+                       systemActionsPanel.removeFromParent()
+                   }
+               }
+
+                   uiButton("MOVE OUR SHIPS") {
+                       textFont = font
+                       textColor = Colors.GOLD
+                       onClick {
+                           systemActionsPanel.removeFromParent()
+                           ps.operation = operationType.SELECTION
+                           clickedFleet(x, y)
+                       }
+                   }
+
+                   uiButton("VIEW ENEMY SHIPS") {
+                       textFont = font
+                       textColor = Colors.GOLD
+                       onClick {
+                           systemActionsPanel.removeFromParent()
+                           clickedEnemyFleet(x, y)
+                       }
+                   }
+
+                   uiButton("CLOSE") {
+                    onClick { systemActionsPanel.removeFromParent() }
+                }
             }
         }
     }
-
 
     private suspend fun movechosenShips(x: Int, y: Int) {
         //Figure out destination star
@@ -238,6 +280,12 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     private suspend fun clickedFleet(x: Int, y: Int) {
         println("we clicked a fleet")
         ps.activePlayerStar = x * 10 + y
+
+        if( !gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent()) {
+            showNoGo("Our Fleet is not here")
+            return
+        }
+
         //Assume want to move whole fleet
         if(gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() == 0 &&
             gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() == 0  &&
@@ -261,6 +309,10 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     private suspend fun clickedEnemyFleet(x: Int, y: Int) {
         println("we clicked an enemy fleet")
         ps.activePlayerStar = x * 10 + y
+        if( !gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent()) {
+           showNoGo("No Enemy Fleet Here")
+           return
+        }
         sceneContainer.changeTo<ViewShipsScene>()
     }
 }
