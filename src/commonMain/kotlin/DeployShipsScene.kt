@@ -43,7 +43,8 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
                //image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
                image(resourcesVfs["ships/player_terraformer.png"].readBitmap()) {
-                   scale(0.1, 0.1)
+                   //scale(0.1, 0.1)
+                   size(96,96)
                }
             }
             uiHorizontalStack {
@@ -61,7 +62,8 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
                 image(resourcesVfs["ships/player_colony_ship.png"].readBitmap()) {
                     //scale(0.5, 0.5)
-                    scale(0.1, 0.1)
+                    //scale(0.1, 0.1)
+                    size(96,96)
                 }
             }
 
@@ -80,7 +82,8 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
                 image(resourcesVfs["ships/player_corvette.png"].readBitmap())  {
                    // scale(0.5, 0.5)
-                    scale(0.1, 0.1)
+                    //scale(0.1, 0.1)
+                    size(96,96)
                 }
             }
 
@@ -99,7 +102,8 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
                 image(resourcesVfs["ships/player_cruiser.png"].readBitmap()) {
                    // scale(0.5, 0.5)
-                    scale(0.1, 0.1)
+                    //scale(0.1, 0.1)
+                    size(96,96)
                 }
             }
 
@@ -118,7 +122,8 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
                 image(resourcesVfs["ships/player_battleship.png"].readBitmap()) {
                     //scale(0.5, 0.5)
-                    scale(0.1, 0.1)
+                    //scale(0.1, 0.1)
+                    size(96,96)
                 }
             }
 
@@ -136,8 +141,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     onClick { onShipDown(shipType.GALLEON_HUMAN) }
                 }
                 image(resourcesVfs["ships/player_galleon.png"].readBitmap())  {
-                   // scale(0.5, 0.5)
-                    scale(0.1, 0.1)
+                   size(96, 96)
                 }
             }
 

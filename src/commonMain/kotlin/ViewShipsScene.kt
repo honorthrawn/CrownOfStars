@@ -39,7 +39,8 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 colonyReadout = text("Colony: ${enemyFleet.getColonyCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/enemy_colony_ship.png"].readBitmap()) {
-                    scale(0.1, 0.1)
+                    //scale(0.1, 0.1)
+                    size(96, 96)
                 }
             }
 
@@ -47,7 +48,8 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 corvetteReadout = text("Corvettes: ${enemyFleet.getCorvetteCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/enemy_corvette.png"].readBitmap())  {
-                   scale(0.1, 0.1)
+                   //scale(0.1, 0.1)
+                    size(96, 96)
                 }
             }
 
@@ -55,7 +57,8 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 cruiserReadout = text("Cruisers: ${enemyFleet.getCruiserCombatCount()}", 25.00, Colors.RED, font)
                   image(resourcesVfs["ships/enemy_cruiser.png"].readBitmap()) {
-                    scale(0.1, 0.1)
+                    //scale(0.1, 0.1)
+                      size(96, 96)
                 }
             }
 
@@ -63,7 +66,8 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 battleshipReadout = text("Battleships: ${enemyFleet.getBattleShipCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/enemy_battleship.png"].readBitmap()) {
-                   scale(0.1, 0.1)
+                   //scale(0.1, 0.1)
+                    size(96, 96)
                 }
             }
 
@@ -71,7 +75,8 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 5.00
                 galleonReadout = text("Galleons: ${enemyFleet.getGalleonCombatCount()}", 25.00, Colors.RED, font)
                 image(resourcesVfs["ships/enemy_galleon.png"].readBitmap())  {
-                    scale(0.1, 0.1)
+                    //scale(0.1, 0.1)
+                    size(96, 96)
                 }
             }
 
