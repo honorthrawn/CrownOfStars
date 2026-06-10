@@ -14,170 +14,197 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
     override suspend fun SContainer.sceneInit() {
         shipFactory.init()
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
+
+        image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
+
         val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
 
-        val terraformerCosts = getCosts(shipType.TERRAFORMATTER_HUMAN)
-        val colonyCosts = getCosts(shipType.COLONY_HUMAN)
-        val corvetteCosts = getCosts(shipType.CORVETTE_HUMAN)
-        val cruiserCost = getCosts(shipType.CRUISER_HUMAN)
-        val battleShipCost = getCosts(shipType.BATTLESHIP_HUMAN)
-        val galleonCost = getCosts(shipType.GALLEON_HUMAN)
+        val playerEmpire = es.empires[Allegiance.Player.ordinal]!!
 
-        uiVerticalStack {
-            uiHorizontalStack {
-                val terraFormer = image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
-                    setSizeScaled(50.0, 50.0)
-                }
-
-                val line1 = text("Terraformer", 50.00, Colors.CYAN, font) {
-                }
-            }
-            uiHorizontalStack {
-                val line2 = text(
-                    "Organics ${terraformerCosts.organics} Ship ${terraformerCosts.metal}", 50.00,
-                    Colors.CYAN, font
-                ) {
-                }
-
-                uiButton("BUY") {
-                    textColor = Colors.GOLD
-                    textFont = font
-                    onClick { buy(shipType.TERRAFORMATTER_HUMAN) }
-                }
-            }
-
-            uiHorizontalStack {
-                val colonyShip = image(resourcesVfs["ships/Human-Battlecruiser.png"].readBitmap()) {
-                    setSizeScaled(50.0, 50.0)
-                }
-                val line3 = text("Colony", 50.00, Colors.CYAN, font) {
-                }
-            }
-
-            uiHorizontalStack {
-                val line4 =
-                    text(
-                        "Organics ${colonyCosts.organics} Ship ${colonyCosts.metal}",
-                        50.00,
-                        Colors.CYAN,
-                        font
-                    ) {
-                    }
-
-                val buyColony = uiButton("BUY") {
-                    textColor = Colors.GOLD
-                    textFont = font
-                    onClick { buy(shipType.COLONY_HUMAN) }
-                }
-            }
-
-
-            uiHorizontalStack {
-                val corvetteShip = image(resourcesVfs["ships/Human-Corvette.png"].readBitmap()) {
-                    setSizeScaled(50.0, 50.0)
-                }
-                val line5 = text("Corvette", 50.00, Colors.CYAN, font) {
-                }
-            }
-
-            uiHorizontalStack {
-                val line6 =
-                    text(
-                        "Organics ${corvetteCosts.organics} Ship ${corvetteCosts.metal}",
-                        50.00,
-                        Colors.CYAN,
-                        font
-                    ) {
-                    }
-                val buyCorvette = uiButton("BUY") {
-                    textColor = Colors.GOLD
-                    textFont = font
-                    onClick { buy(shipType.CORVETTE_HUMAN) }
-                }
-            }
-
-            uiHorizontalStack {
-                val cruiserShip = image(resourcesVfs["ships/Human-Cruiser.png"].readBitmap()) {
-                    setSizeScaled(50.0, 50.0)
-                }
-                val line7 = text("Cruiser", 50.00, Colors.CYAN, font) {
-                }
-            }
-
-            uiHorizontalStack {
-                val line8 =
-                    text("Organics ${cruiserCost.organics} Ship ${cruiserCost.metal}", 50.00, Colors.CYAN, font) {
-                    }
-                val buyCruiser = uiButton("BUY") {
-                    textColor = Colors.GOLD
-                    textFont = font
-                    onClick { buy(shipType.CRUISER_HUMAN) }
-                }
-            }
-
-            uiHorizontalStack {
-                val battleShip = image(resourcesVfs["ships/Human-Battleship.png"].readBitmap()) {
-                    setSizeScaled(50.0, 50.0)
-                }
-                val line9 = text("Battleship", 50.00, Colors.CYAN, font) {
-                }
-            }
-
-            uiHorizontalStack {
-                val line10 =
-                    text("Organics ${battleShipCost.organics} Ship ${battleShipCost.metal}", 50.00, Colors.CYAN, font) {
-                    }
-                val buyBattleShip = uiButton("BUY") {
-                    textColor = Colors.GOLD
-                    textFont = font
-                    onClick { buy(shipType.BATTLESHIP_HUMAN) }
-                }
-            }
-
-            uiHorizontalStack {
-                val galleon = image(resourcesVfs["ships/Human-Frigate.png"].readBitmap()) {
-                    setSizeScaled(50.0, 50.0)
-                }
-                val line11 = text("Galleon", 50.00, Colors.CYAN, font) {
-                }
-            }
-
-            uiHorizontalStack {
-                val line12 =
-                    text("Organics ${galleonCost.organics} Ship ${galleonCost.metal}", 50.00, Colors.CYAN, font) {
-                    }
-                val buyGalleon = uiButton("BUY") {
-                    textColor = Colors.GOLD
-                    textFont = font
-                    onClick { buy(shipType.GALLEON_HUMAN) }
-                }
-            }
-
-            val Ship = "STORES SHIP: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}  "
-            val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}  "
-
-            uiHorizontalStack {
-                padding = 10.00
-                shipsReadout = text(Ship, 50.00, Colors.CYAN, font)
-                farmerReadout = text(Organic, 50.00, Colors.CYAN, font)
-            }
-
-            uiButton("BACK") {
-                textColor = Colors.GOLD
-                textFont = font
-                onClick { sceneContainer.changeTo<PlanetScene>() }
-            }
-
-            uiButton("MAP") {
-                textColor = Colors.GOLD
-                textFont = font
-                onClick { sceneContainer.changeTo<StarsScene>() }
-            }
+        shipsReadout = text(
+            "SHIP: ${playerEmpire.shipPoints}",
+            36.0,
+            Colors.CYAN,
+            font
+        ) {
+            position(20, 10)
         }
+
+        farmerReadout = text(
+            "ORGANICS: ${playerEmpire.organicPoints}",
+            36.0,
+            Colors.CYAN,
+            font
+        ) {
+            position(300, 10)
+        }
+
+        uiButton("BACK") {
+            textColor = Colors.GOLD
+            textFont = font
+            position(sceneWidth - 220.0, 10.0)
+            onClick { sceneContainer.changeTo<PlanetScene>() }
+        }
+
+        uiButton("MAP") {
+            textColor = Colors.GOLD
+            textFont = font
+            position(sceneWidth - 110.0, 10.0)
+            onClick { sceneContainer.changeTo<StarsScene>() }
+        }
+
+        var y = 60.0
+        val x = 30.0
+        val gap = 10.0
+        val slotHeight = 130.0
+
+        val terraformerCosts = getCosts(shipType.TERRAFORMATTER_HUMAN)
+        ShipSlot(
+            x, y,
+            "ships/player_terraformer.png",
+            font,
+            "Terraformer",
+            terraformerCosts.organics,
+            terraformerCosts.metal,
+            true
+        ) {
+            buy(shipType.TERRAFORMATTER_HUMAN)
+        }
+
+        y += slotHeight + gap
+
+        val colonyCosts = getCosts(shipType.COLONY_HUMAN)
+        ShipSlot(
+            x, y,
+            "ships/player_colony_ship.png",
+            font,
+            "Colony Ship",
+            colonyCosts.organics,
+            colonyCosts.metal,
+            true
+        ) {
+            buy(shipType.COLONY_HUMAN)
+        }
+
+        y += slotHeight + gap
+
+        val corvetteCosts = getCosts(shipType.CORVETTE_HUMAN)
+        ShipSlot(
+            x, y,
+            "ships/player_corvette.png",
+            font,
+            "Corvette",
+            corvetteCosts.organics,
+            corvetteCosts.metal,
+            true
+        ) {
+            buy(shipType.CORVETTE_HUMAN)
+        }
+
+        y += slotHeight + gap
+
+        val cruiserCosts = getCosts(shipType.CRUISER_HUMAN)
+        ShipSlot(
+            x, y,
+            "ships/player_cruiser.png",
+            font,
+            "Cruiser",
+            cruiserCosts.organics,
+            cruiserCosts.metal,
+            true
+        ) {
+            buy(shipType.CRUISER_HUMAN)
+        }
+
+        y += slotHeight + gap
+
+        val battleshipCosts = getCosts(shipType.BATTLESHIP_HUMAN)
+        ShipSlot(
+            x, y,
+            "ships/player_battleship.png",
+            font,
+            "Battleship",
+            battleshipCosts.organics,
+            battleshipCosts.metal,
+            true
+        ) {
+            buy(shipType.BATTLESHIP_HUMAN)
+        }
+
+        y += slotHeight + gap
+
+        val galleonCosts = getCosts(shipType.GALLEON_HUMAN)
+        ShipSlot(
+            x, y,
+            "ships/player_galleon.png",
+            font,
+            "Galleon",
+            galleonCosts.organics,
+            galleonCosts.metal,
+            true
+        ) {
+            buy(shipType.GALLEON_HUMAN)
+        }
+    }
+
+    private suspend fun Container.ShipSlot(
+        x: Double,
+        y: Double,
+        path: String,
+        font: Font,
+        name: String,
+        organics: UInt,
+        metals: UInt,
+        faceLeft: Boolean = false,
+        onClickHandler: suspend () -> Unit
+    ): Container {
+        val slotWidth = sceneWidth - 60.0
+        val slotHeight = 130.0
+
+        val maxShipWidth = 110.0
+        val maxShipHeight = 95.0
+
+        val slot = container {
+            position(x, y)
+
+            // Keep visible while testing. Later maybe use a darker translucent panel.
+            solidRect(slotWidth, slotHeight, Colors["#00102099"])
+        }
+
+        val bitmap = resourcesVfs[path].readBitmap()
+
+        val scaleAmount = minOf(
+            maxShipWidth / bitmap.width.toDouble(),
+            maxShipHeight / bitmap.height.toDouble()
+        )
+
+        slot.image(bitmap) {
+            anchor(0.5, 0.5)
+            position(75.0, slotHeight / 2.0)
+
+            scaleX = if (faceLeft) -scaleAmount else scaleAmount
+            scaleY = scaleAmount
+        }
+
+        slot.text(name, 34.0, Colors.CYAN, font) {
+            position(160.0, 22.0)
+        }
+
+        slot.text("Organics: $organics    Ship: $metals", 28.0, Colors.CYAN, font) {
+            position(160.0, 70.0)
+        }
+
+        slot.uiButton("BUY") {
+            textColor = Colors.GOLD
+            textFont = font
+            position(slotWidth - 130.0, 43.0)
+            onClick { onClickHandler() }
+        }
+
+        return slot
     }
 
     private suspend fun buy(shipType: shipType) {

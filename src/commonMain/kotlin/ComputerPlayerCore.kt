@@ -150,12 +150,13 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
         galleonCosts = getCosts(shipType.GALLEON_ENEMY)
     }
 
-    private fun findBestColonizationTarget(): Star? {
+    private fun findBestColonizationTarget(fromStar: Star): Star? {
         return gs.stars.values
             .filter { star ->
-                star.planets.values.any { planet ->
-                    planet.ownerIndex == Allegiance.Unoccupied
-                }
+                star !== fromStar &&
+                    star.planets.values.any { planet ->
+                        planet.ownerIndex == Allegiance.Unoccupied
+                    }
             }
             .maxByOrNull { star ->
                 star.planets.values
@@ -177,16 +178,7 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             startStar.enemyFleet.destroyShip(shipType.COLONY_ENEMY)
         } else {
             println("COLONY SHIP MOVING")
-           /* //For now, do the simple thing and select the next star system - slowing marching backwards towards Sol
-            val x = startStar.xloc
-            val y = startStar.yloc
-            val startloc = (y * 10 + x)
-            var destination = startloc - 1
-            //Probably won't happen but just in case
-            if(destination <= 0) {
-                destination = 0
-            }*/
-            val destination = findBestColonizationTarget()
+            val destination = findBestColonizationTarget(startStar)
             if (destination == null) {
                 println("No colonization target found")
                 return
@@ -335,18 +327,12 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
         }
         println("[AI] HAS: ORGANICS: ${es.empires[Allegiance.Enemy.ordinal]!!.organicPoints} METAL:  ${es.empires[Allegiance.Enemy.ordinal]!!.shipPoints}")
 
-        /*
-        val newGovernor = governors.getNextGovernor(assessment.posture)
-        when (newGovernor) {
-            Governor.GROWTH -> runGrowthRules()
-            Governor.EXPANSION -> runExpansionRules()
-            Governor.LABOR -> runLaborRules()
-            Governor.RESEARCH -> runResearchRules()
-            Governor.SHIPBUILDER -> runShipBuilderRules()
-            Governor.BASEBUILDER -> runBaseBuilderRules()
-        }*/
         runMandatoryRules()
+
+        assessment = assessEmpire()
         runPriorityRules()
+
+        assessment = assessEmpire()
         evaluateShipOrders()
     }
 
@@ -383,14 +369,17 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
     fun evaluateShipOrders() {
         println("COMPUTER ADMIRAL RUNNING")
 
-        //If we have colony ships, move them and/or establish colonies
-        val allStars = gs.stars.values
-        for (star in allStars) {
-            if(star.enemyFleet.getColonyShipCount() > 0) {
-                println("MOOVING COLONY SHIPS")
-                moveColonyShip(star)
+        val starsWithUnmovedColonyShips = gs.stars.values
+            .filter { star ->
+                star.enemyFleet.getColonyShipCount() > 0
             }
+            .toList()
+
+        for (star in starsWithUnmovedColonyShips) {
+            println("MOVING COLONY SHIPS")
+            moveColonyShip(star)
         }
+
         println("COMPUTER ADMIRAL DONE")
     }
 
@@ -436,20 +425,30 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
         )
     }
 
-    fun inferStrategicPosture(computerWorlds: Int, playerWorlds: Int, unoccupiedWorlds : Int, totalWorlds : Int ) : StrategicPosture {
-        var retval = StrategicPosture.EXPAND //Start with assumption it is early game
-        if( unoccupiedWorlds <= totalWorlds * .50) {
-            retval = StrategicPosture.EXPAND
+    fun inferStrategicPosture(
+        computerWorlds: Int,
+        playerWorlds: Int,
+        unoccupiedWorlds: Int,
+        totalWorlds: Int
+    ): StrategicPosture {
+        if (totalWorlds <= 0) return StrategicPosture.BALANCED
+
+        val unoccupiedRatio = unoccupiedWorlds.toDouble() / totalWorlds.toDouble()
+
+        return when {
+            // Lots of room left: keep expanding.
+            unoccupiedRatio > 0.50 -> StrategicPosture.EXPAND
+
+            // Enemy is far ahead.
+            playerWorlds > computerWorlds * 1.5 -> StrategicPosture.TURTLE
+
+            // AI is far ahead.
+            computerWorlds > playerWorlds * 1.5 -> StrategicPosture.AGGRESSIVE
+
+            // Some room remains, but not wide open.
+            unoccupiedRatio > 0.25 -> StrategicPosture.EXPAND
+
+            else -> StrategicPosture.BALANCED
         }
-        if( unoccupiedWorlds <= totalWorlds * .25) {
-            retval = StrategicPosture.BALANCED
-        }
-        if (computerWorlds > playerWorlds * 1.5) {
-            retval = StrategicPosture.AGGRESSIVE
-        }
-        if (playerWorlds > computerWorlds * 1.5) {
-            retval = StrategicPosture.TURTLE // turtle mode
-        }
-        return retval
     }
 }

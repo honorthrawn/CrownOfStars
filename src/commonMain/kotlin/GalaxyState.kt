@@ -6,7 +6,7 @@ import kotlinx.serialization.json.*
 
 @Serializable
 class GalaxyState {
-
+    var starDate = 2260
     var stars = mutableMapOf<Int, Star>()
 
     suspend fun rollGalaxy() {
@@ -56,6 +56,7 @@ class GalaxyState {
         for (star in stars.values) {
             star.nextTurn()
         }
+        starDate++
     }
 
     suspend fun load() {

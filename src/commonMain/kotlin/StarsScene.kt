@@ -14,6 +14,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
     private lateinit var defenseReadout: Text
+    private lateinit var turnReadout: Text
     private lateinit var systemActionsPanel: Container
     private var friendlyFleets = arrayListOf<Image>()
     private var enemyFleets = arrayListOf<Image>()
@@ -93,11 +94,13 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             position(5.00, y + cellHeight)
             padding = 10.00
 
+            val turn = "STARDATE: ${gs.starDate}"
             val Ship = "METAL: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
             val Research = "RESEARCH: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints}"
             val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
             val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints} "
 
+            turnReadout = text(turn, 50.00, Colors.CYAN, font)
             shipsReadout = text(Ship, 50.00, Colors.CYAN, font)
             farmerReadout = text(Organic, 50.00, Colors.CYAN, font)
             scienceReadout = text(Research, 50.00, Colors.CYAN, font)
@@ -143,10 +146,12 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     }
 
     private fun updateScreen() {
+        val turn = "STARDATE: ${gs.starDate}"
         val Ship = "METAL: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints} "
         val Research = "RESEARCH: ${es.empires[Allegiance.Player.ordinal]!!.researchPoints} "
         val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints} "
         val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints}  "
+        turnReadout.text = turn
         defenseReadout.text = defense
         shipsReadout.text = Ship
         farmerReadout.text = Organic
