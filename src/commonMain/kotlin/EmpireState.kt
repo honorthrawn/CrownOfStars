@@ -10,6 +10,12 @@ class EmpireState {
         val playerEmpire = Empire(Allegiance.Player)
         val enemyEmpire = Empire(Allegiance.Enemy)
 
+        //Assign some starting resources so player has something interesting to do on first turn
+        playerEmpire.organicPoints = 50u
+        playerEmpire.shipPoints = 100u
+        enemyEmpire.organicPoints = 50u
+        enemyEmpire.shipPoints = 100u
+
         playerEmpire.popTagsStartingTechs(techTree)
         enemyEmpire.popTagsStartingTechs(techTree)
 

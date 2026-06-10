@@ -34,6 +34,22 @@ class GalaxyState {
         stars[nI]!!.planets[2]!!.type = PlanetType.TERRAN
         stars[nI]!!.planets[2]!!.ownerIndex = Allegiance.Enemy
         stars[nI]!!.planets[2]!!.farmers = 5u
+
+        //Starting ships for the player and the enemy!
+        val factory = shipFactory()
+        factory.init()
+        val colonyShipPlayer = factory.getShip(shipType.COLONY_HUMAN)
+        stars[0]!!.playerFleet.add(colonyShipPlayer)
+        val playerCorvette = factory.getShip(shipType.CORVETTE_HUMAN)
+        stars[0]!!.playerFleet.add(playerCorvette)
+        stars[0]!!.playerFleet.add(playerCorvette)
+        stars[0]!!.playerFleet.add(playerCorvette)
+        val colonyShipEnemy = factory.getShip(shipType.COLONY_ENEMY)
+        stars[nI]!!.enemyFleet.add(colonyShipEnemy)
+        val enemyCorvette = factory.getShip(shipType.CORVETTE_ENEMY)
+        stars[nI]!!.enemyFleet.add(enemyCorvette)
+        stars[nI]!!.enemyFleet.add(enemyCorvette)
+        stars[nI]!!.enemyFleet.add(enemyCorvette)
     }
 
     fun nextTurn() {
