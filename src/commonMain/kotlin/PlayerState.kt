@@ -36,6 +36,10 @@ class PlayerState {
         operation = operationType.SELECTION
         chosenTerraformers = 0
         chosenColony = 0
+        chosenGalleon = 0
+        chosenCorvette = 0
+        chosenCruiser = 0
+        chosenBattleship = 0
     }
 
     fun resetBattleStats() {

@@ -19,7 +19,7 @@ class BuyTechScene(
     private lateinit var detailsStack: Container
 
     override suspend fun SContainer.sceneMain() {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        loadBasicAssets()
         val tree = getCurrentTechTree()
 
         image(resourcesVfs[getRealmImagePath()].readBitmap()) {
@@ -33,7 +33,7 @@ class BuyTechScene(
         val topY = 125.0
         val bottomY = sceneHeight - 160.0
 
-        text(getRealmTitle(), 40.0, Colors.GOLD, font) {
+        text(getRealmTitle(), 40.0, Colors.GOLD, gameFont) {
             position(leftX, 30.0)
         }
 
@@ -46,9 +46,9 @@ class BuyTechScene(
             padding = 12.0
         }
 
-        buildTechList(tree, font)
+        buildTechList(tree, gameFont)
 
-        researchPoints = text("Research Points left: ${playerEmpire.researchPoints}", 25.0, Colors.CYAN, font) {
+        researchPoints = text("Research Points left: ${playerEmpire.researchPoints}", 25.0, Colors.CYAN, gameFont) {
             position(leftX, bottomY - 70.0)
         }
 
@@ -58,7 +58,7 @@ class BuyTechScene(
 
             uiButton("BUY SELECTED", width = 170.0, height = 45.0) {
                 textColor = Colors.GOLD
-                textFont = font
+                textFont = gameFont
                 onClick {
                     val tech = selectedTech
                     if (tech == null) {
@@ -71,22 +71,22 @@ class BuyTechScene(
 
             uiButton("BACK", width = 120.0, height = 45.0) {
                 textColor = Colors.GOLD
-                textFont = font
+                textFont = gameFont
                 onClick { sceneContainer.changeTo<ChooseResearchRealm>() }
             }
 
             uiButton("MAP", width = 120.0, height = 45.0) {
                 textColor = Colors.GOLD
-                textFont = font
+                textFont = gameFont
                 onClick { sceneContainer.changeTo<StarsScene>() }
             }
         }
 
         val firstAvailable = tree.firstOrNull { tech -> !playerEmpire.techTags.contains(tech.id) }
         if (firstAvailable != null) {
-            selectTech(firstAvailable, font)
+            selectTech(firstAvailable, gameFont)
         } else {
-            showDetailsMessage("No available technologies in this realm.", font)
+            showDetailsMessage("No available technologies in this realm.", gameFont)
         }
     }
 
@@ -117,7 +117,7 @@ class BuyTechScene(
         }
     }
 
-    private fun buildTechList(tree: List<Tech>, font: Font) {
+    private fun buildTechList(tree: List<Tech>, gameFont: Font) {
         val playerEmpire = es.empires[Allegiance.Player.ordinal] ?: error("Player empire was not found")
 
         techListStack.removeChildren()
@@ -129,9 +129,9 @@ class BuyTechScene(
                 techListStack.uiButton(shortenTechName(tech.name)) {
                     position(0.0, rowY)
                     textColor = Colors.CYAN
-                    textFont = font
+                    textFont = gameFont
                     onClick {
-                        selectTech(tech, font)
+                        selectTech(tech, gameFont)
                     }
                 }
 
@@ -148,13 +148,13 @@ class BuyTechScene(
         }
     }
 
-    private fun selectTech(tech: Tech, font: Font) {
+    private fun selectTech(tech: Tech, gameFont: Font) {
         selectedTech = tech
         detailsStack.removeChildren()
 
         for (line in getTechDetails(tech)) {
             for (wrappedLine in wrapText(line, 28)) {
-                detailsStack.text(wrappedLine, 24.0, Colors.GOLD, font)
+                detailsStack.text(wrappedLine, 24.0, Colors.GOLD, gameFont)
             }
         }
     }
@@ -180,9 +180,9 @@ class BuyTechScene(
         return lines
     }
 
-    private fun showDetailsMessage(message: String, font: Font) {
+    private fun showDetailsMessage(message: String, gameFont: Font) {
         detailsStack.removeChildren()
-        detailsStack.text(message, 25.0, Colors.GOLD, font)
+        detailsStack.text(message, 25.0, Colors.GOLD, gameFont)
     }
 
     private fun getTechDetails(tech: Tech): List<String> {

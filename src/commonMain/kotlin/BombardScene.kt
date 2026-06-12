@@ -1,15 +1,13 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 import kotlin.random.*
 
-class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
 
     private lateinit var bombMessage: String
     private lateinit var basesMessage: String
@@ -21,12 +19,12 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private lateinit var colonyStatus: String
 
     override suspend fun SContainer.sceneInit() {
+        loadBasicAssets()
         ps.musicSceneContainer?.changeTo<WarMusicScene>()
         val background = image(resourcesVfs["ui/planetBombed.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
         val topLine = "Bombardment of ${gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.name}"
         val playerInitiative = Random.nextInt(1, 6)
         val aiInitiative = Random.nextInt(1, 6)
@@ -46,20 +44,20 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             scaledWidth = sceneWidth.toDouble()
             scaledHeight = sceneHeight.toDouble()
 
-            text(topLine, 20.00, Colors.CYAN, font)
-            text(intiativeMessage, 20.00, Colors.CYAN, font)
-            text(bombMessage, 20.00, Colors.CYAN, font)
-            text(basesMessage, 20.00, Colors.CYAN, font)
-            text(popsMessage, 20.00, Colors.CYAN, font)
-            text(missileLaunchedMessage, 20.00, Colors.CYAN, font)
-            text(corrvettesLostMessage, 20.00, Colors.CYAN, font)
-            text(cruisersLostMessage, 20.00, Colors.CYAN, font)
-            text(battleShipsLostMessage, 20.00, Colors.CYAN, font)
-            text(colonyStatus, 20.00, Colors.CYAN, font)
+            text(topLine, 20.00, Colors.CYAN, gameFont)
+            text(intiativeMessage, 20.00, Colors.CYAN, gameFont)
+            text(bombMessage, 20.00, Colors.CYAN, gameFont)
+            text(basesMessage, 20.00, Colors.CYAN, gameFont)
+            text(popsMessage, 20.00, Colors.CYAN, gameFont)
+            text(missileLaunchedMessage, 20.00, Colors.CYAN, gameFont)
+            text(corrvettesLostMessage, 20.00, Colors.CYAN, gameFont)
+            text(cruisersLostMessage, 20.00, Colors.CYAN, gameFont)
+            text(battleShipsLostMessage, 20.00, Colors.CYAN, gameFont)
+            text(colonyStatus, 20.00, Colors.CYAN, gameFont)
 
             uiButton("CLOSE") {
                 textColor = Colors.GOLD
-                textFont = font
+                textFont = gameFont
                 onClick {
                     ps.musicSceneContainer?.changeTo<MusicScene>()
                     sceneContainer.changeTo<PlanetsScene>() }

@@ -13,6 +13,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private lateinit var shipsReadout: Text
 
     override suspend fun SContainer.sceneInit() {
+        loadBasicAssets()
         shipFactory.init()
 
         image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
@@ -20,15 +21,13 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
         val playerEmpire = es.empires[Allegiance.Player.ordinal]!!
 
         shipsReadout = text(
             "SHIP: ${playerEmpire.shipPoints}",
             36.0,
             Colors.CYAN,
-            font
+            gameFont
         ) {
             position(20, 10)
         }
@@ -37,21 +36,21 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             "ORGANICS: ${playerEmpire.organicPoints}",
             36.0,
             Colors.CYAN,
-            font
+            gameFont
         ) {
             position(300, 10)
         }
 
         uiButton("BACK") {
             textColor = Colors.GOLD
-            textFont = font
+            textFont = gameFont
             position(sceneWidth - 220.0, 10.0)
             onClick { sceneContainer.changeTo<PlanetScene>() }
         }
 
         uiButton("MAP") {
             textColor = Colors.GOLD
-            textFont = font
+            textFont = gameFont
             position(sceneWidth - 110.0, 10.0)
             onClick { sceneContainer.changeTo<StarsScene>() }
         }
@@ -65,7 +64,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ShipSlot(
             x, y,
             "ships/player_terraformer.png",
-            font,
+            gameFont,
             "Terraformer",
             terraformerCosts.organics,
             terraformerCosts.metal,
@@ -80,7 +79,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ShipSlot(
             x, y,
             "ships/player_colony_ship.png",
-            font,
+            gameFont,
             "Colony Ship",
             colonyCosts.organics,
             colonyCosts.metal,
@@ -95,7 +94,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ShipSlot(
             x, y,
             "ships/player_corvette.png",
-            font,
+            gameFont,
             "Corvette",
             corvetteCosts.organics,
             corvetteCosts.metal,
@@ -110,7 +109,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ShipSlot(
             x, y,
             "ships/player_cruiser.png",
-            font,
+            gameFont,
             "Cruiser",
             cruiserCosts.organics,
             cruiserCosts.metal,
@@ -125,7 +124,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ShipSlot(
             x, y,
             "ships/player_battleship.png",
-            font,
+            gameFont,
             "Battleship",
             battleshipCosts.organics,
             battleshipCosts.metal,
@@ -140,7 +139,7 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         ShipSlot(
             x, y,
             "ships/player_galleon.png",
-            font,
+            gameFont,
             "Galleon",
             galleonCosts.organics,
             galleonCosts.metal,

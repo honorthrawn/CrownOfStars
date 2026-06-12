@@ -8,15 +8,18 @@ import com.soywiz.korim.font.*
 import com.soywiz.korio.file.std.*
 
 open class BasicScene() : Scene() {
-
+    protected lateinit var gameFont: Font
     private var notEnoughDialog: Container? = null
     private var confirmationDialog: Container? = null
     private var showingNotEnough = false
 
+    suspend fun loadBasicAssets() {
+        gameFont = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+    }
+
+
     suspend fun showNoGo(requirements: String) {
         if (!showingNotEnough) {
-            val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
             notEnoughDialog = sceneContainer.container {
                 centerOnStage()
 
@@ -32,10 +35,10 @@ open class BasicScene() : Scene() {
                     position(20.0, 20.0)
                     scaledWidth = sceneWidth / 2.0 - 40.0
 
-                    text(requirements, 50.0, Colors.CYAN, font)
+                    text(requirements, 50.0, Colors.CYAN, gameFont)
 
                     uiButton("CLOSE") {
-                        textFont = font
+                        textFont =  gameFont
                         textColor = Colors.GOLD
                         onClick { closeMessage() }
                     }
@@ -60,8 +63,6 @@ open class BasicScene() : Scene() {
             line2 = ""
         }
 
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
         confirmationDialog = sceneContainer.container {
             centerOnStage()
 
@@ -77,14 +78,14 @@ open class BasicScene() : Scene() {
                 position(20.0, 20.0)
                 scaledWidth = sceneWidth / 2.0 - 40.0
 
-                text(line1, 20.0, Colors.CYAN, font)
+                text(line1, 20.0, Colors.CYAN, gameFont)
 
                 if (line2.isNotBlank()) {
-                    text(line2, 20.0, Colors.CYAN, font)
+                    text(line2, 20.0, Colors.CYAN, gameFont)
                 }
 
                 uiButton("NO") {
-                    textFont = font
+                    textFont = gameFont
                     textColor = Colors.GOLD
                     onClick {
                         confirmationDialog?.removeFromParent()
@@ -93,7 +94,7 @@ open class BasicScene() : Scene() {
                 }
 
                 uiButton("YES") {
-                    textFont = font
+                    textFont = gameFont
                     textColor = Colors.GOLD
                     onClick {
                         confirmationDialog?.removeFromParent()

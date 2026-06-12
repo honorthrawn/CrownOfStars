@@ -3,13 +3,16 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val ai: ComputerPlayerCore, val cps: ComputerPlayerState)
-    : BasicScene() {
-    private lateinit var font: Font
+class StarsScene(
+    val gs: GalaxyState,
+    val es: EmpireState,
+    val ps: PlayerState,
+    val ai: ComputerPlayerCore,
+    val cps: ComputerPlayerState
+) : BasicScene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
@@ -20,7 +23,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     private var enemyFleets = arrayListOf<Image>()
 
     override suspend fun SContainer.sceneInit() {
-        font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        loadBasicAssets()
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
@@ -64,12 +67,12 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
                 }
                 enemyFleets.add(enemyFleetImage)
 
-                val textColor = when(gs.stars[nI]!!.getAllegiance()) {
+                val textColor = when (gs.stars[nI]!!.getAllegiance()) {
                     Allegiance.Unoccupied -> Colors.WHITE
                     Allegiance.Player -> Colors.CYAN
                     Allegiance.Enemy -> Colors.RED
                 }
-                text(gs.stars[nI]!!.name, 11.00, textColor, font) {
+                text(gs.stars[nI]!!.name, 11.00, textColor, gameFont) {
                     centerXOn(rect)
                     alignBottomToBottomOf(rect, 2.00)
                 }
@@ -79,7 +82,8 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
                         StarType.YELLOW -> yellowStar
                         StarType.BLUE -> blueStar
                         StarType.RED -> redStar
-                    } ) {
+                    }
+                ) {
                     scaledWidth = 30.0
                     scaledHeight = 30.0
                     centerOn(rect)
@@ -100,28 +104,28 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
             val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
             val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints} "
 
-            turnReadout = text(turn, 50.00, Colors.CYAN, font)
-            shipsReadout = text(Ship, 50.00, Colors.CYAN, font)
-            farmerReadout = text(Organic, 50.00, Colors.CYAN, font)
-            scienceReadout = text(Research, 50.00, Colors.CYAN, font)
-            defenseReadout = text(defense, 50.00, Colors.CYAN, font)
+            turnReadout = text(turn, 50.00, Colors.CYAN, gameFont)
+            shipsReadout = text(Ship, 50.00, Colors.CYAN, gameFont)
+            farmerReadout = text(Organic, 50.00, Colors.CYAN, gameFont)
+            scienceReadout = text(Research, 50.00, Colors.CYAN, gameFont)
+            defenseReadout = text(defense, 50.00, Colors.CYAN, gameFont)
 
             uiHorizontalStack {
                 uiButton("NEXT TURN") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { nextTurn() }
                 }
 
                 uiButton("TECH") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { sceneContainer.changeTo<ChooseResearchRealm>() }
                 }
 
                 uiButton("SAVE") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick {
                         es.save()
                         gs.save()
@@ -130,7 +134,7 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
 
                 uiButton("QUIT") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { kotlin.system.exitProcess(0) }
                 }
             }
@@ -163,141 +167,134 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     }
 
     private suspend fun showSystemActions(x: Int, y: Int) {
-        //Special case, we already selected our fleet
-        if(ps.operation == operationType.MOVINGFLEET) {
-            movechosenShips(x,y)
+        if (ps.operation == operationType.MOVINGFLEET) {
+            movechosenShips(x, y)
             return
         }
 
-        systemActionsPanel = this.sceneContainer.container()
+        // Remove any existing actions panel before creating a new one
+        if (::systemActionsPanel.isInitialized) {
+            systemActionsPanel.removeFromParent()
+        }
 
-        systemActionsPanel.roundRect(
-            sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
+        val panel = sceneContainer.container()
+        systemActionsPanel = panel
+
+        panel.roundRect(
+            sceneWidth / 2.00,
+            sceneHeight / 4.00,
+            5.0,
+            5.0,
             Colors.BLACK
         ) {
-               uiVerticalStack {
+            uiVerticalStack {
                 scaledWidth = sceneWidth / 2.00
-                text("SYSTEM OPERATIONS", 50.00, Colors.CYAN, font)
 
-               uiButton("PLANETS")
-               {
-                   textFont = font
-                   textColor = Colors.GOLD
-                   onClick {
-                       ps.operation = operationType.SELECTION
-                       ps.activePlayerStar = x * 10 + y
-                       sceneContainer.changeTo<PlanetsScene>()
-                       systemActionsPanel.removeFromParent()
-                   }
-               }
+                text("SYSTEM OPERATIONS", 50.00, Colors.CYAN, gameFont)
 
-                   uiButton("MOVE OUR SHIPS") {
-                       textFont = font
-                       textColor = Colors.GOLD
-                       onClick {
-                           systemActionsPanel.removeFromParent()
-                           ps.operation = operationType.SELECTION
-                           clickedFleet(x, y)
-                       }
-                   }
+                uiButton("PLANETS") {
+                    textFont = gameFont
+                    textColor = Colors.GOLD
+                    onClick {
+                        panel.removeFromParent()
+                        ps.operation = operationType.SELECTION
+                        ps.activePlayerStar = x * 10 + y
+                        sceneContainer.changeTo<PlanetsScene>()
+                    }
+                }
 
-                   uiButton("VIEW ENEMY SHIPS") {
-                       textFont = font
-                       textColor = Colors.GOLD
-                       onClick {
-                           systemActionsPanel.removeFromParent()
-                           clickedEnemyFleet(x, y)
-                       }
-                   }
+                uiButton("MOVE OUR SHIPS") {
+                    textFont = gameFont
+                    textColor = Colors.GOLD
+                    onClick {
+                        panel.removeFromParent()
+                        ps.operation = operationType.SELECTION
+                        clickedFleet(x, y)
+                    }
+                }
 
-                   uiButton("CLOSE") {
-                    onClick { systemActionsPanel.removeFromParent() }
+                uiButton("VIEW ENEMY SHIPS") {
+                    textFont = gameFont
+                    textColor = Colors.GOLD
+                    onClick {
+                        panel.removeFromParent()
+                        clickedEnemyFleet(x, y)
+                    }
+                }
+
+                uiButton("CLOSE") {
+                    textFont = gameFont
+                    textColor = Colors.GOLD
+                    onClick {
+                        panel.removeFromParent()
+                    }
                 }
             }
         }
     }
 
     private suspend fun movechosenShips(x: Int, y: Int) {
-        //Figure out destination star
         val destination = x * 10 + y
-        //Check if can move there, todo
+        val origin = ps.activePlayerStar
 
-        //Remove the ships from the current star's fleet
-        while (ps.chosenTerraformers > 0) {
-            var shipMoving =
-                gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.TERRAFORMATTER_HUMAN)
-            if (shipMoving != null) {
-                shipMoving.hasMoved = true
-                gs.stars[destination]?.playerFleet?.add(shipMoving)
-            }
-            ps.chosenTerraformers--
-        }
-        while (ps.chosenColony > 0) {
-            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.COLONY_HUMAN)
-            if (shipMoving != null) {
-                shipMoving.hasMoved = true
-                gs.stars[destination]?.playerFleet?.add(shipMoving)
-            }
-            ps.chosenColony--
-        }
-        while (ps.chosenGalleon > 0) {
-            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.GALLEON_HUMAN)
-            if (shipMoving != null) {
-                shipMoving.hasMoved = true
-                gs.stars[destination]?.playerFleet?.add(shipMoving)
-            }
-            ps.chosenGalleon--
-        }
-        while (ps.chosenCorvette > 0) {
-            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.CORVETTE_HUMAN)
-            if (shipMoving != null) {
-                shipMoving.hasMoved = true
-                gs.stars[destination]?.playerFleet?.add(shipMoving)
-            }
-            ps.chosenCorvette--
-        }
-        while (ps.chosenCruiser > 0) {
-            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.CRUISER_HUMAN)
-            if (shipMoving != null) {
-                shipMoving.hasMoved = true
-                gs.stars[destination]?.playerFleet?.add(shipMoving)
-            }
-            ps.chosenCruiser--
-        }
-        while (ps.chosenBattleship > 0) {
-            var shipMoving = gs.stars[ps.activePlayerStar]?.playerFleet?.removeShipFromFleetForMove(shipType.BATTLESHIP_HUMAN)
-            if (shipMoving != null) {
-                shipMoving.hasMoved = true
-                gs.stars[destination]?.playerFleet?.add(shipMoving)
-            }
-            ps.chosenBattleship--
-        }
+        // todo: range/supply validation goes here
 
-        // If we moved into an area with enemy fleet, resolve the combat
-        if( gs.stars[destination]!!.playerFleet!!.isPresent() &&  gs.stars[destination]!!.enemyFleet!!.isPresent()) {
+        moveShips(origin, destination, shipType.TERRAFORMATTER_HUMAN, ps.chosenTerraformers)
+        moveShips(origin, destination, shipType.COLONY_HUMAN, ps.chosenColony)
+        moveShips(origin, destination, shipType.GALLEON_HUMAN, ps.chosenGalleon)
+        moveShips(origin, destination, shipType.CORVETTE_HUMAN, ps.chosenCorvette)
+        moveShips(origin, destination, shipType.CRUISER_HUMAN, ps.chosenCruiser)
+        moveShips(origin, destination, shipType.BATTLESHIP_HUMAN, ps.chosenBattleship)
+
+       ps.reset()
+
+        val destStar = gs.stars[destination]!!
+
+        if (
+            destStar.playerFleet?.isPresent() == true &&
+            destStar.enemyFleet?.isPresent() == true
+        ) {
             ps.activePlayerStar = destination
-            cps.activeBattleStar = ps.activePlayerStar;
+            cps.activeBattleStar = destination
             sceneContainer.changeTo<FleetCombatScene>()
+            return
         }
+
         updateScreen()
+    }
+
+
+    private fun moveShips(origin: Int, destination: Int, type: shipType, count: Int) {
+        repeat(count) {
+            val shipMoving =
+                gs.stars[origin]?.playerFleet?.removeShipFromFleetForMove(type)
+
+            if (shipMoving != null) {
+                shipMoving.hasMoved = true
+
+                // Best if destination playerFleet is guaranteed non-null.
+                gs.stars[destination]!!.playerFleet!!.add(shipMoving)
+            }
+        }
     }
 
     private suspend fun clickedFleet(x: Int, y: Int) {
         println("we clicked a fleet")
         ps.activePlayerStar = x * 10 + y
 
-        if( !gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent()) {
+        if (!gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent()) {
             showNoGo("Our Fleet is not here")
             return
         }
 
         //Assume want to move whole fleet
-        if(gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() == 0 &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() == 0  &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCount() == 0  &&
+        if (gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() == 0 &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() == 0 &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCount() == 0 &&
             gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCount() == 0 &&
             gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCount() == 0 &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount() == 0 ) {
+            gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount() == 0
+        ) {
             showNoGo("The fleet has already moved this turn")
             return
         }
@@ -314,9 +311,9 @@ class StarsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, 
     private suspend fun clickedEnemyFleet(x: Int, y: Int) {
         println("we clicked an enemy fleet")
         ps.activePlayerStar = x * 10 + y
-        if( !gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent()) {
-           showNoGo("No Enemy Fleet Here")
-           return
+        if (!gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent()) {
+            showNoGo("No Enemy Fleet Here")
+            return
         }
         sceneContainer.changeTo<ViewShipsScene>()
     }

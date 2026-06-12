@@ -17,6 +17,7 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { ComputerPlayerCombat(get(), get(), get())}
     injector.mapPrototype { ComputerPlayerCore(get(), get(), techs = get())}
     injector.mapPrototype { MainMenu(get(), get(), get(), get()) }
+    injector.mapPrototype { IntroScene() }
     injector.mapPrototype { PlanetsScene(get(), get(), get()) }
     injector.mapPrototype { PlanetScene(get(), get(), get()) }
     injector.mapPrototype { EnemyPlanetScene(get(), get(), get()) }

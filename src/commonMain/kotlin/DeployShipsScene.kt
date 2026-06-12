@@ -1,14 +1,12 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
     private lateinit var terraFormerReadout: Text
     private lateinit var colonyReadout: Text
     private lateinit var corvetteReadout: Text
@@ -16,7 +14,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private lateinit var battleshipReadout: Text
     private lateinit var galleonReadout: Text
     override suspend fun SContainer.sceneInit() {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        loadBasicAssets()
 
         val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
             position(0, 0)
@@ -25,119 +23,109 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         uiVerticalStack {
             padding = 20.0
             uiHorizontalStack {
-                 text("Deploy Forces", 50.00, Colors.CYAN, font)
+                 text("Deploy Forces", 50.00, Colors.CYAN, gameFont)
             }
            uiHorizontalStack {
                padding = 5.00
-               terraFormerReadout = text("Terraformers: ${ps.chosenTerraformers}", 25.00, Colors.CYAN, font)
+               terraFormerReadout = text("Terraformers: ${ps.chosenTerraformers}", 25.00, Colors.CYAN, gameFont)
                uiButton("ADD") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipUp(shipType.TERRAFORMATTER_HUMAN) }
                 }
 
                uiButton("SUB") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipDown(shipType.TERRAFORMATTER_HUMAN) }
                 }
-               //image(resourcesVfs["ships/Human-Spacestation.png"].readBitmap()) {
-               image(resourcesVfs["ships/player_terraformer.png"].readBitmap()) {
-                   //scale(0.1, 0.1)
-                   size(96,96)
+                image(resourcesVfs["ships/player_terraformer.png"].readBitmap()) {
+                     size(96,96)
                }
             }
             uiHorizontalStack {
                 padding = 5.00
-                colonyReadout = text("Colony: ${ps.chosenColony}", 25.00, Colors.CYAN, font)
+                colonyReadout = text("Colony: ${ps.chosenColony}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipUp(shipType.COLONY_HUMAN) }
                 }
                 uiButton("SUB") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipDown(shipType.COLONY_HUMAN) }
                 }
                 image(resourcesVfs["ships/player_colony_ship.png"].readBitmap()) {
-                    //scale(0.5, 0.5)
-                    //scale(0.1, 0.1)
                     size(96,96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                corvetteReadout = text("Corvettes: ${ps.chosenCorvette}", 25.00, Colors.CYAN, font)
+                corvetteReadout = text("Corvettes: ${ps.chosenCorvette}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipUp(shipType.CORVETTE_HUMAN) }
                 }
                 uiButton("SUB") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipDown(shipType.CORVETTE_HUMAN) }
                 }
                 image(resourcesVfs["ships/player_corvette.png"].readBitmap())  {
-                   // scale(0.5, 0.5)
-                    //scale(0.1, 0.1)
                     size(96,96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                cruiserReadout = text("Cruisers: ${ps.chosenCruiser}", 25.00, Colors.CYAN, font)
+                cruiserReadout = text("Cruisers: ${ps.chosenCruiser}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipUp(shipType.CRUISER_HUMAN) }
                 }
                 uiButton("SUB") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipDown(shipType.CRUISER_HUMAN) }
                 }
                 image(resourcesVfs["ships/player_cruiser.png"].readBitmap()) {
-                   // scale(0.5, 0.5)
-                    //scale(0.1, 0.1)
                     size(96,96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                battleshipReadout = text("Battleships: ${ps.chosenBattleship}", 25.00, Colors.CYAN, font)
+                battleshipReadout = text("Battleships: ${ps.chosenBattleship}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipUp(shipType.BATTLESHIP_HUMAN) }
                 }
                 uiButton("SUB") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipDown(shipType.BATTLESHIP_HUMAN) }
                 }
                 image(resourcesVfs["ships/player_battleship.png"].readBitmap()) {
-                    //scale(0.5, 0.5)
-                    //scale(0.1, 0.1)
                     size(96,96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                galleonReadout = text("Galleons: ${ps.chosenGalleon}", 25.00, Colors.CYAN, font)
+                galleonReadout = text("Galleons: ${ps.chosenGalleon}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipUp(shipType.GALLEON_HUMAN) }
                 }
                 uiButton("SUB") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { onShipDown(shipType.GALLEON_HUMAN) }
                 }
                 image(resourcesVfs["ships/player_galleon.png"].readBitmap())  {
@@ -150,13 +138,13 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
 
                 uiButton("CLOSE") {
                     textColor =  Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick {  ps.reset(); sceneContainer.changeTo<StarsScene>() }
                 }
 
                 uiButton("MOVE") {
                     textColor = Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick {
                         ps.operation = operationType.MOVINGFLEET
                         println("chosenTerraformers: ${ps.chosenTerraformers} chosenColony: ${ps.chosenColony}")

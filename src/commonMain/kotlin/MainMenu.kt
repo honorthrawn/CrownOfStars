@@ -73,6 +73,6 @@ class MainMenu(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, va
         ts.loadTrees()
         gs.rollGalaxy()
         es.rollEmpires(ts)
-        sceneContainer.changeTo<StarsScene>()
+        sceneContainer.changeTo<IntroScene>()
     }
 }
