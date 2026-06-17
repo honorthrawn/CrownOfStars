@@ -1,14 +1,12 @@
 
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class EnemyPlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class EnemyPlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var defenseReadout: Text
@@ -16,12 +14,8 @@ class EnemyPlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private lateinit var unassignedReadout: Text
     private lateinit var baseReadout: Text
     override suspend fun SContainer.sceneInit() {
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
+        loadBasicAssets()
+        addDefaultBackground()
         println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.bombardIndex}")
 
         val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.getImagePath()
@@ -30,7 +24,7 @@ class EnemyPlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         }
 
         val planet = "${gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.name} - ${gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.type} "
-        val planetText = text( planet, 50.00, Colors.RED, font) {
+        val planetText = text( planet, 50.00, Colors.RED, gameFont) {
             alignLeftToLeftOf(planetImage)
             alignTopToTopOf(planetImage, 12.0)
         }
@@ -38,20 +32,20 @@ class EnemyPlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         uiVerticalStack {
             alignLeftToRightOf(planetImage)
             alignTopToBottomOf(planetText, 12.0)
-            baseReadout = text("BASES: 00", 50.00, Colors.RED, font)
+            baseReadout = text("BASES: 00", 50.00, Colors.RED, gameFont)
         }
 
         uiVerticalStack(400.00, UI_DEFAULT_PADDING){
             position(000.00, 300.00)
             padding = 10.00
-            farmerReadout = text("FARMING: 00", 50.00, Colors.RED, font)
-            shipsReadout = text("SHIPS:   00", 50.00, Colors.RED, font)
-            defenseReadout = text("DEFENSE: 00", 50.00, Colors.RED, font)
-            scienceReadout = text("SCIENCE: 00", 50.00, Colors.RED, font)
-            unassignedReadout= text("UNASSIGNED: 00", 50.00, Colors.RED, font)
+            farmerReadout = text("FARMING: 00", 50.00, Colors.RED, gameFont)
+            shipsReadout = text("SHIPS:   00", 50.00, Colors.RED, gameFont)
+            defenseReadout = text("DEFENSE: 00", 50.00, Colors.RED, gameFont)
+            scienceReadout = text("SCIENCE: 00", 50.00, Colors.RED, gameFont)
+            unassignedReadout= text("UNASSIGNED: 00", 50.00, Colors.RED, gameFont)
             uiButton("BACK") {
                textColor = Colors.GOLD
-               textFont = font
+               textFont = gameFont
                onClick { sceneContainer.changeTo<PlanetsScene>() }
             }
         }

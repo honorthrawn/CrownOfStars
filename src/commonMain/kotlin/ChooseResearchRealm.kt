@@ -3,22 +3,17 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.format.*
-import com.soywiz.korio.file.std.*
 
 class ChooseResearchRealm(val es: EmpireState, val ps: PlayerState) : BasicScene() {
     private lateinit var researchPoints: Text
 
     override suspend fun SContainer.sceneMain() {
         loadBasicAssets()
-
-        val background = image(resourcesVfs["ui/chooseResearch.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
+        addBackground("ui/chooseResearch.jpg")
 
         uiVerticalStack {
-            alignTopToTopOf(background)
+            centerXOnStage()
+            centerYOnStage()
             padding = 50.00
             scaledWidth = sceneWidth.toDouble()
 

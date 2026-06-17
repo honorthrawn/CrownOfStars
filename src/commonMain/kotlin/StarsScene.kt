@@ -24,10 +24,7 @@ class StarsScene(
 
     override suspend fun SContainer.sceneInit() {
         loadBasicAssets()
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
+        addDefaultBackground()
 
         val yellowStar = resourcesVfs[StarType.getImagePath(StarType.YELLOW)].readBitmap()
         val blueStar = resourcesVfs[StarType.getImagePath(StarType.BLUE)].readBitmap()
@@ -111,6 +108,7 @@ class StarsScene(
             defenseReadout = text(defense, 50.00, Colors.CYAN, gameFont)
 
             uiHorizontalStack {
+                padding = 10.00
                 uiButton("NEXT TURN") {
                     textColor = Colors.GOLD
                     textFont = gameFont
@@ -197,7 +195,7 @@ class StarsScene(
                     textColor = Colors.GOLD
                     onClick {
                         panel.removeFromParent()
-                        ps.operation = operationType.SELECTION
+                        ps.reset()
                         ps.activePlayerStar = x * 10 + y
                         sceneContainer.changeTo<PlanetsScene>()
                     }
@@ -208,6 +206,7 @@ class StarsScene(
                     textColor = Colors.GOLD
                     onClick {
                         panel.removeFromParent()
+                        ps.reset()
                         ps.operation = operationType.SELECTION
                         clickedFleet(x, y)
                     }
@@ -217,6 +216,7 @@ class StarsScene(
                     textFont = gameFont
                     textColor = Colors.GOLD
                     onClick {
+                        ps.reset()
                         panel.removeFromParent()
                         clickedEnemyFleet(x, y)
                     }
@@ -226,6 +226,7 @@ class StarsScene(
                     textFont = gameFont
                     textColor = Colors.GOLD
                     onClick {
+                        ps.reset()
                         panel.removeFromParent()
                     }
                 }
@@ -268,7 +269,6 @@ class StarsScene(
         repeat(count) {
             val shipMoving =
                 gs.stars[origin]?.playerFleet?.removeShipFromFleetForMove(type)
-
             if (shipMoving != null) {
                 shipMoving.hasMoved = true
 
@@ -287,24 +287,23 @@ class StarsScene(
             return
         }
 
-        //Assume want to move whole fleet
-        if (gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount() == 0 &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount() == 0 &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCount() == 0 &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCount() == 0 &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCount() == 0 &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount() == 0
-        ) {
+        if (gs.stars[ps.activePlayerStar]!!.playerFleet.isTerraformerAvailableToMove() &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isColonyAvailableToMove() &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isCorvetteAvailableToMove() &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isCruiserAvailableToMove() &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isBattleshipAvailableToMove() &&
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isGalleonAvailableToMove() ) {
             showNoGo("The fleet has already moved this turn")
             return
         }
 
-        ps.chosenTerraformers = gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformersCount()
-        ps.chosenColony = gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipCount()
-        ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCount()
-        ps.chosenCorvette = gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCount()
-        ps.chosenCruiser = gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCount()
-        ps.chosenBattleship = gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCount()
+        //Assume want to move whole fleet
+        ps.chosenTerraformers = gs.stars[ps.activePlayerStar]!!.playerFleet.getMovableTerraformersCount()
+        ps.chosenColony = gs.stars[ps.activePlayerStar]!!.playerFleet.getMovableColonyShipCount()
+        ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getMovableGalleonCount()
+        ps.chosenCorvette = gs.stars[ps.activePlayerStar]!!.playerFleet.getMovableCorvetteCount()
+        ps.chosenCruiser = gs.stars[ps.activePlayerStar]!!.playerFleet.getMovableCruiserCount()
+        ps.chosenBattleship = gs.stars[ps.activePlayerStar]!!.playerFleet.getMovableBattleShipCount()
         sceneContainer.changeTo<DeployShipsScene>()
     }
 

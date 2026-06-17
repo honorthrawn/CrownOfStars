@@ -13,21 +13,29 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private lateinit var cruiserReadout: Text
     private lateinit var battleshipReadout: Text
     private lateinit var galleonReadout: Text
+    private lateinit var currentFleet: Fleet
+
     override suspend fun SContainer.sceneInit() {
         loadBasicAssets()
+        addDefaultBackground()
+        currentFleet = gs.stars[ps.activePlayerStar]?.playerFleet!!
 
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
         uiVerticalStack {
             padding = 20.0
             uiHorizontalStack {
                  text("Deploy Forces", 50.00, Colors.CYAN, gameFont)
             }
+
+            uiHorizontalStack {
+                terraFormerReadout = text(
+                    "Selected: ${ps.chosenTerraformers} Ready: ${currentFleet.getMovableTerraformersCount()} Total: ${currentFleet.getTerraformerTotalCount()}",
+                    50.00, Colors.CYAN, gameFont
+                )
+            }
+
            uiHorizontalStack {
                padding = 5.00
-               terraFormerReadout = text("Terraformers: ${ps.chosenTerraformers}", 25.00, Colors.CYAN, gameFont)
+
                uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = gameFont
@@ -43,9 +51,17 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                      size(96,96)
                }
             }
+
+            uiHorizontalStack {
+                colonyReadout = text(
+                    "Selected: ${ps.chosenColony} Ready: ${currentFleet.getMovableColonyShipCount()} Total: ${currentFleet.getColonyShipTotalCount()}",
+                    50.00, Colors.CYAN, gameFont
+                )
+            }
+
             uiHorizontalStack {
                 padding = 5.00
-                colonyReadout = text("Colony: ${ps.chosenColony}", 25.00, Colors.CYAN, gameFont)
+
                 uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = gameFont
@@ -62,8 +78,15 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
 
             uiHorizontalStack {
+                corvetteReadout = text(
+                    "Selected: ${ps.chosenCorvette} Ready: ${currentFleet.getMovableCorvetteCount()} Total: ${currentFleet.getCorvetteTotalCount()}",
+                    50.00, Colors.CYAN, gameFont
+                )
+            }
+
+            uiHorizontalStack {
                 padding = 5.00
-                corvetteReadout = text("Corvettes: ${ps.chosenCorvette}", 25.00, Colors.CYAN, gameFont)
+
                 uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = gameFont
@@ -80,8 +103,14 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
 
             uiHorizontalStack {
+                cruiserReadout = text(
+                    "Selected: ${ps.chosenCruiser} Ready: ${currentFleet.getMovableCruiserCount()} Total: ${currentFleet.getCruiserTotalCount()}",
+                    50.00, Colors.CYAN, gameFont
+                )
+            }
+
+            uiHorizontalStack {
                 padding = 5.00
-                cruiserReadout = text("Cruisers: ${ps.chosenCruiser}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = gameFont
@@ -98,8 +127,14 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
 
             uiHorizontalStack {
+                battleshipReadout = text(
+                    "Selected: ${ps.chosenBattleship} Ready: ${currentFleet.getMovableBattleShipCount()} Total: ${currentFleet.getBattleShipTotalCount()}",
+                    50.00, Colors.CYAN, gameFont
+                )
+            }
+
+            uiHorizontalStack {
                 padding = 5.00
-                battleshipReadout = text("Battleships: ${ps.chosenBattleship}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = gameFont
@@ -116,8 +151,14 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
 
             uiHorizontalStack {
+                galleonReadout = text(
+                    "Selected: ${ps.chosenGalleon} Ready: ${currentFleet.getMovableGalleonCount()} Total: ${currentFleet.getGalleonTotalCount()}",
+                    50.00, Colors.CYAN, gameFont
+                )
+            }
+
+            uiHorizontalStack {
                 padding = 5.00
-                galleonReadout = text("Galleons: ${ps.chosenGalleon}", 25.00, Colors.CYAN, gameFont)
                 uiButton("ADD") {
                     textColor = Colors.GOLD
                     textFont = gameFont
@@ -133,6 +174,7 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 }
             }
 
+
             uiHorizontalStack {
                 padding = 20.0
 
@@ -146,8 +188,11 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     textColor = Colors.GOLD
                     textFont = gameFont
                     onClick {
+                        if (totalSelectedShips() <= 0) {
+                            showNoGo("Select at least one ship to move")
+                            return@onClick
+                        }
                         ps.operation = operationType.MOVINGFLEET
-                        println("chosenTerraformers: ${ps.chosenTerraformers} chosenColony: ${ps.chosenColony}")
                         sceneContainer.changeTo<StarsScene>()
                     }
                 }
@@ -158,29 +203,29 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private fun onShipUp(type: shipType) {
         when(type) {
             shipType.TERRAFORMATTER_HUMAN ->
-                if(ps.chosenTerraformers < gs.stars[ps.activePlayerStar]?.playerFleet?.getTerraformersCount()!!) {
+                if(ps.chosenTerraformers < currentFleet.getMovableTerraformersCount()) {
                     ps.chosenTerraformers++
                 }
             shipType.COLONY_HUMAN ->
-                if(ps.chosenColony < gs.stars[ps.activePlayerStar]?.playerFleet?.getColonyShipCount()!!) {
+                if(ps.chosenColony < currentFleet.getMovableColonyShipCount()) {
                     ps.chosenColony++
                 }
             shipType.CORVETTE_HUMAN ->
-                if(ps.chosenCorvette < gs.stars[ps.activePlayerStar]?.playerFleet?.getCorvetteCount()!!) {
+                if(ps.chosenCorvette < currentFleet.getMovableCorvetteCount()) {
                 ps.chosenCorvette++
             }
             shipType.CRUISER_HUMAN -> {
-                if(ps.chosenCruiser < gs.stars[ps.activePlayerStar]?.playerFleet?.getCruiserCount()!!) {
+                if(ps.chosenCruiser < currentFleet.getMovableCruiserCount()) {
                     ps.chosenCruiser++
                 }
             }
             shipType.BATTLESHIP_HUMAN -> {
-                if(ps.chosenBattleship < gs.stars[ps.activePlayerStar]?.playerFleet?.getBattleShipCount()!!) {
+                if(ps.chosenBattleship < currentFleet.getMovableBattleShipCount()) {
                     ps.chosenBattleship++
                 }
             }
             shipType.GALLEON_HUMAN -> {
-                if(ps.chosenGalleon < gs.stars[ps.activePlayerStar]?.playerFleet?.getGalleonCount()!!) {
+                if(ps.chosenGalleon < currentFleet.getMovableGalleonCount()) {
                     ps.chosenGalleon++
                 }
             } else -> {
@@ -221,13 +266,31 @@ class DeployShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     }
 
     private fun updateReadouts() {
-        terraFormerReadout.text = "Terraformers: ${ps.chosenTerraformers}"
-        colonyReadout.text = "Colony: ${ps.chosenColony}"
-        corvetteReadout.text = "Corvettes: ${ps.chosenCorvette}"
-        cruiserReadout.text =  "Cruisers: ${ps.chosenCruiser}"
-        battleshipReadout.text = "Battleships: ${ps.chosenBattleship}"
-        galleonReadout.text = "Galleons: ${ps.chosenGalleon}"
+        terraFormerReadout.text =
+            "Selected: ${ps.chosenTerraformers} Ready: ${currentFleet.getMovableTerraformersCount()} Total: ${currentFleet.getTerraformerTotalCount()}"
+
+        colonyReadout.text =
+            "Selected: ${ps.chosenColony} Ready: ${currentFleet.getMovableColonyShipCount()} Total: ${currentFleet.getColonyShipTotalCount()}"
+
+        corvetteReadout.text =
+            "Selected: ${ps.chosenCorvette} Ready: ${currentFleet.getMovableCorvetteCount()} Total: ${currentFleet.getCorvetteTotalCount()}"
+
+        cruiserReadout.text =
+            "Selected: ${ps.chosenCruiser} Ready: ${currentFleet.getMovableCruiserCount()} Total: ${currentFleet.getCruiserTotalCount()}"
+
+        battleshipReadout.text =
+            "Selected: ${ps.chosenBattleship} Ready: ${currentFleet.getMovableBattleShipCount()} Total: ${currentFleet.getBattleShipTotalCount()}"
+
+        galleonReadout.text =
+            "Selected: ${ps.chosenGalleon} Ready: ${currentFleet.getMovableGalleonCount()} Total: ${currentFleet.getGalleonTotalCount()}"
     }
 
-
+    private fun totalSelectedShips(): Int {
+        return ps.chosenTerraformers +
+            ps.chosenColony +
+            ps.chosenCorvette +
+            ps.chosenCruiser +
+            ps.chosenBattleship +
+            ps.chosenGalleon
+    }
 }

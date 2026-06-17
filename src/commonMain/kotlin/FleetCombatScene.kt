@@ -95,32 +95,24 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     private var resolvingCombat = false
 
     override suspend fun SContainer.sceneMain() {
+        loadBasicAssets()
         setupBonuses()
+        val background = addDefaultBackground()
 
         ps.musicSceneContainer?.changeTo<WarMusicScene>()
 
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
-
-        header = text("Battle at ${gs.stars[ps.activePlayerStar]!!.name} Round: ${round}", 25.00, Colors.GOLD, font) {
+        header = text("Battle at ${gs.stars[ps.activePlayerStar]!!.name} Round: ${round}", 25.00, Colors.GOLD, gameFont) {
             alignTopToTopOf(background)
             centerXOnStage()
         }
-        messageLine = text("Click on your ship on left, then on enemy to fire on right", 25.00, Colors.GOLD, font) {
+        messageLine = text("Click on your ship on left, then on enemy to fire on right", 25.00, Colors.GOLD, gameFont) {
             alignTopToBottomOf(header)
             alignLeftToLeftOf(background)
         }
-        messageLine2 = text("", 25.00, Colors.GOLD, font) {
+        messageLine2 = text("", 25.00, Colors.GOLD, gameFont) {
             alignTopToBottomOf(messageLine)
             alignLeftToLeftOf(background)
         }
-
-        val usefulHeight =
-            sceneHeight.toDouble() - header.scaledHeight - messageLine.scaledHeight - messageLine2.scaledHeight
 
         getCounts()
         ps.resetBattleStats()
@@ -138,7 +130,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/player_terraformer.png",
                 playerTerrafomers,
                 Colors.CYAN,
-                font,
+                gameFont,
                 faceLeft = true
             ) {
                 clickOnPlayerShip(shipType.TERRAFORMATTER_HUMAN)
@@ -159,7 +151,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/player_colony_ship.png",
                 colonyShipCount,
                 Colors.CYAN,
-                font,
+                gameFont,
                 faceLeft = true
             ) {
                 clickOnPlayerShip(shipType.COLONY_HUMAN)
@@ -178,7 +170,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/player_corvette.png",
                 corvetteCount,
                 Colors.CYAN,
-                font,
+                gameFont,
                 faceLeft = true
             ) {
                 clickOnPlayerShip(shipType.CORVETTE_HUMAN)
@@ -197,7 +189,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/player_cruiser.png",
                 cruiserCount,
                 Colors.CYAN,
-                font,
+                gameFont,
                 faceLeft = true
             ) {
                 clickOnPlayerShip(shipType.CRUISER_HUMAN)
@@ -216,7 +208,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/player_battleship.png",
                 battleShipCount,
                 Colors.CYAN,
-                font,
+                gameFont,
                 faceLeft = true
             ) {
                 clickOnPlayerShip(shipType.BATTLESHIP_HUMAN)
@@ -235,7 +227,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/player_galleon.png",
                 galleonCount,
                 Colors.CYAN,
-                font,
+                gameFont,
                 faceLeft = true
             ) {
                 clickOnPlayerShip(shipType.GALLEON_HUMAN)
@@ -256,7 +248,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/enemy_colony_ship.png",
                 enemyColonyShipCount,
                 Colors.RED,
-                font,
+                gameFont,
                 faceLeft = false
             ) {
                 clickonEnemyShip(shipType.COLONY_ENEMY)
@@ -275,7 +267,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/enemy_corvette.png",
                 enemyCorvetteCount,
                 Colors.RED,
-                font,
+                gameFont,
                 faceLeft = false
             ) {
                 clickonEnemyShip(shipType.CORVETTE_ENEMY)
@@ -294,7 +286,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/enemy_cruiser.png",
                 enemyCruiserCount,
                 Colors.RED,
-                font,
+                gameFont,
                 faceLeft = false
             ) {
                 clickonEnemyShip(shipType.CRUISER_ENEMY)
@@ -313,7 +305,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/enemy_battleship.png",
                 enemyBattleShipCount,
                 Colors.RED,
-                font,
+                gameFont,
                 faceLeft = false
             ) {
                 clickonEnemyShip(shipType.BATTLESHIP_ENEMY)
@@ -332,7 +324,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                 "ships/enemy_galleon.png",
                 enemyGalleonCount,
                 Colors.RED,
-                font,
+                gameFont,
                 faceLeft = false
             ) {
                 clickonEnemyShip(shipType.GALLEON_ENEMY)
@@ -356,19 +348,19 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
 
     private suspend fun getCounts() {
         //Get new counts from galaxy state
-        playerTerrafomers = gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformerCombatCount()
-        colonyShipCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyCombatCount()
-        corvetteCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCombatCount()
-        cruiserCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCombatCount()
-        battleShipCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCombatCount()
-        galleonCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCombatCount()
+        playerTerrafomers = gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformerTotalCount()
+        colonyShipCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipTotalCount()
+        corvetteCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteTotalCount()
+        cruiserCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserTotalCount()
+        battleShipCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipTotalCount()
+        galleonCount = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonTotalCount()
 
-        //val playerTerrafomers = gs.stars[ps.activePlayerStar]!!.enemyFleet.getTerraformerCombatCount()
-        enemyColonyShipCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getColonyCombatCount()
-        enemyCorvetteCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getCorvetteCombatCount()
-        enemyCruiserCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getCruiserCombatCount()
-        enemyBattleShipCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getBattleShipCombatCount()
-        enemyGalleonCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getGalleonCombatCount()
+        //val playerTerrafomers = gs.stars[ps.activePlayerStar]!!.enemyFleet.getTerraformerTotalCount()
+        enemyColonyShipCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getColonyShipTotalCount()
+        enemyCorvetteCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getCorvetteTotalCount()
+        enemyCruiserCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getCruiserTotalCount()
+        enemyBattleShipCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getBattleShipTotalCount()
+        enemyGalleonCount = gs.stars[ps.activePlayerStar]!!.enemyFleet.getGalleonTotalCount()
     }
 
     private suspend fun clickOnPlayerShip(shipTypeClicked: shipType) {
@@ -467,11 +459,11 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                         if (destroyed) {
                             ps.enemyShipsDestroyed++
                             val countRemaining = when (enemyShipTypeChosen) {
-                                shipType.COLONY_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getColonyCombatCount()
-                                shipType.CORVETTE_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getCorvetteCombatCount()
-                                shipType.CRUISER_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getCruiserCombatCount()
-                                shipType.BATTLESHIP_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getBattleShipCombatCount()
-                                shipType.GALLEON_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getGalleonCombatCount()
+                                shipType.COLONY_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getColonyShipTotalCount()
+                                shipType.CORVETTE_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getCorvetteTotalCount()
+                                shipType.CRUISER_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getCruiserTotalCount()
+                                shipType.BATTLESHIP_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getBattleShipTotalCount()
+                                shipType.GALLEON_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getGalleonTotalCount()
                                 //Player shouldn't fire on own ships
                                 shipType.TERRAFORMATTER_HUMAN -> 0
                                 shipType.COLONY_HUMAN -> 0
@@ -551,12 +543,12 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     ps.shipsLost++
 
                     val countRemaining = when (targetShips) {
-                        shipType.TERRAFORMATTER_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformerCombatCount()
-                        shipType.COLONY_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyCombatCount()
-                        shipType.CORVETTE_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCombatCount()
-                        shipType.CRUISER_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCombatCount()
-                        shipType.BATTLESHIP_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCombatCount()
-                        shipType.GALLEON_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCombatCount()
+                        shipType.TERRAFORMATTER_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformerTotalCount()
+                        shipType.COLONY_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getColonyShipTotalCount()
+                        shipType.CORVETTE_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteTotalCount()
+                        shipType.CRUISER_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserTotalCount()
+                        shipType.BATTLESHIP_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipTotalCount()
+                        shipType.GALLEON_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonTotalCount()
                         else -> 0
                     }
 

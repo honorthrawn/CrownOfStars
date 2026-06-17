@@ -59,8 +59,10 @@ class GalaxyState {
         starDate++
     }
 
+    private val galaxySaveFile get() = applicationDataVfs["galaxyState.json"]
+
     suspend fun load() {
-        val jsonIn = applicationDataVfs["galaxyState.json"].readString()
+        val jsonIn = galaxySaveFile.readString()
         val json = Json {
             prettyPrint = true
             allowStructuredMapKeys = true
@@ -77,11 +79,11 @@ class GalaxyState {
         }
 
         val jsonOut = json.encodeToString(GalaxyState.serializer(), this)
-        applicationDataVfs["galaxyState.json"].writeString(jsonOut)
+        galaxySaveFile.writeString(jsonOut)
     }
 
     suspend fun hasSaveGame(): Boolean {
-        return localCurrentDirVfs["galaxyState.json"].exists()
+        return galaxySaveFile.exists()
     }
 
 }

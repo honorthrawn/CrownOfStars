@@ -29,8 +29,10 @@ class EmpireState {
         }
     }
 
+    private val empireSaveFile get() = applicationDataVfs["empireState.json"]
+
     suspend fun load() {
-        val jsonIn = applicationDataVfs["empireState.json"].readString()
+        val jsonIn = empireSaveFile.readString()
         val json = Json { prettyPrint = true }
         val loaded = json.decodeFromString(EmpireState.serializer(), jsonIn)
         empires = loaded.empires
@@ -39,6 +41,6 @@ class EmpireState {
     suspend fun save() {
         val json = Json { prettyPrint = true }
         val jsonOut = json.encodeToString(EmpireState.serializer(), this)
-        applicationDataVfs["empireState.json"].writeString(jsonOut)
+        empireSaveFile.writeString(jsonOut)
     }
 }

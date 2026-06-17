@@ -3,13 +3,12 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
 class WinFleetCombatScene(val gs: GalaxyState, val ps: PlayerState) : BasicScene() {
     override suspend fun SContainer.sceneMain() {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        loadBasicAssets()
 
         val background = image(resourcesVfs["ui/fleetVictorious.jpg"].readBitmap()) {
             position(0, 0)
@@ -20,17 +19,17 @@ class WinFleetCombatScene(val gs: GalaxyState, val ps: PlayerState) : BasicScene
             "Battle at ${gs.stars[ps.activePlayerStar]!!.name} Rounds: ${ps.totalRounds}",
             25.00,
             Colors.GOLD,
-            font
+            gameFont
         ) {
             alignTopToTopOf(background)
             centerXOnStage()
         }
-        val line1 = text("We won the battle", 25.00, Colors.CYAN, font) {
+        val line1 = text("We won the battle", 25.00, Colors.CYAN, gameFont) {
             alignTopToBottomOf(header)
             centerXOnStage()
         }
         val line2 =
-            text("We lost ${ps.shipsLost} ships from ${ps.totalDamgeReceived} damage", 25.00, Colors.CYAN, font) {
+            text("We lost ${ps.shipsLost} ships from ${ps.totalDamgeReceived} damage", 25.00, Colors.CYAN, gameFont) {
                 alignTopToBottomOf(line1)
                 centerXOnStage()
             }
@@ -38,7 +37,7 @@ class WinFleetCombatScene(val gs: GalaxyState, val ps: PlayerState) : BasicScene
             "We destroyed ${ps.enemyShipsDestroyed} ships from ${ps.totalDamageDealt} damage",
             25.00,
             Colors.CYAN,
-            font
+            gameFont
         ) {
             alignTopToBottomOf(line2)
             centerXOnStage()
@@ -48,7 +47,7 @@ class WinFleetCombatScene(val gs: GalaxyState, val ps: PlayerState) : BasicScene
             alignTopToBottomOf(line3)
             centerXOnStage()
             textColor = Colors.GOLD
-            textFont = font
+            textFont = gameFont
             onClick { ps.musicSceneContainer?.changeTo<MusicScene>()
                 sceneContainer.changeTo<StarsScene>() }
         }

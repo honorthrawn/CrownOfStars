@@ -1,0 +1,22 @@
+{
+    "empires": {
+        "1": {
+            "id": "Player",
+            "shipPoints": 100,
+            "organicPoints": 50,
+            "techTags": [
+                0,
+                100
+            ]
+        },
+        "2": {
+            "id": "Enemy",
+            "shipPoints": 100,
+            "organicPoints": 50,
+            "techTags": [
+                0,
+                100
+            ]
+        }
+    }
+}

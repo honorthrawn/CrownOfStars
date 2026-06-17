@@ -19,6 +19,7 @@ class PlayerState {
     var chosenCruiser = 0
     var chosenBattleship = 0
     var chosenGalleon = 0
+    var chosenGalleonForInvasion = 0
     var operation = operationType.SELECTION
     var terraformIndex = 0
     var bombardIndex = 0

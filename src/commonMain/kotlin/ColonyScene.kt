@@ -3,18 +3,12 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.format.*
-import com.soywiz.korio.file.std.*
 
 class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
     override suspend fun SContainer.sceneInit() {
         loadBasicAssets()
         val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.getLandscapeImagePath()
-        val planetImage = image(resourcesVfs[fileName].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
-
+        addBackground(fileName)
         val message = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name
         uiVerticalStack {
             scaledWidth = sceneWidth.toDouble()
@@ -28,5 +22,4 @@ class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
         }
     }
-
 }

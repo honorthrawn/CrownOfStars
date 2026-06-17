@@ -1,10 +1,9 @@
+
 import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
-import com.soywiz.korim.format.*
-import com.soywiz.korio.file.std.*
 
 class BuyTechScene(
     val es: EmpireState,
@@ -21,11 +20,7 @@ class BuyTechScene(
     override suspend fun SContainer.sceneMain() {
         loadBasicAssets()
         val tree = getCurrentTechTree()
-
-        image(resourcesVfs[getRealmImagePath()].readBitmap()) {
-            position(0.0, 0.0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
+        addBackground(getRealmImagePath())
 
         val playerEmpire = es.empires[Allegiance.Player.ordinal] ?: error("Player empire was not found")
         val leftX = 60.0

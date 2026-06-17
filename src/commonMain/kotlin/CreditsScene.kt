@@ -3,17 +3,11 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.format.*
-import com.soywiz.korio.file.std.*
 
 class CreditsScene : BasicScene() {
     override suspend fun SContainer.sceneInit() {
         loadBasicAssets()
-
-        image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
+        addDefaultBackground()
 
         val credits: List<Pair<String, RGBA>> = listOf(
             "Programming and Game Design" to Colors.GOLD,

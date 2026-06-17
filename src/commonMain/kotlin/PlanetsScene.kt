@@ -3,7 +3,6 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
@@ -14,16 +13,12 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
     private var planetTexts = mutableListOf<Text>()
 
     override suspend fun SContainer.sceneInit() {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        loadBasicAssets()
+        val background = addDefaultBackground()
         println("ACTIVE STAR: ${ps.activePlayerStar}")
 
         val startx = 200
         var starty = 600
-
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
 
         for ((i, planet) in gs.stars[ps.activePlayerStar]!!.planets.values.withIndex()) {
             val fileName = planet.getImagePath()
@@ -46,7 +41,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             } else {
                 "${planet.name} - ${planet.type} $turnCounter"
             }
-            planetTexts.add(i, text(planetTxt, 50.00, planetTextColor, font) {
+            planetTexts.add(i, text(planetTxt, 50.00, planetTextColor, gameFont) {
                 centerXOnStage()
                 alignTopToTopOf(planetImage, 12.0) })
             planetImage.addUpdater { updatePlanet(planetImage, i) }
@@ -67,7 +62,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             Allegiance.Player -> Colors.CYAN
             Allegiance.Enemy -> Colors.RED
         }
-        text(gs.stars[ps.activePlayerStar]!!.name, 50.00, starTextColor, font) {
+        text(gs.stars[ps.activePlayerStar]!!.name, 50.00, starTextColor, gameFont) {
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
         }
@@ -78,16 +73,14 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
             uiButton("BACK") {
                 textColor = Colors.GOLD
-                textFont = font
+                textFont = gameFont
                 onClick { sceneContainer.changeTo<StarsScene>() }
             }
         }
 }
 
     private suspend fun planetClicked(index: Int) {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
-        if(!showingSelectOperationDialog) {
+         if(!showingSelectOperationDialog) {
             showingSelectOperationDialog = true
             when (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex) {
                 Allegiance.Player -> {
@@ -105,17 +98,17 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                                 scaledWidth = sceneWidth / 2.00
                                 uiButton("COLONIZE") {
                                     textColor = Colors.GOLD
-                                    textFont = font
+                                    textFont = gameFont
                                     onClick { colonizePlanet(index) }
                                 }
                                 uiButton("TERRAFORM") {
                                     textColor = Colors.GOLD
-                                    textFont = font
+                                    textFont = gameFont
                                     onClick { terraformPlanet(index) }
                                 }
                                 uiButton("BACK") {
                                     textColor = Colors.GOLD
-                                    textFont = font
+                                    textFont = gameFont
                                     onClick {
                                         showingSelectOperationDialog = false
                                         selectOperationDialog?.removeFromParent() }
@@ -136,22 +129,22 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                                 scaledWidth = sceneWidth / 2.00
                                 uiButton("VIEW") {
                                     textColor = Colors.GOLD
-                                    textFont = font
+                                    textFont = gameFont
                                     onClick { showEnemyPlanet(index) }
                                 }
                                 uiButton("BOMBARD") {
                                     textColor = Colors.GOLD
-                                    textFont = font
+                                    textFont = gameFont
                                     onClick { bombardPlanet(index) }
                                 }
                                 uiButton("INVADE") {
                                     textColor = Colors.GOLD
-                                    textFont = font
+                                    textFont = gameFont
                                     onClick { invadePlanet(index) }
                                 }
                                 uiButton("BACK") {
                                     textColor = Colors.GOLD
-                                    textFont = font
+                                    textFont = gameFont
                                     showingSelectOperationDialog = false
                                     onClick {  selectOperationDialog?.removeFromParent() }
                                 }
@@ -240,7 +233,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         if (gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex == Allegiance.Enemy) {
             if (gs.stars[ps.activePlayerStar]!!.playerFleet.isGalleonsPresent()) {
             ps.bombardIndex = index
-            ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonCombatCount()
+            ps.chosenGalleon = gs.stars[ps.activePlayerStar]!!.playerFleet.getGalleonTotalCount()
             sceneContainer.changeTo<InvadeScene>()
             } else {
                 showNoGo("You must have galleons present to invade an enemy held world")

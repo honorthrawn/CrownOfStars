@@ -26,6 +26,30 @@ class Fleet {
         }
     }
 
+    fun isColonyAvailableToMove(): Boolean {
+        return colonyShips.any { !it.hasMoved }
+    }
+
+    fun isTerraformerAvailableToMove(): Boolean {
+        return terraformers.any { !it.hasMoved }
+    }
+
+    fun isCorvetteAvailableToMove(): Boolean {
+        return corvettes.any { !it.hasMoved }
+    }
+
+    fun isCruiserAvailableToMove(): Boolean {
+        return cruisers.any { !it.hasMoved }
+    }
+
+    fun isBattleshipAvailableToMove(): Boolean {
+        return battleships.any { !it.hasMoved }
+    }
+
+    fun isGalleonAvailableToMove(): Boolean {
+        return galleons.any { !it.hasMoved }
+    }
+
     fun isPresent(): Boolean {
       return terraformers.isNotEmpty()  || colonyShips.isNotEmpty() || corvettes.isNotEmpty() ||
           cruisers.isNotEmpty() || battleships.isNotEmpty() || galleons.isNotEmpty()
@@ -59,27 +83,27 @@ class Fleet {
         return battleships.isNotEmpty()
     }
 
-    fun getTerraformerCombatCount(): Int {
+    fun getTerraformerTotalCount(): Int {
         return terraformers.count()
     }
 
-    fun getColonyCombatCount(): Int {
+    fun getColonyShipTotalCount(): Int {
         return colonyShips.count()
     }
 
-    fun getGalleonCombatCount(): Int {
+    fun getGalleonTotalCount(): Int {
         return galleons.count()
     }
 
-    fun getCorvetteCombatCount(): Int {
+    fun getCorvetteTotalCount(): Int {
         return corvettes.count()
     }
 
-    fun getCruiserCombatCount(): Int {
+    fun getCruiserTotalCount(): Int {
         return cruisers.count()
     }
 
-    fun getBattleShipCombatCount(): Int {
+    fun getBattleShipTotalCount(): Int {
         return battleships.count()
     }
 
@@ -157,105 +181,59 @@ class Fleet {
 
     //Changed these functions to return count that hasn't moved already, that way neither player
     //nor AI will get to move the ships more than once per turn
-    fun getColonyShipCount(): Int {
+   fun getMovableColonyShipCount(): Int {
         return colonyShips.filterNot { it.hasMoved }.count()
     }
 
-    fun getTerraformersCount(): Int {
+    fun getMovableTerraformersCount(): Int {
         return terraformers.filterNot { it.hasMoved }.count()
     }
 
-    fun getCorvetteCount() : Int {
+    fun getMovableCorvetteCount() : Int {
         return corvettes.filterNot { it.hasMoved }.count()
     }
 
-    fun getCruiserCount() : Int {
+    fun getMovableCruiserCount() : Int {
         return cruisers.filterNot { it.hasMoved }.count()
     }
 
-    fun getBattleShipCount() : Int {
+    fun getMovableBattleShipCount() : Int {
         return battleships.filterNot { it.hasMoved }.count()
     }
 
-    fun getGalleonCount() : Int {
+    fun getMovableGalleonCount() : Int {
         return galleons.filterNot { it.hasMoved }.count()
     }
 
-    fun removeShipFromFleetForMove(shipTypeToRemove: shipType) : Ship  {
-        val ship: Ship
-        when (shipTypeToRemove) {
+    fun removeShipFromFleetForMove(shipTypeToRemove: shipType): Ship?  {
+        fun removeFirstUnmoved(list: MutableList<Ship>, label: String): Ship? {
+            println("Trying to remove $label")
+            val index = list.indexOfFirst { !it.hasMoved }
 
-            shipType.TERRAFORMATTER_HUMAN -> {
-                println("Trying to remove terraformer")
-                val indx = terraformers.indexOfFirst { !it.hasMoved }
-                ship = terraformers[indx]
-                terraformers.removeAt(indx)
+            if (index < 0) {
+                println("No unmoved $label available. Total ships=${list.size}, moved=${list.count { it.hasMoved }}")
+                return null
             }
 
-            shipType.COLONY_HUMAN -> {
-                println("Trying to remove colony ship")
-                val indx = colonyShips.indexOfFirst { !it.hasMoved }
-                ship = colonyShips[indx]
-                colonyShips.removeAt(indx)
-            }
-
-            shipType.CORVETTE_HUMAN -> {
-                val indx = corvettes.indexOfFirst { !it.hasMoved }
-                ship = corvettes[indx]
-                corvettes.removeAt(indx)
-            }
-
-            shipType.CRUISER_HUMAN -> {
-                val indx = cruisers.indexOfFirst { !it.hasMoved }
-                ship = cruisers[indx]
-                cruisers.removeAt(indx)
-            }
-
-            shipType.BATTLESHIP_HUMAN -> {
-                val indx = battleships.indexOfFirst { !it.hasMoved }
-                ship = battleships[indx]
-                battleships.removeAt(indx)
-            }
-
-            shipType.GALLEON_HUMAN -> {
-                val indx = galleons.indexOfFirst { !it.hasMoved }
-                ship = galleons[indx]
-                galleons.removeAt(indx)
-            }
-
-            shipType.COLONY_ENEMY -> {
-                println("Trying to remove colony ship")
-                val indx = colonyShips.indexOfFirst { !it.hasMoved }
-                ship = colonyShips[indx]
-                colonyShips.removeAt(indx)
-            }
-
-            shipType.CORVETTE_ENEMY -> {
-                val indx = corvettes.indexOfFirst { !it.hasMoved }
-                ship = corvettes[indx]
-                corvettes.removeAt(indx)
-            }
-
-            shipType.CRUISER_ENEMY -> {
-                val indx = cruisers.indexOfFirst { !it.hasMoved }
-                ship = cruisers[indx]
-                cruisers.removeAt(indx)
-            }
-
-            shipType.BATTLESHIP_ENEMY -> {
-                val indx = battleships.indexOfFirst { !it.hasMoved }
-                ship = battleships[indx]
-                battleships.removeAt(indx)
-            }
-
-            shipType.GALLEON_ENEMY -> {
-                val indx = galleons.indexOfFirst { !it.hasMoved }
-                ship = galleons[indx]
-                galleons.removeAt(indx)
-            }
+            return list.removeAt(index)
         }
-        return ship
+
+        return when (shipTypeToRemove) {
+            shipType.TERRAFORMATTER_HUMAN -> removeFirstUnmoved(terraformers, "terraformer")
+            shipType.COLONY_HUMAN -> removeFirstUnmoved(colonyShips, "colony ship")
+            shipType.CORVETTE_HUMAN -> removeFirstUnmoved(corvettes, "corvette")
+            shipType.CRUISER_HUMAN -> removeFirstUnmoved(cruisers, "cruiser")
+            shipType.BATTLESHIP_HUMAN -> removeFirstUnmoved(battleships, "battleship")
+            shipType.GALLEON_HUMAN -> removeFirstUnmoved(galleons, "galleon")
+
+            shipType.COLONY_ENEMY -> removeFirstUnmoved(colonyShips, "enemy colony ship")
+            shipType.CORVETTE_ENEMY -> removeFirstUnmoved(corvettes, "enemy corvette")
+            shipType.CRUISER_ENEMY -> removeFirstUnmoved(cruisers, "enemy cruiser")
+            shipType.BATTLESHIP_ENEMY -> removeFirstUnmoved(battleships, "enemy battleship")
+            shipType.GALLEON_ENEMY -> removeFirstUnmoved(galleons, "enemy galleon")
+        }
     }
+
 
     fun destroyShip(shipTypeToRemove: shipType) {
         when (shipTypeToRemove) {

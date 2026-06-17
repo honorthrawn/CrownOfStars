@@ -3,8 +3,6 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.format.*
-import com.soywiz.korio.file.std.*
 import kotlin.random.*
 
 class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
@@ -20,11 +18,8 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
     override suspend fun SContainer.sceneInit() {
         loadBasicAssets()
+        addBackground("ui/planetBombed.jpg")
         ps.musicSceneContainer?.changeTo<WarMusicScene>()
-        val background = image(resourcesVfs["ui/planetBombed.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
         val topLine = "Bombardment of ${gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.name}"
         val playerInitiative = Random.nextInt(1, 6)
         val aiInitiative = Random.nextInt(1, 6)
@@ -113,28 +108,28 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
         missileLaunchedMessage = "They launched $missileTubes missiles and did damage $hits times"
         var corvettesLost = 0
-        var totalCorvettes = gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCombatCount()
+        var totalCorvettes = gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteTotalCount()
         var cruisersLost = 0
-        var totalCruisers = gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCombatCount()
+        var totalCruisers = gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserTotalCount()
         var battleShipsLost = 0
-        var totalBattleShips = gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCombatCount()
+        var totalBattleShips = gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipTotalCount()
 
         if (hits > 0) {
             var hitsToAsses = hits
-            while (hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteCombatCount() > 0) {
+            while (hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getCorvetteTotalCount() > 0) {
                 hitsToAsses--
                 if(gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(shipType.CORVETTE_HUMAN, 20)) {
                     corvettesLost++
                 }
             }
-            while(hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserCombatCount() > 0 ) {
+            while(hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getCruiserTotalCount() > 0 ) {
                 hitsToAsses--
                 //TODO: Fix this -- it appears like one missle from ground can take whole cruiser
                 if(gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(shipType.CRUISER_HUMAN, 20)) {
                     cruisersLost++
                 }
             }
-            while(hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipCombatCount() > 0 ) {
+            while(hitsToAsses > 0 && gs.stars[ps.activePlayerStar]!!.playerFleet.getBattleShipTotalCount() > 0 ) {
                 hitsToAsses--
                 //TODO: Fix this -- it appears like one missle from ground can take whole battleship
                 if(gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(shipType.BATTLESHIP_HUMAN, 20)) {

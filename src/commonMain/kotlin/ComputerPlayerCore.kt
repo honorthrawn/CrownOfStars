@@ -185,8 +185,10 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             }
 
             val shipMoving = startStar.enemyFleet.removeShipFromFleetForMove(shipType.COLONY_ENEMY)
-            shipMoving.hasMoved = true
-            destination.enemyFleet.add(shipMoving)
+            if( shipMoving != null) {
+                shipMoving.hasMoved = true
+                destination.enemyFleet.add(shipMoving)
+            }
         }
     }
 
@@ -371,7 +373,7 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
 
         val starsWithUnmovedColonyShips = gs.stars.values
             .filter { star ->
-                star.enemyFleet.getColonyShipCount() > 0
+                star.enemyFleet.isColonyAvailableToMove()
             }
             .toList()
 
@@ -399,7 +401,7 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             playerWorlds.addAll(star.planets.values.filter { it.ownerIndex == Allegiance.Player })
             unoccupiedWorlds.addAll(star.planets.values.filter { it.ownerIndex == Allegiance.Unoccupied })
 
-            colonyShipCount += star.enemyFleet.getColonyShipCount()
+            colonyShipCount += star.enemyFleet.getMovableColonyShipCount()
             // warshipCount += star.enemyFleet.getWarshipCount()
             // playerWarshipCount += star.playerFleet.getWarshipCount()
         }

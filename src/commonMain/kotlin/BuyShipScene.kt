@@ -14,13 +14,8 @@ class BuyShipScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
     override suspend fun SContainer.sceneInit() {
         loadBasicAssets()
+        addDefaultBackground()
         shipFactory.init()
-
-        image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
-
         val playerEmpire = es.empires[Allegiance.Player.ordinal]!!
 
         shipsReadout = text(

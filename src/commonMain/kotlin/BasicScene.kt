@@ -5,6 +5,7 @@ import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
+import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
 open class BasicScene() : Scene() {
@@ -17,6 +18,19 @@ open class BasicScene() : Scene() {
         gameFont = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
     }
 
+    protected suspend fun Container.addDefaultBackground() : Image {
+        return image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
+            position(0, 0)
+            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
+        }
+    }
+
+    protected suspend fun Container.addBackground(path: String) : Image {
+        return image(resourcesVfs[path].readBitmap()) {
+            position(0, 0)
+            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
+        }
+    }
 
     suspend fun showNoGo(requirements: String) {
         if (!showingNotEnough) {

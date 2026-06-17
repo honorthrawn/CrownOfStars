@@ -1,13 +1,12 @@
+
 import com.soywiz.korge.input.*
-import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
-import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 
-class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : Scene() {
+class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
     //private lateinit var terraFormerReadout: Text
     private lateinit var colonyReadout: Text
     private lateinit var corvetteReadout: Text
@@ -15,16 +14,12 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
     private lateinit var battleshipReadout: Text
     private lateinit var galleonReadout: Text
     override suspend fun SContainer.sceneInit() {
-        val font = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
-
-        val background = image(resourcesVfs["ui/hs-2012-37-a-large_web.jpg"].readBitmap()) {
-            position(0, 0)
-            setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
-        }
+        loadBasicAssets()
+        addDefaultBackground()
         uiVerticalStack {
             padding = 20.0
             uiHorizontalStack {
-                text("View Forces", 50.00, Colors.RED, font)
+                text("View Forces", 50.00, Colors.RED, gameFont)
             }
             //TODO Enemy doesn't use terraformers, if they start, need to change this
             //uiHorizontalStack {
@@ -37,46 +32,41 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
             val enemyFleet = gs.stars[ps.activePlayerStar]!!.enemyFleet
             uiHorizontalStack {
                 padding = 5.00
-                colonyReadout = text("Colony: ${enemyFleet.getColonyCombatCount()}", 25.00, Colors.RED, font)
+                colonyReadout = text("Colony: ${enemyFleet.getColonyShipTotalCount()}", 25.00, Colors.RED, gameFont)
                 image(resourcesVfs["ships/enemy_colony_ship.png"].readBitmap()) {
-                    //scale(0.1, 0.1)
-                    size(96, 96)
+                   size(96, 96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                corvetteReadout = text("Corvettes: ${enemyFleet.getCorvetteCombatCount()}", 25.00, Colors.RED, font)
+                corvetteReadout = text("Corvettes: ${enemyFleet.getCorvetteTotalCount()}", 25.00, Colors.RED, gameFont)
                 image(resourcesVfs["ships/enemy_corvette.png"].readBitmap())  {
-                   //scale(0.1, 0.1)
                     size(96, 96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                cruiserReadout = text("Cruisers: ${enemyFleet.getCruiserCombatCount()}", 25.00, Colors.RED, font)
+                cruiserReadout = text("Cruisers: ${enemyFleet.getCruiserTotalCount()}", 25.00, Colors.RED, gameFont)
                   image(resourcesVfs["ships/enemy_cruiser.png"].readBitmap()) {
-                    //scale(0.1, 0.1)
-                      size(96, 96)
+                     size(96, 96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                battleshipReadout = text("Battleships: ${enemyFleet.getBattleShipCombatCount()}", 25.00, Colors.RED, font)
+                battleshipReadout = text("Battleships: ${enemyFleet.getBattleShipTotalCount()}", 25.00, Colors.RED, gameFont)
                 image(resourcesVfs["ships/enemy_battleship.png"].readBitmap()) {
-                   //scale(0.1, 0.1)
-                    size(96, 96)
+                     size(96, 96)
                 }
             }
 
             uiHorizontalStack {
                 padding = 5.00
-                galleonReadout = text("Galleons: ${enemyFleet.getGalleonCombatCount()}", 25.00, Colors.RED, font)
+                galleonReadout = text("Galleons: ${enemyFleet.getGalleonTotalCount()}", 25.00, Colors.RED, gameFont)
                 image(resourcesVfs["ships/enemy_galleon.png"].readBitmap())  {
-                    //scale(0.1, 0.1)
-                    size(96, 96)
+                   size(96, 96)
                 }
             }
 
@@ -84,11 +74,10 @@ class ViewShipsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerSta
                 padding = 20.0
                 uiButton("CLOSE") {
                     textColor =  Colors.GOLD
-                    textFont = font
+                    textFont = gameFont
                     onClick { sceneContainer.changeTo<StarsScene>() }
                 }
             }
         }
     }
-
 }
