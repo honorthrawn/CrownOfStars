@@ -7,11 +7,11 @@ import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
+import kotlinx.coroutines.*
 
 open class BasicScene() : Scene() {
     protected lateinit var gameFont: Font
     private var notEnoughDialog: Container? = null
-    private var confirmationDialog: Container? = null
     private var showingNotEnough = false
 
     suspend fun loadBasicAssets() {
@@ -32,92 +32,161 @@ open class BasicScene() : Scene() {
         }
     }
 
+    fun showGameDialog(
+        title: String,
+        width: Double = sceneWidth / 2.0,
+        height: Double = sceneHeight / 3.0,
+        block: Container.(dialog: Container) -> Unit
+    ): Container {
+        val dialog = sceneContainer.container()
+
+        val x = (sceneWidth - width) / 2.0
+        val y = (sceneHeight - height) / 2.0
+
+        dialog.position(x, y)
+
+        // Shadow
+        dialog.roundRect(width, height, 12.0, 12.0, Colors["#00000088"]) {
+            position(6.0, 6.0)
+        }
+
+        // Main window body
+        dialog.roundRect(width, height, 12.0, 12.0, Colors["#202838"])
+
+        // Title bar
+        dialog.roundRect(width, 46.0, 12.0, 12.0, Colors["#2F3D56"])
+
+        // Title text
+        dialog.text(title, 28.0, Colors.CYAN, gameFont) {
+            position(20.0, 10.0)
+        }
+
+        // Content area
+        val content = dialog.container {
+            position(20.0, 65.0)
+        }
+
+        content.block(dialog)
+
+        return dialog
+    }
+
+    fun showChooseResearchRealmDialog(es: EmpireState, ps: PlayerState): Container {
+        val playerEmpire = es.empires[Allegiance.Player.ordinal]
+            ?: error("Player empire was not found")
+
+        suspend fun chooseRealm(realm: TechRealm, dialog: Container) {
+            ps.techRealmChosen = realm
+            dialog.removeFromParent()
+            sceneContainer.changeTo<BuyTechScene>()
+        }
+
+        return showGameDialog(
+            title = "CHOOSE RESEARCH",
+            width = 360.0,
+            height = 430.0
+        ) { dialog ->
+            text("Research: ${playerEmpire.researchPoints}", 28.0, Colors.CYAN, gameFont) {
+                position(0.0, 0.0)
+            }
+
+            uiVerticalStack {
+                position(0.0, 48.0)
+                padding = 12.0
+
+                uiButton("COMPUTERS", width = 220.0, height = 45.0) {
+                    textColor = Colors.GOLD
+                    textFont = gameFont
+                    onClick { chooseRealm(TechRealm.COMPUTERS, dialog) }
+                }
+
+                uiButton("WEAPONS", width = 220.0, height = 45.0) {
+                    textColor = Colors.GOLD
+                    textFont = gameFont
+                    onClick { chooseRealm(TechRealm.WEAPONS, dialog) }
+                }
+
+                uiButton("DEFENSE", width = 220.0, height = 45.0) {
+                    textColor = Colors.GOLD
+                    textFont = gameFont
+                    onClick { chooseRealm(TechRealm.DEFENSE, dialog) }
+                }
+
+                uiButton("PROPULSION", width = 220.0, height = 45.0) {
+                    textColor = Colors.GOLD
+                    textFont = gameFont
+                    onClick { chooseRealm(TechRealm.PROPULSION, dialog) }
+                }
+
+                uiButton("CLOSE", width = 220.0, height = 45.0) {
+                    textColor = Colors.GOLD
+                    textFont = gameFont
+                    onClick { dialog.removeFromParent() }
+                }
+            }
+        }
+    }
+
     suspend fun showNoGo(requirements: String) {
-        if (!showingNotEnough) {
-            notEnoughDialog = sceneContainer.container {
-                centerOnStage()
-
-                roundRect(
-                    sceneWidth / 2.0,
-                    sceneHeight / 4.0,
-                    5.0,
-                    5.0,
-                    Colors.BLACK
-                )
-
+         showGameDialog("Operation Invalid", sceneWidth / 2.0,sceneHeight / 4.0) { dialog ->
                 uiVerticalStack {
-                    position(20.0, 20.0)
                     scaledWidth = sceneWidth / 2.0 - 40.0
-
-                    text(requirements, 50.0, Colors.CYAN, gameFont)
+                    text(requirements, 40.0, Colors.CYAN, gameFont)
 
                     uiButton("CLOSE") {
                         textFont =  gameFont
                         textColor = Colors.GOLD
-                        onClick { closeMessage() }
+                        onClick { dialog.removeFromParent() }
                     }
                 }
             }
-
-            showingNotEnough = true
-        }
     }
 
-    suspend fun showConfirmDialog(msg: String) {
-        confirmationDialog?.removeFromParent()
+    suspend fun showConfirmDialog(message: String): Boolean {
+        val result = CompletableDeferred<Boolean>()
 
-        val line1: String
-        val line2: String
+        val dialog = showGameDialog(
+            title = "CONFIRM",
+            width = sceneWidth / 2.0,
+            height = sceneHeight / 3.0
+        ) { dialog ->
 
-        if (msg.length > 40) {
-            line1 = msg.substring(0, 40)
-            line2 = msg.substring(40)
-        } else {
-            line1 = msg
-            line2 = ""
-        }
+            text(message, 24.0, Colors.WHITE, gameFont) {
+                position(0.0, 0.0)
+            }
 
-        confirmationDialog = sceneContainer.container {
-            centerOnStage()
+            uiHorizontalStack {
+                position(0.0, 100.0)
 
-            roundRect(
-                sceneWidth / 2.0,
-                sceneHeight / 4.0,
-                5.0,
-                5.0,
-                Colors.BLACK
-            )
+                uiButton("YES") {
+                    textFont = gameFont
+                    textColor = Colors.GOLD
 
-            uiVerticalStack {
-                position(20.0, 20.0)
-                scaledWidth = sceneWidth / 2.0 - 40.0
+                    onClick {
+                        dialog.removeFromParent()
 
-                text(line1, 20.0, Colors.CYAN, gameFont)
-
-                if (line2.isNotBlank()) {
-                    text(line2, 20.0, Colors.CYAN, gameFont)
+                        if (!result.isCompleted) {
+                            result.complete(true)
+                        }
+                    }
                 }
 
                 uiButton("NO") {
                     textFont = gameFont
                     textColor = Colors.GOLD
-                    onClick {
-                        confirmationDialog?.removeFromParent()
-                        confirmationDialog = null
-                    }
-                }
 
-                uiButton("YES") {
-                    textFont = gameFont
-                    textColor = Colors.GOLD
                     onClick {
-                        confirmationDialog?.removeFromParent()
-                        confirmationDialog = null
-                        actionConfirmed()
+                        dialog.removeFromParent()
+
+                        if (!result.isCompleted) {
+                            result.complete(false)
+                        }
                     }
                 }
             }
         }
+
+        return result.await()
     }
 
 
@@ -141,14 +210,5 @@ open class BasicScene() : Scene() {
     override suspend fun sceneBeforeLeaving() {
         showingNotEnough = false
         notEnoughDialog?.removeFromParent()
-    }
-
-    private fun closeMessage() {
-        showingNotEnough = false
-        notEnoughDialog?.removeFromParent()
-        notEnoughDialog = null
-    }
-
-    open suspend fun actionConfirmed() {
     }
 }

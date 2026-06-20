@@ -67,7 +67,7 @@ class BuyTechScene(
             uiButton("BACK", width = 120.0, height = 45.0) {
                 textColor = Colors.GOLD
                 textFont = gameFont
-                onClick { sceneContainer.changeTo<ChooseResearchRealm>() }
+                onClick { showChooseResearchRealmDialog(es, ps) }
             }
 
             uiButton("MAP", width = 120.0, height = 45.0) {
@@ -206,7 +206,6 @@ class BuyTechScene(
                 lines.add("Speed: ${tech.speed}")
             }
         }
-
         return lines
     }
 
@@ -215,23 +214,17 @@ class BuyTechScene(
             ?: error("Player empire was not found")
 
         if (!playerEmpire.canBuyTech(tech)) {
-            showNoGo("Not enough Research to buy this!")
-        } else {
-            selectedTech = tech
-            showConfirmDialog("Buy ${tech.name} for ${tech.cost} research?")
+            showNoGo("Not enough Research to buy this")
+            return
         }
-    }
 
-    override suspend fun actionConfirmed() {
-        val tech = selectedTech ?: return
-
-        val playerEmpire = es.empires[Allegiance.Player.ordinal]
-            ?: error("Player empire was not found")
+        val confirmed = showConfirmDialog("Buy ${tech.name} for ${tech.cost} research")
+        if (!confirmed) {
+            return
+        }
 
         playerEmpire.buyTech(tech)
         researchPoints.text = "Research Points left: ${playerEmpire.researchPoints}"
-
-        // Simple refresh. Since this scene is not huge, reloading it is easiest and safest.
         sceneContainer.changeTo<BuyTechScene>()
     }
 }

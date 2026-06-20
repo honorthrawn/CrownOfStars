@@ -118,7 +118,7 @@ class StarsScene(
                 uiButton("TECH") {
                     textColor = Colors.GOLD
                     textFont = gameFont
-                    onClick { sceneContainer.changeTo<ChooseResearchRealm>() }
+                    onClick { showChooseResearchRealmDialog(es, ps) }
                 }
 
                 uiButton("SAVE") {
@@ -170,31 +170,25 @@ class StarsScene(
             return
         }
 
-        // Remove any existing actions panel before creating a new one
         if (::systemActionsPanel.isInitialized) {
             systemActionsPanel.removeFromParent()
         }
 
-        val panel = sceneContainer.container()
-        systemActionsPanel = panel
+        val panel = showGameDialog(
+            title = "SYSTEM OPERATIONS",
+            width = sceneWidth / 2.0,
+            height = sceneHeight / 3.0
+        ) { dialog ->
 
-        panel.roundRect(
-            sceneWidth / 2.00,
-            sceneHeight / 4.00,
-            5.0,
-            5.0,
-            Colors.BLACK
-        ) {
             uiVerticalStack {
-                scaledWidth = sceneWidth / 2.00
-
-                text("SYSTEM OPERATIONS", 50.00, Colors.CYAN, gameFont)
+                scaledWidth = sceneWidth / 2.0 - 40.0
 
                 uiButton("PLANETS") {
                     textFont = gameFont
                     textColor = Colors.GOLD
+
                     onClick {
-                        panel.removeFromParent()
+                        dialog.removeFromParent()
                         ps.reset()
                         ps.activePlayerStar = x * 10 + y
                         sceneContainer.changeTo<PlanetsScene>()
@@ -204,8 +198,9 @@ class StarsScene(
                 uiButton("MOVE OUR SHIPS") {
                     textFont = gameFont
                     textColor = Colors.GOLD
+
                     onClick {
-                        panel.removeFromParent()
+                        dialog.removeFromParent()
                         ps.reset()
                         ps.operation = operationType.SELECTION
                         clickedFleet(x, y)
@@ -215,9 +210,10 @@ class StarsScene(
                 uiButton("VIEW ENEMY SHIPS") {
                     textFont = gameFont
                     textColor = Colors.GOLD
+
                     onClick {
                         ps.reset()
-                        panel.removeFromParent()
+                        dialog.removeFromParent()
                         clickedEnemyFleet(x, y)
                     }
                 }
@@ -225,13 +221,16 @@ class StarsScene(
                 uiButton("CLOSE") {
                     textFont = gameFont
                     textColor = Colors.GOLD
+
                     onClick {
                         ps.reset()
-                        panel.removeFromParent()
+                        dialog.removeFromParent()
                     }
                 }
             }
         }
+
+        systemActionsPanel = panel
     }
 
     private suspend fun movechosenShips(x: Int, y: Int) {
