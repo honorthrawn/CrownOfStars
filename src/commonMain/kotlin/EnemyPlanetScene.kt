@@ -18,7 +18,7 @@ class EnemyPlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
         addDefaultBackground()
         println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.bombardIndex}")
 
-        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.getImagePath()
+        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.getImageCloseUpPath()
         val planetImage = image(resourcesVfs[fileName].readBitmap()) {
             position(0, 0)
         }

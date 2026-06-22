@@ -64,7 +64,7 @@ class BuyTechScene(
                 }
             }
 
-            uiButton("BACK", width = 120.0, height = 45.0) {
+            uiButton("REALMS", width = 120.0, height = 45.0) {
                 textColor = Colors.GOLD
                 textFont = gameFont
                 onClick { showChooseResearchRealmDialog(es, ps) }

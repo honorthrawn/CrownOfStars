@@ -9,7 +9,7 @@ korge {
     id = "com.honorthrawn.CrownofStars"
     name = "Crown of Stars"
     version = "0.0.9"
-   // icon = file("C:\\DEV\\MYSRC\\CrownOfStars\\src\\commonMain\\resources\\ui\\crown.png")
+    icon = file("src/commonMain/resources/ui/crown.png")
 // To enable all targets at once
    // targetAll()
 
@@ -37,5 +37,4 @@ korge {
 //tasks.matching { it.name == "jvmProcessResources" }.configureEach {
 //    dependsOn(tasks.matching { t -> t.name.startsWith("korgeProcessedResources") })
 //}
-
 

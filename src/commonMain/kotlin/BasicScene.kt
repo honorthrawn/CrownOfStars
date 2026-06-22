@@ -3,6 +3,7 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.scene.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
+import com.soywiz.korim.bitmap.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
@@ -11,11 +12,13 @@ import kotlinx.coroutines.*
 
 open class BasicScene() : Scene() {
     protected lateinit var gameFont: Font
+    private lateinit var brushedMetalTitleBar: Bitmap
     private var notEnoughDialog: Container? = null
     private var showingNotEnough = false
 
     suspend fun loadBasicAssets() {
         gameFont = resourcesVfs["fonts/bioliquid-Regular.ttf"].readTtfFont()
+        brushedMetalTitleBar = resourcesVfs["ui/brushedMetal.png"].readBitmap()
     }
 
     protected suspend fun Container.addDefaultBackground() : Image {
@@ -53,8 +56,7 @@ open class BasicScene() : Scene() {
         // Main window body
         dialog.roundRect(width, height, 12.0, 12.0, Colors["#202838"])
 
-        // Title bar
-        dialog.roundRect(width, 46.0, 12.0, 12.0, Colors["#2F3D56"])
+        dialog.addBrushedMetalTitleBar(width)
 
         // Title text
         dialog.text(title, 28.0, Colors.CYAN, gameFont) {
@@ -69,6 +71,22 @@ open class BasicScene() : Scene() {
         content.block(dialog)
 
         return dialog
+    }
+
+    private fun Container.addBrushedMetalTitleBar(width: Double) {
+        val titleHeight = 46.0
+
+        roundRect(width, titleHeight, 12.0, 12.0, Colors["#34404D"])
+        image(brushedMetalTitleBar) {
+            position(8.0, 4.0)
+            setSizeScaled(width - 16.0, titleHeight - 9.0)
+        }
+        solidRect(width - 16.0, 1.0, Colors["#E6EEF666"]) {
+            position(8.0, 4.0)
+        }
+        solidRect(width - 16.0, 2.0, Colors["#0A0E14AA"]) {
+            position(8.0, titleHeight - 3.0)
+        }
     }
 
     fun showChooseResearchRealmDialog(es: EmpireState, ps: PlayerState): Container {
@@ -145,7 +163,7 @@ open class BasicScene() : Scene() {
     suspend fun showConfirmDialog(message: String): Boolean {
         val result = CompletableDeferred<Boolean>()
 
-        val dialog = showGameDialog(
+        showGameDialog(
             title = "CONFIRM",
             width = sceneWidth / 2.0,
             height = sceneHeight / 3.0

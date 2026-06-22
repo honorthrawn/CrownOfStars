@@ -3,6 +3,8 @@ import com.soywiz.korge.input.*
 import com.soywiz.korge.ui.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
+import com.soywiz.korim.format.*
+import com.soywiz.korio.file.std.*
 
 class CreditsScene : BasicScene() {
     override suspend fun SContainer.sceneInit() {
@@ -14,7 +16,7 @@ class CreditsScene : BasicScene() {
             "Shane Ratledge" to Colors.CYAN,
             "" to Colors.WHITE,
             "Game Engine" to Colors.GOLD,
-            "KorGE" to Colors.CYAN,
+            "Built with KorGE" to Colors.CYAN,
             "" to Colors.WHITE,
             "Programming Support" to Colors.GOLD,
             "ChatGPT" to Colors.CYAN,
@@ -34,6 +36,7 @@ class CreditsScene : BasicScene() {
         val sectionGap = 20.0
 
         val creditsContainer = container()
+        val korgeIcon = resourcesVfs["ui/korge.png"].readBitmap()
 
         var yPos = 0.0
 
@@ -56,6 +59,16 @@ class CreditsScene : BasicScene() {
                 t.position(xPos, yPos)
 
                 yPos += fontSize + lineGap
+
+                if (line == "Built with KorGE") {
+                    val iconSize = 56.0
+                    val icon = creditsContainer.image(korgeIcon) {
+                        setSizeScaled(iconSize, iconSize)
+                        position((sceneWidth.toDouble() - iconSize) / 2.0, yPos + 2.0)
+                    }
+
+                    yPos = icon.y + icon.scaledHeight + lineGap
+                }
             }
         }
 

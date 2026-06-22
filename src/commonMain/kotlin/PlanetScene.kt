@@ -25,7 +25,7 @@ class PlanetScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         addDefaultBackground()
         println("Active player star: ${ps.activePlayerStar} active player planet: ${ps.activePlayerPlanet}")
 
-        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.getImagePath()
+        val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.getImageCloseUpPath()
         val planetImage = image(resourcesVfs[fileName].readBitmap()) {
             position(0, 0)
         }

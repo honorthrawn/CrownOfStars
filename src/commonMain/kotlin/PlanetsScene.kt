@@ -8,7 +8,7 @@ import com.soywiz.korio.file.std.*
 
 class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState) : BasicScene() {
     private val direction = mutableListOf<Boolean>()
-    private var selectOperationDialog: RoundRect? = null
+    private var selectOperationDialog: Container? = null
     private var showingSelectOperationDialog = false
     private var planetTexts = mutableListOf<Text>()
 
@@ -19,6 +19,10 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
         val startx = 200
         var starty = 600
+        val planetButtonStack = uiVerticalStack {
+            position(20.0, 120.0)
+            padding = 8.0
+        }
 
         for ((i, planet) in gs.stars[ps.activePlayerStar]!!.planets.values.withIndex()) {
             val fileName = planet.getImagePath()
@@ -44,6 +48,13 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             planetTexts.add(i, text(planetTxt, 50.00, planetTextColor, gameFont) {
                 centerXOnStage()
                 alignTopToTopOf(planetImage, 12.0) })
+
+            planetButtonStack.uiButton(planet.name, width = 150.0, height = 42.0) {
+                textColor = planetTextColor
+                textFont = gameFont
+                onClick { planetClicked(i) }
+            }
+
             planetImage.addUpdater { updatePlanet(planetImage, i) }
             planetImage.onClick { planetClicked(i) }
             starty -= 200
@@ -51,8 +62,6 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
         val fileName = StarType.getImagePath(gs.stars[ps.activePlayerStar]!!.type)
         val starImage = image(resourcesVfs[fileName].readBitmap()) {
-            //scale(0.5)
-            //position(width / 2, 800.00)
             centerXOnStage()
             alignBottomToBottomOf(background)
         }
@@ -66,17 +75,12 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
         }
-
-        uiHorizontalStack {
-            position(0, sceneHeight - 200)
-            padding = 10.00
-
-            uiButton("BACK") {
-                textColor = Colors.GOLD
-                textFont = gameFont
-                onClick { sceneContainer.changeTo<StarsScene>() }
-            }
+        planetButtonStack.uiButton("BACK") {
+            textColor = Colors.GOLD
+            textFont = gameFont
+            onClick { sceneContainer.changeTo<StarsScene>() }
         }
+
 }
 
     private suspend fun planetClicked(index: Int) {
@@ -88,68 +92,69 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 }
 
                 Allegiance.Unoccupied -> {
-                    selectOperationDialog =
-                        this.sceneContainer.container().roundRect(
-                            sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                            Colors.BLACK
-                        ) {
-                            centerOnStage()
-                            uiVerticalStack {
-                                scaledWidth = sceneWidth / 2.00
-                                uiButton("COLONIZE") {
-                                    textColor = Colors.GOLD
-                                    textFont = gameFont
-                                    onClick { colonizePlanet(index) }
-                                }
-                                uiButton("TERRAFORM") {
-                                    textColor = Colors.GOLD
-                                    textFont = gameFont
-                                    onClick { terraformPlanet(index) }
-                                }
-                                uiButton("BACK") {
-                                    textColor = Colors.GOLD
-                                    textFont = gameFont
-                                    onClick {
-                                        showingSelectOperationDialog = false
-                                        selectOperationDialog?.removeFromParent() }
+                    selectOperationDialog = showGameDialog(
+                        title = "UNCLAIMED WORLD",
+                        width = sceneWidth / 2.0,
+                        height = sceneHeight / 3.0
+                    ) { dialog ->
+                        uiVerticalStack {
+                            scaledWidth = sceneWidth / 2.0 - 40.0
+                            uiButton("COLONIZE") {
+                                textColor = Colors.GOLD
+                                textFont = gameFont
+                                onClick { colonizePlanet(index) }
+                            }
+                            uiButton("TERRAFORM") {
+                                textColor = Colors.GOLD
+                                textFont = gameFont
+                                onClick { terraformPlanet(index) }
+                            }
+                            uiButton("BACK") {
+                                textColor = Colors.GOLD
+                                textFont = gameFont
+                                onClick {
+                                    showingSelectOperationDialog = false
+                                    dialog.removeFromParent()
                                 }
                             }
                         }
+                    }
 
                 }
 
                 Allegiance.Enemy -> {
-                    selectOperationDialog =
-                        this.sceneContainer.container().roundRect(
-                            sceneWidth / 2.00, sceneHeight / 4.00, 5.0, 5.0,
-                            Colors.BLACK
-                        ) {
-                            centerOnStage()
-                            uiVerticalStack {
-                                scaledWidth = sceneWidth / 2.00
-                                uiButton("VIEW") {
-                                    textColor = Colors.GOLD
-                                    textFont = gameFont
-                                    onClick { showEnemyPlanet(index) }
-                                }
-                                uiButton("BOMBARD") {
-                                    textColor = Colors.GOLD
-                                    textFont = gameFont
-                                    onClick { bombardPlanet(index) }
-                                }
-                                uiButton("INVADE") {
-                                    textColor = Colors.GOLD
-                                    textFont = gameFont
-                                    onClick { invadePlanet(index) }
-                                }
-                                uiButton("BACK") {
-                                    textColor = Colors.GOLD
-                                    textFont = gameFont
+                    selectOperationDialog = showGameDialog(
+                        title = "ENEMY WORLD",
+                        width = sceneWidth / 2.0,
+                        height = sceneHeight / 3.0
+                    ) { dialog ->
+                        uiVerticalStack {
+                            scaledWidth = sceneWidth / 2.0 - 40.0
+                            uiButton("VIEW") {
+                                textColor = Colors.GOLD
+                                textFont = gameFont
+                                onClick { showEnemyPlanet(index) }
+                            }
+                            uiButton("BOMBARD") {
+                                textColor = Colors.GOLD
+                                textFont = gameFont
+                                onClick { bombardPlanet(index) }
+                            }
+                            uiButton("INVADE") {
+                                textColor = Colors.GOLD
+                                textFont = gameFont
+                                onClick { invadePlanet(index) }
+                            }
+                            uiButton("BACK") {
+                                textColor = Colors.GOLD
+                                textFont = gameFont
+                                onClick {
                                     showingSelectOperationDialog = false
-                                    onClick {  selectOperationDialog?.removeFromParent() }
+                                    dialog.removeFromParent()
                                 }
                             }
                         }
+                    }
                 }
             }
         }
