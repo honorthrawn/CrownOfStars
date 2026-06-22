@@ -10,24 +10,36 @@ class TerraformingScene(val gs: GalaxyState, val es: EmpireState, val ps: Player
     override suspend fun SContainer.sceneInit() {
         loadBasicAssets()
         val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformIndex]!!.getLandscapeImagePath()
-        val planetImage = image(resourcesVfs[fileName].readBitmap())  {
+        image(resourcesVfs[fileName].readBitmap())  {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
         }
 
         val message = gs.stars[ps.activePlayerStar]!!.planets[ps.terraformIndex]!!.name
         val turnsNeeded = "It will take ${gs.stars[ps.activePlayerStar]!!.planets[ps.terraformIndex]!!.turnsLeftTerraform} turns to complete"
-        uiVerticalStack {
-            scaledWidth = sceneWidth.toDouble()
-            scaledHeight = sceneHeight.toDouble()
-            text("You started Terraforming on", 50.00, Colors.CYAN, gameFont )
-            text(message, 50.00, Colors.CYAN, gameFont)
-            text(turnsNeeded, 50.00, Colors.CYAN, gameFont)
-            uiButton("CLOSE") {
-                textColor = Colors.GOLD
-                textFont = gameFont
-                onClick {  sceneContainer.changeTo<PlanetsScene>() }
-            }
+        var yPos = 0.00
+        val padding = 5.00
+        text("You started Terraforming on", 50.00, Colors.CYAN, gameFont ) {
+            centerXOnStage()
+            y = yPos
+            yPos += (height + padding)
+        }
+        text(message, 50.00, Colors.CYAN, gameFont)  {
+            centerXOnStage()
+            y = yPos
+            yPos += (height + padding)
+        }
+        text(turnsNeeded, 50.00, Colors.CYAN, gameFont) {
+            centerXOnStage()
+            y = yPos
+            yPos += (height + padding)
+        }
+        uiButton("CLOSE") {
+            centerXOnStage()
+            y = yPos
+            textColor = Colors.GOLD
+            textFont = gameFont
+            onClick {  sceneContainer.changeTo<PlanetsScene>() }
         }
     }
 }

@@ -286,12 +286,12 @@ class StarsScene(
             return
         }
 
-        if (gs.stars[ps.activePlayerStar]!!.playerFleet.isTerraformerAvailableToMove() &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.isColonyAvailableToMove() &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.isCorvetteAvailableToMove() &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.isCruiserAvailableToMove() &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.isBattleshipAvailableToMove() &&
-            gs.stars[ps.activePlayerStar]!!.playerFleet.isGalleonAvailableToMove() ) {
+        if (!(gs.stars[ps.activePlayerStar]!!.playerFleet.isTerraformerAvailableToMove() ||
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isColonyAvailableToMove() ||
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isCorvetteAvailableToMove() ||
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isCruiserAvailableToMove() ||
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isBattleshipAvailableToMove() ||
+            gs.stars[ps.activePlayerStar]!!.playerFleet.isGalleonAvailableToMove()) ) {
             showNoGo("The fleet has already moved this turn")
             return
         }

@@ -35,29 +35,78 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             resolveBombs()
         }
 
-        uiVerticalStack {
-            scaledWidth = sceneWidth.toDouble()
-            scaledHeight = sceneHeight.toDouble()
-
-            text(topLine, 20.00, Colors.CYAN, gameFont)
-            text(intiativeMessage, 20.00, Colors.CYAN, gameFont)
-            text(bombMessage, 20.00, Colors.CYAN, gameFont)
-            text(basesMessage, 20.00, Colors.CYAN, gameFont)
-            text(popsMessage, 20.00, Colors.CYAN, gameFont)
-            text(missileLaunchedMessage, 20.00, Colors.CYAN, gameFont)
-            text(corrvettesLostMessage, 20.00, Colors.CYAN, gameFont)
-            text(cruisersLostMessage, 20.00, Colors.CYAN, gameFont)
-            text(battleShipsLostMessage, 20.00, Colors.CYAN, gameFont)
-            text(colonyStatus, 20.00, Colors.CYAN, gameFont)
+           var yPos = 0.00
+           val padding = 4.00
+            text(topLine, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(intiativeMessage, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(bombMessage, 20.00, Colors.CYAN, gameFont){
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(basesMessage, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(popsMessage, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(missileLaunchedMessage, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(corrvettesLostMessage, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(cruisersLostMessage, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                centerXOnStage()
+            }
+            text(battleShipsLostMessage, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
+            text(colonyStatus, 20.00, Colors.CYAN, gameFont) {
+                y = yPos;
+                yPos += height
+                yPos += padding
+                centerXOnStage()
+            }
 
             uiButton("CLOSE") {
+                y = yPos;
+                centerXOnStage()
                 textColor = Colors.GOLD
                 textFont = gameFont
                 onClick {
                     ps.musicSceneContainer?.changeTo<MusicScene>()
-                    sceneContainer.changeTo<PlanetsScene>() }
+                    sceneContainer.changeTo<PlanetsScene>()
+                }
             }
-        }
     }
 
     //TODO: refactor this and allow the AI player to bombard human colonies.

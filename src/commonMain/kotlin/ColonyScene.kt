@@ -10,16 +10,24 @@ class ColonyScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
         val fileName = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.getLandscapeImagePath()
         addBackground(fileName)
         val message = gs.stars[ps.activePlayerStar]!!.planets[ps.activePlayerPlanet]!!.name
-        uiVerticalStack {
-            scaledWidth = sceneWidth.toDouble()
-            scaledHeight = sceneHeight.toDouble()
-            text("You started a new colony on", 50.00, Colors.CYAN, gameFont )
-            text(message, 50.00, Colors.CYAN, gameFont)
-            uiButton("CLOSE")  {
-                textColor = Colors.GOLD
-                textFont = gameFont
-                onClick {  sceneContainer.changeTo<PlanetScene>() }
-            }
+        var yPos = 0.00
+        val padding = 5.00
+        text("You started a new colony on", 50.00, Colors.CYAN, gameFont ) {
+            centerXOnStage()
+            y = yPos
+            yPos += (height + padding)
+        }
+        text(message, 50.00, Colors.CYAN, gameFont)  {
+            centerXOnStage()
+            y = yPos
+            yPos += (height + padding)
+        }
+        uiButton("CLOSE")  {
+            centerXOnStage()
+            y = yPos
+            textColor = Colors.GOLD
+            textFont = gameFont
+            onClick {  sceneContainer.changeTo<PlanetScene>() }
         }
     }
 }
