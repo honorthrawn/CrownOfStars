@@ -77,6 +77,20 @@ data class Planet(val star: String) {
         return retval
     }
 
+    fun getLargestImagePath() : String {
+        val retval = when(type) {
+            PlanetType.TOXIC -> "planets/toxic_planet_clean.png"
+            PlanetType.OCEAN -> "planets/ocean_planet_clean.png"
+            PlanetType.TERRAN -> "planets/terran_planet_clean.png"
+            PlanetType.DESERT -> "planets/desert_planet_clean.png"
+            PlanetType.VOLCANIC -> "planets/volcanic_planet_clean.png"
+            PlanetType.BARREN -> "planets/barren_planet_clean.png"
+            PlanetType.SUPERTERRAN -> "planets/super_terran_planet_clean.png"
+            PlanetType.TROPICAL -> "planets/tropical_planet_clean.png"
+        }
+        return retval
+    }
+
 
     fun roll(pos: Int)  {
         type = PlanetType.values()[Random.nextInt(0, PlanetType.values().count())]

@@ -145,7 +145,24 @@ class StarsScene(
         es.addProduction(gs)
         gs.nextTurn()
         updateScreen()
+        val winner = ai.checkForVictory()
+        when(winner) {
+            Allegiance.Unoccupied -> return;
+            Allegiance.Player -> playerVictory()
+            Allegiance.Enemy -> enemyVictory()
+            null -> return;
+        }
     }
+
+    suspend fun playerVictory() {
+        sceneContainer.changeTo<YouWinScene>()
+    }
+
+
+    suspend fun enemyVictory() {
+        sceneContainer.changeTo<YouLostScene>()
+    }
+
 
     private fun updateScreen() {
         val turn = "STARDATE: ${gs.starDate}"

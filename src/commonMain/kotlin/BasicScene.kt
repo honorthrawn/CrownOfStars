@@ -9,6 +9,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 import kotlinx.coroutines.*
+import kotlin.math.min
 
 open class BasicScene() : Scene() {
     protected lateinit var gameFont: Font
@@ -32,6 +33,24 @@ open class BasicScene() : Scene() {
         return image(resourcesVfs[path].readBitmap()) {
             position(0, 0)
             setSizeScaled(sceneWidth.toDouble(), sceneHeight.toDouble())
+        }
+    }
+
+    protected suspend fun Container.addFittedBackground(path: String, padding: Double = 0.0) : Image {
+        val bitmap = resourcesVfs[path].readBitmap()
+        return image(bitmap) {
+            val availableWidth = sceneWidth.toDouble() - padding * 2.0
+            val availableHeight = sceneHeight.toDouble() - padding * 2.0
+            val scaleFactor = min(
+                availableWidth / bitmap.width,
+                availableHeight / bitmap.height
+            )
+
+            scale(scaleFactor)
+            position(
+                (sceneWidth.toDouble() - bitmap.width * scaleFactor) / 2.0,
+                (sceneHeight.toDouble() - bitmap.height * scaleFactor) / 2.0
+            )
         }
     }
 

@@ -1,7 +1,9 @@
 import rule.*
 
 class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: TechTree){
-    //Limited resources, can't really do everything all the time.   So different governors/ministers run randomly based on
+    val MIN_COLONIZED_WORLDS_FOR_DOMINANCE = 12
+    val DOMINANCE_PERCENT = 70.0
+    //Limited resources, can't really do everything all the time.   So different governors/ministers run randomly based on\
     //aggression level to determine what computer player will spend points on,
     private var laborInitialized = false
     private var governors = ComputerGovernors()
@@ -453,4 +455,33 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             else -> StrategicPosture.BALANCED
         }
     }
+
+    fun checkForVictory(): Allegiance? {
+        val assessment = assessEmpire()
+
+        //Rule 1: No colonies/planets left, you loose.
+        if(assessment.playerWorldCount == 0) {
+            return Allegiance.Enemy
+        }
+        else if(assessment.computerWorldCount == 0) {
+            return Allegiance.Player
+        }
+
+        //Rule 2: Dominance Victory
+        val totalColonized = assessment.playerWorldCount + assessment.computerWorldCount
+
+        if (totalColonized < MIN_COLONIZED_WORLDS_FOR_DOMINANCE) {
+            return null
+        }
+
+        val playerPercent = assessment.playerWorldCount * 100 / totalColonized
+        val enemyPercent = assessment.computerWorldCount * 100 / totalColonized
+
+        return when {
+            playerPercent >= DOMINANCE_PERCENT -> Allegiance.Player
+            enemyPercent >= DOMINANCE_PERCENT -> Allegiance.Enemy
+            else -> null
+        }
+    }
+
 }

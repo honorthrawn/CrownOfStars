@@ -40,16 +40,27 @@ class GalaxyState {
         factory.init()
         val colonyShipPlayer = factory.getShip(shipType.COLONY_HUMAN)
         stars[0]!!.playerFleet.add(colonyShipPlayer)
-        val playerCorvette = factory.getShip(shipType.CORVETTE_HUMAN)
-        stars[0]!!.playerFleet.add(playerCorvette)
-        stars[0]!!.playerFleet.add(playerCorvette)
-        stars[0]!!.playerFleet.add(playerCorvette)
+        stars[0]!!.playerFleet.add(factory.getShip(shipType.CORVETTE_HUMAN))
+        stars[0]!!.playerFleet.add(factory.getShip(shipType.CORVETTE_HUMAN))
+        stars[0]!!.playerFleet.add(factory.getShip(shipType.CORVETTE_HUMAN))
+
+        //TESTING
+        val playerTerraformer = factory.getShip(shipType.TERRAFORMATTER_HUMAN)
+        stars[0]!!.playerFleet.add(playerTerraformer)
+        for (i in 1..15) {
+            stars[0]!!.playerFleet.add(factory.getShip(shipType.BATTLESHIP_HUMAN))
+            stars[0]!!.playerFleet.add(factory.getShip(shipType.CRUISER_HUMAN))
+            stars[0]!!.playerFleet.add(factory.getShip(shipType.CRUISER_HUMAN))
+        }
+        for (i in 1..15) {
+            stars[0]!!.playerFleet.add(factory.getShip(shipType.GALLEON_HUMAN))
+        }
+
         val colonyShipEnemy = factory.getShip(shipType.COLONY_ENEMY)
         stars[nI]!!.enemyFleet.add(colonyShipEnemy)
-        val enemyCorvette = factory.getShip(shipType.CORVETTE_ENEMY)
-        stars[nI]!!.enemyFleet.add(enemyCorvette)
-        stars[nI]!!.enemyFleet.add(enemyCorvette)
-        stars[nI]!!.enemyFleet.add(enemyCorvette)
+        stars[nI]!!.enemyFleet.add(factory.getShip(shipType.CORVETTE_ENEMY))
+        stars[nI]!!.enemyFleet.add(factory.getShip(shipType.CORVETTE_ENEMY))
+        stars[nI]!!.enemyFleet.add(factory.getShip(shipType.CORVETTE_ENEMY))
     }
 
     fun nextTurn() {
@@ -82,8 +93,9 @@ class GalaxyState {
         galaxySaveFile.writeString(jsonOut)
     }
 
+
     suspend fun hasSaveGame(): Boolean {
         return galaxySaveFile.exists()
     }
 
-}
+    }
