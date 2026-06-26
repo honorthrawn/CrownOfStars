@@ -457,7 +457,8 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                         val destroyed =
                             gs.stars[ps.activePlayerStar]!!.enemyFleet.damageShip(enemyShipTypeChosen!!, damageRolled)
                         if (destroyed) {
-                            ps.enemyShipsDestroyed++
+                            ps.enemyShipsDestroyedLastBattle++
+                            ps.totalEnemyShipsDestroyed++
                             val countRemaining = when (enemyShipTypeChosen) {
                                 shipType.COLONY_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getColonyShipTotalCount()
                                 shipType.CORVETTE_ENEMY -> gs.stars[ps.activePlayerStar]!!.enemyFleet.getCorvetteTotalCount()
@@ -480,6 +481,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                         }
                     }
                 }
+                ps.damageDealtLastBattle += totaldamage
                 ps.totalDamageDealt += totaldamage
                 //need to mark that the ship type has fired
                 gs.stars[ps.activePlayerStar]!!.playerFleet.setFiredGuns(playerShipTypeChosen!!)
@@ -540,7 +542,8 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
                     gs.stars[ps.activePlayerStar]!!.playerFleet.damageShip(targetShips, damageApplied)
 
                 if (destroyed) {
-                    ps.shipsLost++
+                    ps.shipsLostLastBattle++
+                    ps.totalShipsLost++
 
                     val countRemaining = when (targetShips) {
                         shipType.TERRAFORMATTER_HUMAN -> gs.stars[ps.activePlayerStar]!!.playerFleet.getTerraformerTotalCount()
@@ -559,7 +562,8 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
             }
         }
 
-        ps.totalDamgeReceived += totaldamage
+        ps.damageReceivedLastBattle += totaldamage
+        ps.totalDamageRecieved += totaldamage
 
         gs.stars[ps.activePlayerStar]!!.enemyFleet.setFiredGuns(firingShips)
 
@@ -699,7 +703,7 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     }
 
     private suspend fun checkForBattleOver() {
-        ps.totalRounds = round
+        ps.battleRounds = round
         if (gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent() && !gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent()) {
             sceneContainer.changeTo<LoseFleetCombatScene>()
         } else if (gs.stars[ps.activePlayerStar]!!.playerFleet.isPresent() && !gs.stars[ps.activePlayerStar]!!.enemyFleet.isPresent()) {

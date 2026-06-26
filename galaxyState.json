@@ -6,12 +6,12 @@
             "planets": {
                 "0": {
                     "star": "SOL",
-                    "type": "TERRAN",
+                    "type": "DESERT",
                     "name": "SOL I"
                 },
                 "1": {
                     "star": "SOL",
-                    "type": "SUPERTERRAN",
+                    "type": "TERRAN",
                     "name": "SOL II"
                 },
                 "2": {
@@ -23,50 +23,21 @@
                 },
                 "3": {
                     "star": "SOL",
-                    "type": "TROPICAL",
+                    "type": "TERRAN",
                     "name": "SOL IV"
                 }
             },
             "playerFleet": {
-                "colonyShips": [
-                    {
-                        "theType": "COLONY_HUMAN",
-                        "maxHP": 100,
-                        "bombRacks": 0,
-                        "gunMounts": 1
-                    }
-                ],
-                "corvettes": [
-                    {
-                        "theType": "CORVETTE_HUMAN",
-                        "maxHP": 10,
-                        "bombRacks": 1,
-                        "gunMounts": 2
-                    },
-                    {
-                        "theType": "CORVETTE_HUMAN",
-                        "maxHP": 10,
-                        "bombRacks": 1,
-                        "gunMounts": 2
-                    },
-                    {
-                        "theType": "CORVETTE_HUMAN",
-                        "maxHP": 10,
-                        "bombRacks": 1,
-                        "gunMounts": 2
-                    }
-                ]
             },
             "enemyFleet": {
             }
         },
         "1": {
             "name": "PROXIMA CENTAURI",
-            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "PROXIMA CENTAURI",
-                    "type": "OCEAN",
+                    "type": "SUPERTERRAN",
                     "name": "PROXIMA CENTAURI I"
                 },
                 "1": {
@@ -93,25 +64,25 @@
         },
         "2": {
             "name": "ALPHA CENTAURI",
-            "type": "RED",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "ALPHA CENTAURI",
-                    "type": "DESERT",
                     "name": "ALPHA CENTAURI I"
                 },
                 "1": {
                     "star": "ALPHA CENTAURI",
-                    "type": "TROPICAL",
+                    "type": "OCEAN",
                     "name": "ALPHA CENTAURI II"
                 },
                 "2": {
                     "star": "ALPHA CENTAURI",
-                    "type": "BARREN",
+                    "type": "DESERT",
                     "name": "ALPHA CENTAURI III"
                 },
                 "3": {
                     "star": "ALPHA CENTAURI",
+                    "type": "TROPICAL",
                     "name": "ALPHA CENTAURI IV"
                 }
             },
@@ -123,26 +94,25 @@
         },
         "3": {
             "name": "BARNARDS STAR",
-            "type": "RED",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "BARNARDS STAR",
-                    "type": "SUPERTERRAN",
+                    "type": "DESERT",
                     "name": "BARNARDS STAR I"
                 },
                 "1": {
                     "star": "BARNARDS STAR",
-                    "type": "VOLCANIC",
+                    "type": "TROPICAL",
                     "name": "BARNARDS STAR II"
                 },
                 "2": {
                     "star": "BARNARDS STAR",
-                    "type": "TROPICAL",
                     "name": "BARNARDS STAR III"
                 },
                 "3": {
                     "star": "BARNARDS STAR",
-                    "type": "TERRAN",
+                    "type": "VOLCANIC",
                     "name": "BARNARDS STAR IV"
                 }
             },
@@ -154,20 +124,21 @@
         },
         "4": {
             "name": "POLLUX",
-            "type": "RED",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "POLLUX",
-                    "type": "DESERT",
+                    "type": "TROPICAL",
                     "name": "POLLUX I"
                 },
                 "1": {
                     "star": "POLLUX",
-                    "type": "OCEAN",
+                    "type": "DESERT",
                     "name": "POLLUX II"
                 },
                 "2": {
                     "star": "POLLUX",
+                    "type": "DESERT",
                     "name": "POLLUX III"
                 },
                 "3": {
@@ -188,22 +159,20 @@
             "planets": {
                 "0": {
                     "star": "RIGEL",
-                    "type": "BARREN",
                     "name": "RIGEL I"
                 },
                 "1": {
                     "star": "RIGEL",
-                    "type": "DESERT",
+                    "type": "TROPICAL",
                     "name": "RIGEL II"
                 },
                 "2": {
                     "star": "RIGEL",
-                    "type": "TROPICAL",
+                    "type": "SUPERTERRAN",
                     "name": "RIGEL III"
                 },
                 "3": {
                     "star": "RIGEL",
-                    "type": "BARREN",
                     "name": "RIGEL IV"
                 }
             },
@@ -215,20 +184,21 @@
         },
         "6": {
             "name": "ALDEBERAN",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "ALDEBERAN",
-                    "type": "BARREN",
+                    "type": "SUPERTERRAN",
                     "name": "ALDEBERAN I"
                 },
                 "1": {
                     "star": "ALDEBERAN",
-                    "type": "TROPICAL",
+                    "type": "SUPERTERRAN",
                     "name": "ALDEBERAN II"
                 },
                 "2": {
                     "star": "ALDEBERAN",
-                    "type": "DESERT",
+                    "type": "TERRAN",
                     "name": "ALDEBERAN III"
                 },
                 "3": {
@@ -245,14 +215,16 @@
         },
         "7": {
             "name": "ANTARES",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "ANTARES",
-                    "type": "BARREN",
+                    "type": "OCEAN",
                     "name": "ANTARES I"
                 },
                 "1": {
                     "star": "ANTARES",
+                    "type": "BARREN",
                     "name": "ANTARES II"
                 },
                 "2": {
@@ -262,7 +234,7 @@
                 },
                 "3": {
                     "star": "ANTARES",
-                    "type": "BARREN",
+                    "type": "VOLCANIC",
                     "name": "ANTARES IV"
                 }
             },
@@ -274,25 +246,26 @@
         },
         "8": {
             "name": "VEGA",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "VEGA",
-                    "type": "TROPICAL",
+                    "type": "TERRAN",
                     "name": "VEGA I"
                 },
                 "1": {
                     "star": "VEGA",
-                    "type": "BARREN",
+                    "type": "TERRAN",
                     "name": "VEGA II"
                 },
                 "2": {
                     "star": "VEGA",
-                    "type": "VOLCANIC",
+                    "type": "SUPERTERRAN",
                     "name": "VEGA III"
                 },
                 "3": {
                     "star": "VEGA",
-                    "type": "SUPERTERRAN",
+                    "type": "VOLCANIC",
                     "name": "VEGA IV"
                 }
             },
@@ -304,26 +277,24 @@
         },
         "9": {
             "name": "VY CANIS MAJORIS",
-            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "VY CANIS MAJORIS",
-                    "type": "DESERT",
+                    "type": "TROPICAL",
                     "name": "VY CANIS MAJORIS I"
                 },
                 "1": {
                     "star": "VY CANIS MAJORIS",
-                    "type": "DESERT",
+                    "type": "BARREN",
                     "name": "VY CANIS MAJORIS II"
                 },
                 "2": {
                     "star": "VY CANIS MAJORIS",
-                    "type": "BARREN",
+                    "type": "SUPERTERRAN",
                     "name": "VY CANIS MAJORIS III"
                 },
                 "3": {
                     "star": "VY CANIS MAJORIS",
-                    "type": "DESERT",
                     "name": "VY CANIS MAJORIS IV"
                 }
             },
@@ -335,15 +306,15 @@
         },
         "10": {
             "name": "ALTAIR",
-            "type": "BLUE",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "ALTAIR",
-                    "type": "BARREN",
                     "name": "ALTAIR I"
                 },
                 "1": {
                     "star": "ALTAIR",
+                    "type": "BARREN",
                     "name": "ALTAIR II"
                 },
                 "2": {
@@ -353,7 +324,6 @@
                 },
                 "3": {
                     "star": "ALTAIR",
-                    "type": "OCEAN",
                     "name": "ALTAIR IV"
                 }
             },
@@ -365,20 +335,21 @@
         },
         "11": {
             "name": "CAPELLA",
-            "type": "BLUE",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "CAPELLA",
-                    "type": "TROPICAL",
+                    "type": "VOLCANIC",
                     "name": "CAPELLA I"
                 },
                 "1": {
                     "star": "CAPELLA",
+                    "type": "BARREN",
                     "name": "CAPELLA II"
                 },
                 "2": {
                     "star": "CAPELLA",
-                    "type": "DESERT",
+                    "type": "OCEAN",
                     "name": "CAPELLA III"
                 },
                 "3": {
@@ -395,11 +366,11 @@
         },
         "12": {
             "name": "DENEB",
-            "type": "RED",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "DENEB",
-                    "type": "SUPERTERRAN",
+                    "type": "TROPICAL",
                     "name": "DENEB I"
                 },
                 "1": {
@@ -409,12 +380,12 @@
                 },
                 "2": {
                     "star": "DENEB",
-                    "type": "BARREN",
+                    "type": "DESERT",
                     "name": "DENEB III"
                 },
                 "3": {
                     "star": "DENEB",
-                    "type": "DESERT",
+                    "type": "VOLCANIC",
                     "name": "DENEB IV"
                 }
             },
@@ -427,25 +398,26 @@
         },
         "13": {
             "name": "BETELGEUSE",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "BETELGEUSE",
-                    "type": "OCEAN",
+                    "type": "VOLCANIC",
                     "name": "BETELGEUSE I"
                 },
                 "1": {
                     "star": "BETELGEUSE",
-                    "type": "SUPERTERRAN",
+                    "type": "BARREN",
                     "name": "BETELGEUSE II"
                 },
                 "2": {
                     "star": "BETELGEUSE",
-                    "type": "VOLCANIC",
+                    "type": "DESERT",
                     "name": "BETELGEUSE III"
                 },
                 "3": {
                     "star": "BETELGEUSE",
-                    "type": "TERRAN",
+                    "type": "OCEAN",
                     "name": "BETELGEUSE IV"
                 }
             },
@@ -462,7 +434,7 @@
             "planets": {
                 "0": {
                     "star": "SIRIUS",
-                    "type": "BARREN",
+                    "type": "TERRAN",
                     "name": "SIRIUS I"
                 },
                 "1": {
@@ -472,12 +444,12 @@
                 },
                 "2": {
                     "star": "SIRIUS",
-                    "type": "TROPICAL",
+                    "type": "BARREN",
                     "name": "SIRIUS III"
                 },
                 "3": {
                     "star": "SIRIUS",
-                    "type": "BARREN",
+                    "type": "VOLCANIC",
                     "name": "SIRIUS IV"
                 }
             },
@@ -490,11 +462,11 @@
         },
         "15": {
             "name": "ORION",
-            "type": "BLUE",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "ORION",
-                    "type": "BARREN",
+                    "type": "VOLCANIC",
                     "name": "ORION I"
                 },
                 "1": {
@@ -504,12 +476,12 @@
                 },
                 "2": {
                     "star": "ORION",
-                    "type": "OCEAN",
+                    "type": "DESERT",
                     "name": "ORION III"
                 },
                 "3": {
                     "star": "ORION",
-                    "type": "TERRAN",
+                    "type": "SUPERTERRAN",
                     "name": "ORION IV"
                 }
             },
@@ -522,26 +494,25 @@
         },
         "16": {
             "name": "ALGOL",
-            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "ALGOL",
-                    "type": "TERRAN",
+                    "type": "TROPICAL",
                     "name": "ALGOL I"
                 },
                 "1": {
                     "star": "ALGOL",
-                    "type": "DESERT",
+                    "type": "TERRAN",
                     "name": "ALGOL II"
                 },
                 "2": {
                     "star": "ALGOL",
-                    "type": "DESERT",
+                    "type": "VOLCANIC",
                     "name": "ALGOL III"
                 },
                 "3": {
                     "star": "ALGOL",
-                    "type": "TERRAN",
+                    "type": "VOLCANIC",
                     "name": "ALGOL IV"
                 }
             },
@@ -554,25 +525,25 @@
         },
         "17": {
             "name": "FOMALHAUT",
-            "type": "RED",
             "planets": {
                 "0": {
                     "star": "FOMALHAUT",
-                    "type": "SUPERTERRAN",
+                    "type": "TERRAN",
                     "name": "FOMALHAUT I"
                 },
                 "1": {
                     "star": "FOMALHAUT",
-                    "type": "TROPICAL",
+                    "type": "OCEAN",
                     "name": "FOMALHAUT II"
                 },
                 "2": {
                     "star": "FOMALHAUT",
-                    "type": "OCEAN",
+                    "type": "BARREN",
                     "name": "FOMALHAUT III"
                 },
                 "3": {
                     "star": "FOMALHAUT",
+                    "type": "BARREN",
                     "name": "FOMALHAUT IV"
                 }
             },
@@ -585,24 +556,25 @@
         },
         "18": {
             "name": "MIZAR",
-            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "MIZAR",
-                    "type": "TROPICAL",
+                    "type": "SUPERTERRAN",
                     "name": "MIZAR I"
                 },
                 "1": {
                     "star": "MIZAR",
+                    "type": "DESERT",
                     "name": "MIZAR II"
                 },
                 "2": {
                     "star": "MIZAR",
+                    "type": "SUPERTERRAN",
                     "name": "MIZAR III"
                 },
                 "3": {
                     "star": "MIZAR",
-                    "type": "SUPERTERRAN",
+                    "type": "DESERT",
                     "name": "MIZAR IV"
                 }
             },
@@ -615,24 +587,25 @@
         },
         "19": {
             "name": "ABSOLUTNO",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "ABSOLUTNO",
-                    "type": "BARREN",
+                    "type": "OCEAN",
                     "name": "ABSOLUTNO I"
                 },
                 "1": {
                     "star": "ABSOLUTNO",
-                    "type": "VOLCANIC",
+                    "type": "DESERT",
                     "name": "ABSOLUTNO II"
                 },
                 "2": {
                     "star": "ABSOLUTNO",
-                    "type": "SUPERTERRAN",
                     "name": "ABSOLUTNO III"
                 },
                 "3": {
                     "star": "ABSOLUTNO",
+                    "type": "VOLCANIC",
                     "name": "ABSOLUTNO IV"
                 }
             },
@@ -645,26 +618,26 @@
         },
         "20": {
             "name": "ACHERNAR",
-            "type": "BLUE",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "ACHERNAR",
-                    "type": "BARREN",
+                    "type": "VOLCANIC",
                     "name": "ACHERNAR I"
                 },
                 "1": {
                     "star": "ACHERNAR",
-                    "type": "TROPICAL",
+                    "type": "BARREN",
                     "name": "ACHERNAR II"
                 },
                 "2": {
                     "star": "ACHERNAR",
-                    "type": "TROPICAL",
+                    "type": "BARREN",
                     "name": "ACHERNAR III"
                 },
                 "3": {
                     "star": "ACHERNAR",
-                    "type": "SUPERTERRAN",
+                    "type": "BARREN",
                     "name": "ACHERNAR IV"
                 }
             },
@@ -680,22 +653,22 @@
             "planets": {
                 "0": {
                     "star": "ALCOR",
-                    "type": "OCEAN",
+                    "type": "TERRAN",
                     "name": "ALCOR I"
                 },
                 "1": {
                     "star": "ALCOR",
-                    "type": "BARREN",
+                    "type": "DESERT",
                     "name": "ALCOR II"
                 },
                 "2": {
                     "star": "ALCOR",
-                    "type": "OCEAN",
+                    "type": "VOLCANIC",
                     "name": "ALCOR III"
                 },
                 "3": {
                     "star": "ALCOR",
-                    "type": "BARREN",
+                    "type": "VOLCANIC",
                     "name": "ALCOR IV"
                 }
             },
@@ -711,20 +684,21 @@
             "planets": {
                 "0": {
                     "star": "ARCTURUS",
+                    "type": "TERRAN",
                     "name": "ARCTURUS I"
                 },
                 "1": {
                     "star": "ARCTURUS",
+                    "type": "TROPICAL",
                     "name": "ARCTURUS II"
                 },
                 "2": {
                     "star": "ARCTURUS",
-                    "type": "TERRAN",
                     "name": "ARCTURUS III"
                 },
                 "3": {
                     "star": "ARCTURUS",
-                    "type": "VOLCANIC",
+                    "type": "TROPICAL",
                     "name": "ARCTURUS IV"
                 }
             },
@@ -737,7 +711,6 @@
         },
         "23": {
             "name": "ATLAS",
-            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "ATLAS",
@@ -746,6 +719,7 @@
                 },
                 "1": {
                     "star": "ATLAS",
+                    "type": "TROPICAL",
                     "name": "ATLAS II"
                 },
                 "2": {
@@ -755,7 +729,7 @@
                 },
                 "3": {
                     "star": "ATLAS",
-                    "type": "TERRAN",
+                    "type": "TROPICAL",
                     "name": "ATLAS IV"
                 }
             },
@@ -768,26 +742,26 @@
         },
         "24": {
             "name": "BELLATRIX",
-            "type": "RED",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "BELLATRIX",
-                    "type": "DESERT",
+                    "type": "SUPERTERRAN",
                     "name": "BELLATRIX I"
                 },
                 "1": {
                     "star": "BELLATRIX",
-                    "type": "BARREN",
+                    "type": "TROPICAL",
                     "name": "BELLATRIX II"
                 },
                 "2": {
                     "star": "BELLATRIX",
-                    "type": "SUPERTERRAN",
+                    "type": "TERRAN",
                     "name": "BELLATRIX III"
                 },
                 "3": {
                     "star": "BELLATRIX",
-                    "type": "SUPERTERRAN",
+                    "type": "OCEAN",
                     "name": "BELLATRIX IV"
                 }
             },
@@ -800,7 +774,6 @@
         },
         "25": {
             "name": "CANOPUS",
-            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "CANOPUS",
@@ -813,12 +786,12 @@
                 },
                 "2": {
                     "star": "CANOPUS",
-                    "type": "VOLCANIC",
+                    "type": "DESERT",
                     "name": "CANOPUS III"
                 },
                 "3": {
                     "star": "CANOPUS",
-                    "type": "TROPICAL",
+                    "type": "DESERT",
                     "name": "CANOPUS IV"
                 }
             },
@@ -831,6 +804,7 @@
         },
         "26": {
             "name": "CERVANTES",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "CERVANTES",
@@ -839,7 +813,7 @@
                 },
                 "1": {
                     "star": "CERVANTES",
-                    "type": "BARREN",
+                    "type": "SUPERTERRAN",
                     "name": "CERVANTES II"
                 },
                 "2": {
@@ -849,7 +823,7 @@
                 },
                 "3": {
                     "star": "CERVANTES",
-                    "type": "BARREN",
+                    "type": "OCEAN",
                     "name": "CERVANTES IV"
                 }
             },
@@ -866,22 +840,22 @@
             "planets": {
                 "0": {
                     "star": "COPERNICUS",
-                    "type": "VOLCANIC",
+                    "type": "TERRAN",
                     "name": "COPERNICUS I"
                 },
                 "1": {
                     "star": "COPERNICUS",
-                    "type": "BARREN",
+                    "type": "TROPICAL",
                     "name": "COPERNICUS II"
                 },
                 "2": {
                     "star": "COPERNICUS",
-                    "type": "DESERT",
+                    "type": "SUPERTERRAN",
                     "name": "COPERNICUS III"
                 },
                 "3": {
                     "star": "COPERNICUS",
-                    "type": "DESERT",
+                    "type": "SUPERTERRAN",
                     "name": "COPERNICUS IV"
                 }
             },
@@ -894,20 +868,20 @@
         },
         "28": {
             "name": "DENEB ALGEDI",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "DENEB ALGEDI",
-                    "type": "TROPICAL",
                     "name": "DENEB ALGEDI I"
                 },
                 "1": {
                     "star": "DENEB ALGEDI",
-                    "type": "TERRAN",
+                    "type": "SUPERTERRAN",
                     "name": "DENEB ALGEDI II"
                 },
                 "2": {
                     "star": "DENEB ALGEDI",
-                    "type": "VOLCANIC",
+                    "type": "BARREN",
                     "name": "DENEB ALGEDI III"
                 },
                 "3": {
@@ -925,25 +899,25 @@
         },
         "29": {
             "name": "ELECTRA",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "ELECTRA",
-                    "type": "TERRAN",
+                    "type": "TROPICAL",
                     "name": "ELECTRA I"
                 },
                 "1": {
                     "star": "ELECTRA",
-                    "type": "DESERT",
+                    "type": "BARREN",
                     "name": "ELECTRA II"
                 },
                 "2": {
                     "star": "ELECTRA",
-                    "type": "BARREN",
                     "name": "ELECTRA III"
                 },
                 "3": {
                     "star": "ELECTRA",
-                    "type": "BARREN",
+                    "type": "VOLCANIC",
                     "name": "ELECTRA IV"
                 }
             },
@@ -956,26 +930,25 @@
         },
         "30": {
             "name": "FAFNIR",
-            "type": "RED",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "FAFNIR",
-                    "type": "VOLCANIC",
+                    "type": "TROPICAL",
                     "name": "FAFNIR I"
                 },
                 "1": {
                     "star": "FAFNIR",
-                    "type": "BARREN",
+                    "type": "TROPICAL",
                     "name": "FAFNIR II"
                 },
                 "2": {
                     "star": "FAFNIR",
-                    "type": "VOLCANIC",
                     "name": "FAFNIR III"
                 },
                 "3": {
                     "star": "FAFNIR",
-                    "type": "VOLCANIC",
+                    "type": "DESERT",
                     "name": "FAFNIR IV"
                 }
             },
@@ -987,11 +960,10 @@
         },
         "31": {
             "name": "FORMOSA",
-            "type": "RED",
             "planets": {
                 "0": {
                     "star": "FORMOSA",
-                    "type": "OCEAN",
+                    "type": "DESERT",
                     "name": "FORMOSA I"
                 },
                 "1": {
@@ -1000,12 +972,12 @@
                 },
                 "2": {
                     "star": "FORMOSA",
-                    "type": "SUPERTERRAN",
+                    "type": "TERRAN",
                     "name": "FORMOSA III"
                 },
                 "3": {
                     "star": "FORMOSA",
-                    "type": "DESERT",
+                    "type": "SUPERTERRAN",
                     "name": "FORMOSA IV"
                 }
             },
@@ -1018,26 +990,24 @@
         },
         "32": {
             "name": "GARNET STAR",
-            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "GARNET STAR",
-                    "type": "BARREN",
+                    "type": "OCEAN",
                     "name": "GARNET STAR I"
                 },
                 "1": {
                     "star": "GARNET STAR",
-                    "type": "TERRAN",
+                    "type": "OCEAN",
                     "name": "GARNET STAR II"
                 },
                 "2": {
                     "star": "GARNET STAR",
-                    "type": "TERRAN",
+                    "type": "TROPICAL",
                     "name": "GARNET STAR III"
                 },
                 "3": {
                     "star": "GARNET STAR",
-                    "type": "TERRAN",
                     "name": "GARNET STAR IV"
                 }
             },
@@ -1050,6 +1020,7 @@
         },
         "33": {
             "name": "HADAR",
+            "type": "BLUE",
             "planets": {
                 "0": {
                     "star": "HADAR",
@@ -1057,7 +1028,7 @@
                 },
                 "1": {
                     "star": "HADAR",
-                    "type": "DESERT",
+                    "type": "TROPICAL",
                     "name": "HADAR II"
                 },
                 "2": {
@@ -1067,7 +1038,7 @@
                 },
                 "3": {
                     "star": "HADAR",
-                    "type": "BARREN",
+                    "type": "OCEAN",
                     "name": "HADAR IV"
                 }
             },
@@ -1083,22 +1054,21 @@
             "planets": {
                 "0": {
                     "star": "MINTAKA",
-                    "type": "DESERT",
+                    "type": "TERRAN",
                     "name": "MINTAKA I"
                 },
                 "1": {
                     "star": "MINTAKA",
-                    "type": "TERRAN",
                     "name": "MINTAKA II"
                 },
                 "2": {
                     "star": "MINTAKA",
-                    "type": "OCEAN",
+                    "type": "BARREN",
                     "name": "MINTAKA III"
                 },
                 "3": {
                     "star": "MINTAKA",
-                    "type": "OCEAN",
+                    "type": "SUPERTERRAN",
                     "name": "MINTAKA IV"
                 }
             },
@@ -1115,20 +1085,22 @@
             "planets": {
                 "0": {
                     "star": "MUSICA",
-                    "type": "DESERT",
+                    "type": "VOLCANIC",
                     "name": "MUSICA I"
                 },
                 "1": {
                     "star": "MUSICA",
+                    "type": "TERRAN",
                     "name": "MUSICA II"
                 },
                 "2": {
                     "star": "MUSICA",
-                    "type": "OCEAN",
+                    "type": "BARREN",
                     "name": "MUSICA III"
                 },
                 "3": {
                     "star": "MUSICA",
+                    "type": "VOLCANIC",
                     "name": "MUSICA IV"
                 }
             },
@@ -1145,22 +1117,20 @@
             "planets": {
                 "0": {
                     "star": "PETRA",
-                    "type": "BARREN",
+                    "type": "SUPERTERRAN",
                     "name": "PETRA I"
                 },
                 "1": {
                     "star": "PETRA",
-                    "type": "TROPICAL",
                     "name": "PETRA II"
                 },
                 "2": {
                     "star": "PETRA",
-                    "type": "VOLCANIC",
                     "name": "PETRA III"
                 },
                 "3": {
                     "star": "PETRA",
-                    "type": "OCEAN",
+                    "type": "TERRAN",
                     "name": "PETRA IV"
                 }
             },
@@ -1176,12 +1146,12 @@
             "planets": {
                 "0": {
                     "star": "PEACOCK",
-                    "type": "BARREN",
+                    "type": "TROPICAL",
                     "name": "PEACOCK I"
                 },
                 "1": {
                     "star": "PEACOCK",
-                    "type": "BARREN",
+                    "type": "TERRAN",
                     "name": "PEACOCK II"
                 },
                 "2": {
@@ -1191,7 +1161,7 @@
                 },
                 "3": {
                     "star": "PEACOCK",
-                    "type": "BARREN",
+                    "type": "TERRAN",
                     "name": "PEACOCK IV"
                 }
             },
@@ -1208,17 +1178,16 @@
             "planets": {
                 "0": {
                     "star": "URUK",
-                    "type": "DESERT",
                     "name": "URUK I"
                 },
                 "1": {
                     "star": "URUK",
-                    "type": "BARREN",
+                    "type": "OCEAN",
                     "name": "URUK II"
                 },
                 "2": {
                     "star": "URUK",
-                    "type": "SUPERTERRAN",
+                    "type": "OCEAN",
                     "name": "URUK III"
                 },
                 "3": {
@@ -1236,13 +1205,16 @@
         },
         "39": {
             "name": "ZETA RETICULI",
+            "type": "RED",
             "planets": {
                 "0": {
                     "star": "ZETA RETICULI",
+                    "type": "BARREN",
                     "name": "ZETA RETICULI I"
                 },
                 "1": {
                     "star": "ZETA RETICULI",
+                    "type": "OCEAN",
                     "name": "ZETA RETICULI II"
                 },
                 "2": {
@@ -1254,41 +1226,541 @@
                 },
                 "3": {
                     "star": "ZETA RETICULI",
-                    "type": "DESERT",
+                    "type": "OCEAN",
                     "name": "ZETA RETICULI IV"
                 }
             },
             "playerFleet": {
-            },
-            "enemyFleet": {
+                "terraformers": [
+                    {
+                        "theType": "TERRAFORMATTER_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 0,
+                        "gunMounts": 0,
+                        "hasMoved": true
+                    }
+                ],
                 "colonyShips": [
                     {
-                        "theType": "COLONY_ENEMY",
+                        "theType": "COLONY_HUMAN",
                         "maxHP": 100,
                         "bombRacks": 0,
-                        "gunMounts": 1
+                        "gunMounts": 1,
+                        "currentHP": 79,
+                        "hasMoved": true
                     }
                 ],
                 "corvettes": [
                     {
-                        "theType": "CORVETTE_ENEMY",
+                        "theType": "CORVETTE_HUMAN",
                         "maxHP": 10,
                         "bombRacks": 1,
-                        "gunMounts": 2
+                        "gunMounts": 2,
+                        "hasMoved": true
                     },
                     {
-                        "theType": "CORVETTE_ENEMY",
+                        "theType": "CORVETTE_HUMAN",
                         "maxHP": 10,
                         "bombRacks": 1,
-                        "gunMounts": 2
+                        "gunMounts": 2,
+                        "hasMoved": true
                     },
                     {
-                        "theType": "CORVETTE_ENEMY",
+                        "theType": "CORVETTE_HUMAN",
                         "maxHP": 10,
                         "bombRacks": 1,
-                        "gunMounts": 2
+                        "gunMounts": 2,
+                        "hasMoved": true
+                    }
+                ],
+                "cruisers": [
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "CRUISER_HUMAN",
+                        "maxHP": 50,
+                        "bombRacks": 2,
+                        "gunMounts": 4,
+                        "hasMoved": true,
+                        "hasShot": true
+                    }
+                ],
+                "battleships": [
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "BATTLESHIP_HUMAN",
+                        "maxHP": 200,
+                        "bombRacks": 4,
+                        "gunMounts": 10,
+                        "hasMoved": true,
+                        "hasShot": true
+                    }
+                ],
+                "galleons": [
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
+                    },
+                    {
+                        "theType": "GALLEON_HUMAN",
+                        "maxHP": 25,
+                        "bombRacks": 0,
+                        "gunMounts": 1,
+                        "hasMoved": true,
+                        "hasShot": true
                     }
                 ]
+            },
+            "enemyFleet": {
             },
             "xloc": 9,
             "yloc": 3

@@ -155,6 +155,7 @@ class StarsScene(
     }
 
     suspend fun playerVictory() {
+        ps.playerVictory = true
         sceneContainer.changeTo<YouWinScene>()
     }
 

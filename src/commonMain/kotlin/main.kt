@@ -35,8 +35,8 @@ suspend fun main() = Korge(title = "Crown of Stars",
     injector.mapPrototype { BuyTechScene(get(),get(),get()) }
     injector.mapPrototype { CreditsScene() }
     injector.mapPrototype { MusicScene() }
-    injector.mapPrototype { YouLostScene() }
-    injector.mapPrototype { YouWinScene() }
+    injector.mapPrototype { YouLostScene(get()) }
+    injector.mapPrototype { YouWinScene(get()) }
     injector.mapPrototype { WarMusicScene() }
     //This feels like a hack but we need the same scene container so we can stop the regular music and go to
     //war songs when we switch to a battle scene

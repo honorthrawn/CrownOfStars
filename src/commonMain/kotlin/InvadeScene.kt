@@ -141,6 +141,8 @@ class InvadeScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             val galleonsRemainingMessage = "We lost $galleonsLost of $startingGalleons galleons to defense bases"
             galleonsRemainingReadout.text = galleonsRemainingMessage
+            ps.totalShipsLost += galleonsLost
+            ps.regimentsLost += galleonsLost
 
             var troopsLost = 0
             var popsLost = 0
@@ -160,6 +162,9 @@ class InvadeScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState)
             }
             val casualtiesMessage = "We lost $troopsLost galleons fighting, they lost $popsLost population"
             casualtiesReadout.text = casualtiesMessage
+            ps.totalShipsLost += troopsLost
+            ps.regimentsLost += troopsLost
+            ps.enemyPopulationKilled += popsLost
 
             //attacker won
             var victoryMessage = "This world defeated our landing force"

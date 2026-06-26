@@ -139,6 +139,7 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
         }
         basesMessage = "We destroyed $lostBases of $startingBases bases"
         popsMessage = "We killed $lostPops of $startingPops population"
+        ps.enemyPopulationKilled += lostPops
         if(gs.stars[ps.activePlayerStar]!!.planets[ps.bombardIndex]!!.getTotalPopulation() == 0u) {
             colonyStatus = "The enemy colony has been eliminated"
         } else {
@@ -186,6 +187,7 @@ class BombardScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 }
             }
         }
+        ps.totalShipsLost += corvettesLost + cruisersLost + battleShipsLost
         corrvettesLostMessage = "We lost $corvettesLost of $totalCorvettes corvettes"
         cruisersLostMessage = "We lost $cruisersLost of $totalCruisers cruisers"
         battleShipsLostMessage = "We lost $battleShipsLost of $totalBattleShips battleships"

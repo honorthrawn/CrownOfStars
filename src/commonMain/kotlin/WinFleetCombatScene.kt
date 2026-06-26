@@ -16,7 +16,7 @@ class WinFleetCombatScene(val gs: GalaxyState, val ps: PlayerState) : BasicScene
         }
 
         val header = text(
-            "Battle at ${gs.stars[ps.activePlayerStar]!!.name} Rounds: ${ps.totalRounds}",
+            "Battle at ${gs.stars[ps.activePlayerStar]!!.name} Rounds: ${ps.battleRounds}",
             25.00,
             Colors.GOLD,
             gameFont
@@ -29,12 +29,12 @@ class WinFleetCombatScene(val gs: GalaxyState, val ps: PlayerState) : BasicScene
             centerXOnStage()
         }
         val line2 =
-            text("We lost ${ps.shipsLost} ships from ${ps.totalDamgeReceived} damage", 25.00, Colors.CYAN, gameFont) {
+            text("We lost ${ps.shipsLostLastBattle} ships from ${ps.damageReceivedLastBattle} damage", 25.00, Colors.CYAN, gameFont) {
                 alignTopToBottomOf(line1)
                 centerXOnStage()
             }
         val line3 = text(
-            "We destroyed ${ps.enemyShipsDestroyed} ships from ${ps.totalDamageDealt} damage",
+            "We destroyed ${ps.enemyShipsDestroyedLastBattle} ships from ${ps.damageDealtLastBattle} damage",
             25.00,
             Colors.CYAN,
             gameFont

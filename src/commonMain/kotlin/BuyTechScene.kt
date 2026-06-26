@@ -105,7 +105,7 @@ class BuyTechScene(
 
     private fun getRealmImagePath(): String {
         return when (ps.techRealmChosen) {
-            TechRealm.COMPUTERS -> "tech/futureComputer.jpg"
+            TechRealm.COMPUTERS -> "tech/computer.jpg"
             TechRealm.WEAPONS -> "tech/weapon.jpg"
             TechRealm.DEFENSE -> "tech/armor.jpg"
             TechRealm.PROPULSION -> "tech/propulsion.jpg"

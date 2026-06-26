@@ -195,6 +195,7 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
                 gs.stars[ps.activePlayerStar]!!.planets[index]!!.ownerIndex = Allegiance.Player
                 gs.stars[ps.activePlayerStar]!!.planets[index]!!.farmers = 1u
                 gs.stars[ps.activePlayerStar]!!.playerFleet.destroyShip(shipType.COLONY_HUMAN)
+                ps.coloniesEstablished++
                 ps.operation = operationType.SELECTION
                 sceneContainer.changeTo<ColonyScene>()
             } else {
