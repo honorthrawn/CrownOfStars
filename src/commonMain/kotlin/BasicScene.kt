@@ -9,7 +9,7 @@ import com.soywiz.korim.font.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 import kotlinx.coroutines.*
-import kotlin.math.min
+import kotlin.math.*
 
 open class BasicScene() : Scene() {
     protected lateinit var gameFont: Font
@@ -78,7 +78,7 @@ open class BasicScene() : Scene() {
         dialog.addBrushedMetalTitleBar(width)
 
         // Title text
-        dialog.text(title, 28.0, Colors.CYAN, gameFont) {
+        dialog.text(title, 28.0, Colors.DARKCYAN, gameFont) {
             position(20.0, 10.0)
         }
 

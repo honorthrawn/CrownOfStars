@@ -70,6 +70,10 @@ class GalaxyState {
         starDate++
     }
 
+    fun turnsElapsed(): Int {
+        return starDate - 2260
+    }
+
     private val galaxySaveFile get() = applicationDataVfs["galaxyState.json"]
 
     suspend fun load() {
