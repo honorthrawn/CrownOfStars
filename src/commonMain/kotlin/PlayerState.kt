@@ -9,11 +9,13 @@ enum class CrownOutcome {
     VOID,
     STEWARD,
     ASHEN,
-    MILITARY_DEFEAT
+    MILITARY_DEFEAT,
+    CATASTROPHIC_DEFEAT
 }
 
 class PlayerState {
     var playerVictory = false
+    var catastrophicDefeat = false
     var musicSceneContainer: SceneContainer? = null
     //Index of the player's chosen star or 0 if none
     var activePlayerStar = 0
@@ -78,8 +80,11 @@ class PlayerState {
                 CrownOutcome.ASHEN
             }
         } else {
-            //TODO fill this in later if the enemy managed to turn SOL system into Black Hole
-            CrownOutcome.MILITARY_DEFEAT
+            if (catastrophicDefeat) {
+                CrownOutcome.CATASTROPHIC_DEFEAT
+            } else {
+                CrownOutcome.MILITARY_DEFEAT
+            }
         }
     }
 
@@ -89,6 +94,7 @@ class PlayerState {
             CrownOutcome.STEWARD -> "ui/stewardCrown.png"
             CrownOutcome.ASHEN -> "ui/ashenCrown.png"
             CrownOutcome.MILITARY_DEFEAT -> "ui/militaryDefeat.png"
+            CrownOutcome.CATASTROPHIC_DEFEAT -> "ui/catastrophicDefeat.png"
         }
     }
 
@@ -98,6 +104,17 @@ class PlayerState {
             CrownOutcome.STEWARD -> "Through wisdom you won the Steward Crown"
             CrownOutcome.ASHEN -> "Through ruin and sacrifice you won the Ashen Crown"
             CrownOutcome.MILITARY_DEFEAT -> ""
+            CrownOutcome.CATASTROPHIC_DEFEAT -> ""
+        }
+    }
+
+    fun determineDefeatMessage(): String {
+        return when (determineCrownOutcome()) {
+            CrownOutcome.MILITARY_DEFEAT -> "The crown slips from your grasp beneath the weight of enemy steel"
+            CrownOutcome.CATASTROPHIC_DEFEAT -> "Your last world has fallen. The Crown of Stars is lost to history"
+            CrownOutcome.VOID,
+            CrownOutcome.STEWARD,
+            CrownOutcome.ASHEN -> ""
         }
     }
 

@@ -78,7 +78,7 @@ open class BasicScene() : Scene() {
         dialog.addBrushedMetalTitleBar(width)
 
         // Title text
-        dialog.text(title, 28.0, Colors.DARKCYAN, gameFont) {
+        dialog.text(title, 28.0, Colors["#FFF0A6"], gameFont) {
             position(20.0, 10.0)
         }
 
@@ -181,21 +181,29 @@ open class BasicScene() : Scene() {
 
     suspend fun showConfirmDialog(message: String): Boolean {
         val result = CompletableDeferred<Boolean>()
+        val dialogWidth = sceneWidth / 2.0
+        val contentWidth = dialogWidth - 40.0
 
         showGameDialog(
             title = "CONFIRM",
-            width = sceneWidth / 2.0,
+            width = dialogWidth,
             height = sceneHeight / 3.0
         ) { dialog ->
+            var yPos = 0.0
 
-            text(message, 24.0, Colors.WHITE, gameFont) {
-                position(0.0, 0.0)
+            wrapDialogText(message, 28).forEach { line ->
+                text(line, 24.0, Colors.WHITE, gameFont) {
+                    position(0.0, yPos)
+                }
+                yPos += 34.0
             }
 
+            yPos += 20.0
             uiHorizontalStack {
-                position(0.0, 100.0)
+                position((contentWidth - 190.0) / 2.0, yPos)
+                padding = 20.0
 
-                uiButton("YES") {
+                uiButton("YES", width = 85.0, height = 42.0) {
                     textFont = gameFont
                     textColor = Colors.GOLD
 
@@ -208,7 +216,7 @@ open class BasicScene() : Scene() {
                     }
                 }
 
-                uiButton("NO") {
+                uiButton("NO", width = 85.0, height = 42.0) {
                     textFont = gameFont
                     textColor = Colors.GOLD
 
@@ -224,6 +232,31 @@ open class BasicScene() : Scene() {
         }
 
         return result.await()
+    }
+
+    private fun wrapDialogText(text: String, maxChars: Int): List<String> {
+        val words = text.split(" ")
+        val lines = mutableListOf<String>()
+        var current = ""
+
+        for (word in words) {
+            val candidate = if (current.isBlank()) word else "$current $word"
+
+            if (candidate.length > maxChars) {
+                if (current.isNotBlank()) {
+                    lines.add(current)
+                }
+                current = word
+            } else {
+                current = candidate
+            }
+        }
+
+        if (current.isNotBlank()) {
+            lines.add(current)
+        }
+
+        return lines
     }
 
 

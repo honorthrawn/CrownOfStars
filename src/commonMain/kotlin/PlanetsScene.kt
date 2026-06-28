@@ -82,6 +82,18 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             alignTopToTopOf(starImage, 12.0)
         }
 
+        if (gs.stars[ps.activePlayerStar]!!.isRagnarokProtocolActive()) {
+            text(
+                "RAGNAROK PROTOCOL: ${gs.stars[ps.activePlayerStar]!!.turnsLeftRagnarok} TURNS REMAIN",
+                30.00,
+                Colors["#FFB000"],
+                gameFont
+            ) {
+                centerXOnStage()
+                alignTopToTopOf(background, 32.0)
+            }
+        }
+
         if (gs.stars[ps.activePlayerStar]!!.type == StarType.BLACK_HOLE) {
             text("NO PLANETARY BODIES REMAIN", 34.00, Colors.GOLD, gameFont) {
                 centerXOnStage()

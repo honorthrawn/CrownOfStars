@@ -22,6 +22,17 @@ class YouLostScene(val ps: PlayerState) : BasicScene() {
             centerXOnStage()
         }
 
+        text(
+            ps.determineDefeatMessage(),
+            22.00,
+            Colors.GOLD,
+            gameFont
+        ) {
+            y = yPos
+            yPos += height + padding
+            centerXOnStage()
+        }
+
         yPos += padding
         yPos = addFinalStatistics(yPos, padding)
 

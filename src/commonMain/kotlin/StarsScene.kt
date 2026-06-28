@@ -14,6 +14,12 @@ class StarsScene(
     val ai: ComputerPlayerCore,
     val cps: ComputerPlayerState
 ) : BasicScene() {
+    private data class RagnarokAdvanceResult(
+        val collapsedStarIndex: Int?,
+        val changed: Boolean,
+        val showAftermath: Boolean
+    )
+
     private lateinit var farmerReadout: Text
     private lateinit var shipsReadout: Text
     private lateinit var scienceReadout: Text
@@ -74,6 +80,13 @@ class StarsScene(
                 text(star.name, 11.00, textColor, gameFont) {
                     centerXOn(rect)
                     alignBottomToBottomOf(rect, 2.00)
+                }
+
+                if (star.isRagnarokProtocolActive()) {
+                    text("R${star.turnsLeftRagnarok}", 16.00, Colors["#FFB000"], gameFont) {
+                        centerXOn(rect)
+                        alignTopToTopOf(rect, 5.0)
+                    }
                 }
 
                 if (star.type == StarType.BLACK_HOLE) {
@@ -148,7 +161,22 @@ class StarsScene(
         ai.takeTurn()
         es.addProduction(gs)
         gs.nextTurn()
+        val ragnarokResult = advanceRagnarokProtocols()
         updateScreen()
+        if (ragnarokResult.collapsedStarIndex != null) {
+            ps.activePlayerStar = ragnarokResult.collapsedStarIndex
+            if (ragnarokResult.showAftermath) {
+                sceneContainer.changeTo<RagnarokAftermathScene>()
+            } else {
+                sceneContainer.changeTo<StarsScene>()
+            }
+            return
+        }
+        if (ragnarokResult.changed) {
+            sceneContainer.changeTo<StarsScene>()
+            return
+        }
+
         val winner = ai.checkForVictory()
         when(winner) {
             Allegiance.Unoccupied -> return;
@@ -165,7 +193,14 @@ class StarsScene(
 
 
     suspend fun enemyVictory() {
+        ps.catastrophicDefeat = !playerHasWorlds()
         sceneContainer.changeTo<YouLostScene>()
+    }
+
+    private fun playerHasWorlds(): Boolean {
+        return gs.stars.values.any { star ->
+            star.planets.values.any { planet -> planet.ownerIndex == Allegiance.Player }
+        }
     }
 
 
@@ -268,25 +303,27 @@ class StarsScene(
     }
 
     private suspend fun startRagnarokProtocol() {
-        if(gs.stars[ps.activePlayerStar]!!.type == StarType.BLACK_HOLE) {
+        val star = gs.stars[ps.activePlayerStar]!!
+
+        if(star.type == StarType.BLACK_HOLE) {
             showNoGo("System is already a BLACK HOLE")
             return
         }
 
-        if (!hasSingularityLance() || !gs.stars[ps.activePlayerStar]!!.playerFleet.isBatteshipsPresent()) {
+        if (star.isRagnarokProtocolActive()) {
+            showNoGo("Ragnarok Protocol is already charging. ${star.turnsLeftRagnarok} turns remain.")
+            return
+        }
+
+        if (!hasSingularityLance() || !star.playerFleet.isBatteshipsPresent()) {
             showNoGo("You must have Singularity Lance weapon and a battleship in system to start")
             return
         }
 
-        if (showRagnarokConfirmationDialog(gs.stars[ps.activePlayerStar]!!.name)) {
-            val showAftermath = ps.blackHolesCreatedByPlayer == 0
-            initiateRagnarokProtocol()
+        if (showRagnarokConfirmationDialog(star.name)) {
+            star.startRagnarokProtocol()
             ps.reset()
-            if (showAftermath) {
-                sceneContainer.changeTo<RagnarokAftermathScene>()
-            } else {
-                sceneContainer.changeTo<StarsScene>()
-            }
+            sceneContainer.changeTo<StarsScene>()
         }
     }
 
@@ -326,8 +363,10 @@ class StarsScene(
 
         yPos += 58.0
         val warningParagraphs = listOf(
-            "You are about to initiate stellar collapse in the $starName system.",
-            "All colonies, planetary bodies and enemy fleet in this system will be destroyed.",
+            "You are about to begin stellar collapse in the $starName system.",
+            "The Singularity Lance must charge for 3 turns.",
+            "At least one battleship must remain in this system until the countdown completes.",
+            "When collapse occurs, all colonies, planetary bodies and enemy fleet in this system will be destroyed.",
             "This system will become a permanent black hole and can never be colonized again.",
             "History will remember this act."
         )
@@ -349,7 +388,7 @@ class StarsScene(
         val buttonHeight = 48.0
         val buttonGap = 20.0
         val buttonRowWidth = buttonWidth + buttonGap + standDownWidth
-        val buttonY = height - 78.0
+        val buttonY = height - 66.0
         val buttonX = (width - buttonRowWidth) / 2.0
 
         dialog.uiButton("INITIATE RAGNAROK", width = buttonWidth, height = buttonHeight) {
@@ -404,8 +443,34 @@ class StarsScene(
         return lines
     }
 
-    private fun initiateRagnarokProtocol() {
-        val star = gs.stars[ps.activePlayerStar]!!
+    private fun advanceRagnarokProtocols(): RagnarokAdvanceResult {
+        var changed = false
+        var collapsedStarIndex: Int? = null
+        var showAftermath = false
+
+        for ((starIndex, star) in gs.stars) {
+            when (star.advanceRagnarokProtocol()) {
+                RagnarokProtocolAdvanceResult.INACTIVE -> {}
+                RagnarokProtocolAdvanceResult.CANCELED,
+                RagnarokProtocolAdvanceResult.CHARGING -> changed = true
+                RagnarokProtocolAdvanceResult.READY_TO_COLLAPSE -> {
+                    changed = true
+                    if (ps.blackHolesCreatedByPlayer == 0 && collapsedStarIndex == null) {
+                        showAftermath = true
+                    }
+                    collapseRagnarokProtocol(starIndex)
+                    if (collapsedStarIndex == null) {
+                        collapsedStarIndex = starIndex
+                    }
+                }
+            }
+        }
+
+        return RagnarokAdvanceResult(collapsedStarIndex, changed, showAftermath)
+    }
+
+    private fun collapseRagnarokProtocol(starIndex: Int) {
+        val star = gs.stars[starIndex]!!
 
         ps.blackHolesCreatedByPlayer++
         ps.totalEnemyShipsDestroyed += star.enemyFleet.getTotalShipCount()
@@ -426,6 +491,7 @@ class StarsScene(
         }
 
         star.type = StarType.BLACK_HOLE
+        star.cancelRagnarokProtocol()
         star.planets.clear()
         star.enemyFleet.clear()
     }

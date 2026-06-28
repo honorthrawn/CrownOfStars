@@ -25,12 +25,20 @@ enum class StarType {
     }
 }
 
+enum class RagnarokProtocolAdvanceResult {
+    INACTIVE,
+    CANCELED,
+    CHARGING,
+    READY_TO_COLLAPSE
+}
+
 @Serializable
 data class Star(val name: String) {
     var type: StarType = StarType.YELLOW
     var planets = mutableMapOf<Int, Planet>()
     var playerFleet = Fleet()
     var enemyFleet = Fleet()
+    var turnsLeftRagnarok = -1
     //Location in galaxy, used to help ComputerPlayerCore and such
     var xloc = 0
     var yloc = 0
@@ -54,6 +62,36 @@ data class Star(val name: String) {
        }
        playerFleet.nextTurn()
        enemyFleet.nextTurn()
+    }
+
+    fun startRagnarokProtocol() {
+        turnsLeftRagnarok = 3
+    }
+
+    fun cancelRagnarokProtocol() {
+        turnsLeftRagnarok = -1
+    }
+
+    fun isRagnarokProtocolActive(): Boolean {
+        return turnsLeftRagnarok > 0
+    }
+
+    fun advanceRagnarokProtocol(): RagnarokProtocolAdvanceResult {
+        if (!isRagnarokProtocolActive()) {
+            return RagnarokProtocolAdvanceResult.INACTIVE
+        }
+
+        if (!playerFleet.isBatteshipsPresent()) {
+            cancelRagnarokProtocol()
+            return RagnarokProtocolAdvanceResult.CANCELED
+        }
+
+        turnsLeftRagnarok--
+        return if (turnsLeftRagnarok <= 0) {
+            RagnarokProtocolAdvanceResult.READY_TO_COLLAPSE
+        } else {
+            RagnarokProtocolAdvanceResult.CHARGING
+        }
     }
 
     fun getAllegiance(): Allegiance {
