@@ -33,6 +33,7 @@ data class Empire(val id: Allegiance) {
                     StarType.YELLOW -> researchPoints += 2u
                     StarType.BLUE -> shipPoints += 4u
                     StarType.RED -> organicPoints += 4u
+                    StarType.BLACK_HOLE -> {}
                 }
             }
         }

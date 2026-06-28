@@ -23,7 +23,7 @@ class YouWinScene(val ps: PlayerState) : BasicScene() {
         }
 
         text(
-            "Through wisdom you won the Steward Crown",
+            ps.determineVictoryMessage(),
             25.00,
             Colors.GOLD,
             gameFont

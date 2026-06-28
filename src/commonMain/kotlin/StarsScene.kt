@@ -5,6 +5,7 @@ import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
+import kotlinx.coroutines.*
 
 class StarsScene(
     val gs: GalaxyState,
@@ -26,9 +27,9 @@ class StarsScene(
         loadBasicAssets()
         addDefaultBackground()
 
-        val yellowStar = resourcesVfs[StarType.getImagePath(StarType.YELLOW)].readBitmap()
-        val blueStar = resourcesVfs[StarType.getImagePath(StarType.BLUE)].readBitmap()
-        val redStar = resourcesVfs[StarType.getImagePath(StarType.RED)].readBitmap()
+        val starImages = StarType.values().associateWith {
+            resourcesVfs[StarType.getImagePath(it)].readBitmap()
+        }
 
         val ourFlag = resourcesVfs["ui/player_fleet_banner.png"].readBitmap()
         val enemyFlag = resourcesVfs["ui/enemy_fleet_banner.png"].readBitmap()
@@ -41,13 +42,14 @@ class StarsScene(
         for (i in 0..3) {
             x = 0.00
             for (j in 0..9) {
+                val star = gs.stars[nI]!!
                 val rect = roundRect(cellSize, cellHeight, 5.0, 5.0, Colors.BLACK, Colors.WHITE, 5.00) {
                     position(x, y)
                     onClick { showSystemActions(i, j) } //for some weird reason trying to use nI always results in 40
                 }
 
                 val fleetImage = image(ourFlag) {
-                    visible = gs.stars[nI]!!.playerFleet.isPresent()
+                    visible = star.playerFleet.isPresent()
                     scaledHeight = cellHeight / 2.0
                     scaledWidth = cellSize / 2.0
                     alignTopToTopOf(rect)
@@ -56,7 +58,7 @@ class StarsScene(
                 friendlyFleets.add(fleetImage)
 
                 val enemyFleetImage = image(enemyFlag) {
-                    visible = gs.stars[nI]!!.enemyFleet.isPresent()
+                    visible = star.enemyFleet.isPresent()
                     scaledHeight = cellHeight / 2.0
                     scaledWidth = cellSize / 2.0
                     alignTopToTopOf(rect)
@@ -64,25 +66,27 @@ class StarsScene(
                 }
                 enemyFleets.add(enemyFleetImage)
 
-                val textColor = when (gs.stars[nI]!!.getAllegiance()) {
+                val textColor = when (star.getAllegiance()) {
                     Allegiance.Unoccupied -> Colors.WHITE
                     Allegiance.Player -> Colors.CYAN
                     Allegiance.Enemy -> Colors.RED
                 }
-                text(gs.stars[nI]!!.name, 11.00, textColor, gameFont) {
+                text(star.name, 11.00, textColor, gameFont) {
                     centerXOn(rect)
                     alignBottomToBottomOf(rect, 2.00)
                 }
 
-                var starImage = image(
-                    when (gs.stars[nI]!!.type) {
-                        StarType.YELLOW -> yellowStar
-                        StarType.BLUE -> blueStar
-                        StarType.RED -> redStar
+                if (star.type == StarType.BLACK_HOLE) {
+                    roundRect(40.0, 40.0, 20.0, 20.0, Colors["#16050A"], Colors["#FFB000"], 1.5) {
+                        centerOn(rect)
                     }
+                }
+
+                image(
+                    starImages[star.type]!!
                 ) {
-                    scaledWidth = 30.0
-                    scaledHeight = 30.0
+                    scaledWidth = if (star.type == StarType.BLACK_HOLE) 34.0 else 30.0
+                    scaledHeight = if (star.type == StarType.BLACK_HOLE) 34.0 else 30.0
                     centerOn(rect)
                 }
                 x += cellSize
@@ -92,8 +96,8 @@ class StarsScene(
         }
 
         uiVerticalStack {
-            position(5.00, y + cellHeight)
-            padding = 10.00
+            position(5.00, cellHeight * 4.0 + 18.0)
+            padding = 8.00
 
             val turn = "STARDATE: ${gs.starDate}"
             val Ship = "METAL: ${es.empires[Allegiance.Player.ordinal]!!.shipPoints}"
@@ -101,11 +105,11 @@ class StarsScene(
             val Organic = "ORGANICS: ${es.empires[Allegiance.Player.ordinal]!!.organicPoints}"
             val defense = "DEFENSE: ${es.empires[Allegiance.Player.ordinal]!!.defensePoints} "
 
-            turnReadout = text(turn, 50.00, Colors.CYAN, gameFont)
-            shipsReadout = text(Ship, 50.00, Colors.CYAN, gameFont)
-            farmerReadout = text(Organic, 50.00, Colors.CYAN, gameFont)
-            scienceReadout = text(Research, 50.00, Colors.CYAN, gameFont)
-            defenseReadout = text(defense, 50.00, Colors.CYAN, gameFont)
+            turnReadout = text(turn, 44.00, Colors.CYAN, gameFont)
+            shipsReadout = text(Ship, 44.00, Colors.CYAN, gameFont)
+            farmerReadout = text(Organic, 44.00, Colors.CYAN, gameFont)
+            scienceReadout = text(Research, 44.00, Colors.CYAN, gameFont)
+            defenseReadout = text(defense, 44.00, Colors.CYAN, gameFont)
 
             uiHorizontalStack {
                 padding = 10.00
@@ -213,6 +217,18 @@ class StarsScene(
                     }
                 }
 
+                uiButton("RAGNAROK PROTOCOL") {
+                    textFont = gameFont
+                    textColor = Colors.GOLD
+
+                    onClick {
+                        dialog.removeFromParent()
+                        ps.reset()
+                        ps.activePlayerStar = x * 10 + y
+                        startRagnarokProtocol()
+                    }
+                }
+
                 uiButton("MOVE OUR SHIPS") {
                     textFont = gameFont
                     textColor = Colors.GOLD
@@ -249,6 +265,169 @@ class StarsScene(
         }
 
         systemActionsPanel = panel
+    }
+
+    private suspend fun startRagnarokProtocol() {
+        if(gs.stars[ps.activePlayerStar]!!.type == StarType.BLACK_HOLE) {
+            showNoGo("System is already a BLACK HOLE")
+            return
+        }
+
+        if (!hasSingularityLance() || !gs.stars[ps.activePlayerStar]!!.playerFleet.isBatteshipsPresent()) {
+            showNoGo("You must have Singularity Lance weapon and a battleship in system to start")
+            return
+        }
+
+        if (showRagnarokConfirmationDialog(gs.stars[ps.activePlayerStar]!!.name)) {
+            val showAftermath = ps.blackHolesCreatedByPlayer == 0
+            initiateRagnarokProtocol()
+            ps.reset()
+            if (showAftermath) {
+                sceneContainer.changeTo<RagnarokAftermathScene>()
+            } else {
+                sceneContainer.changeTo<StarsScene>()
+            }
+        }
+    }
+
+    private fun hasSingularityLance(): Boolean {
+        val playerEmpire = es.empires[Allegiance.Player.ordinal] ?: return false
+        return playerEmpire.techTags.any { techId ->
+            val tech = ai.techs.findTech(techId, TechRealm.WEAPONS)
+            tech?.key == "SINGULARITY_LANCE" || tech?.name == "Singularity Lance"
+        }
+    }
+
+    private suspend fun showRagnarokConfirmationDialog(starName: String): Boolean {
+        val result = CompletableDeferred<Boolean>()
+        val overlay = sceneContainer.container()
+
+        overlay.solidRect(sceneWidth, sceneHeight, Colors["#000000CC"])
+
+        val width = sceneWidth * 0.88
+        val height = sceneHeight * 0.68
+        val dialogX = (sceneWidth - width) / 2.0
+        val dialogY = (sceneHeight - height) / 2.0
+
+        val dialog = overlay.container {
+            position(dialogX, dialogY)
+        }
+
+        dialog.roundRect(width, height, 16.0, 16.0, Colors["#130509"], Colors["#B00020"], 4.0)
+        dialog.roundRect(width - 18.0, height - 18.0, 12.0, 12.0, Colors["#26090F"], Colors["#FFB000"], 2.0) {
+            position(9.0, 9.0)
+        }
+
+        var yPos = 28.0
+        dialog.text("RAGNAROK PROTOCOL", 30.0, Colors["#FFB000"], gameFont) {
+            y = yPos
+            centerXOn(dialog)
+        }
+
+        yPos += 58.0
+        val warningParagraphs = listOf(
+            "You are about to initiate stellar collapse in the $starName system.",
+            "All colonies, planetary bodies and enemy fleet in this system will be destroyed.",
+            "This system will become a permanent black hole and can never be colonized again.",
+            "History will remember this act."
+        )
+
+        warningParagraphs.forEach { paragraph ->
+            wrapText(paragraph, 44).forEach { line ->
+                dialog.text(line, 18.0, Colors["#FFD8D8"], gameFont) {
+                    y = yPos
+                    centerXOn(dialog)
+                }
+                yPos += 34.0
+            }
+
+            yPos += 12.0
+        }
+
+        val buttonWidth = 220.0
+        val standDownWidth = 180.0
+        val buttonHeight = 48.0
+        val buttonGap = 20.0
+        val buttonRowWidth = buttonWidth + buttonGap + standDownWidth
+        val buttonY = height - 78.0
+        val buttonX = (width - buttonRowWidth) / 2.0
+
+        dialog.uiButton("INITIATE RAGNAROK", width = buttonWidth, height = buttonHeight) {
+            position(buttonX, buttonY)
+            textFont = gameFont
+            textColor = Colors["#FFB000"]
+            onClick {
+                overlay.removeFromParent()
+                if (!result.isCompleted) {
+                    result.complete(true)
+                }
+            }
+        }
+
+        dialog.uiButton("STAND DOWN", width = standDownWidth, height = buttonHeight) {
+            position(buttonX + buttonWidth + buttonGap, buttonY)
+            textFont = gameFont
+            textColor = Colors.CYAN
+            onClick {
+                overlay.removeFromParent()
+                if (!result.isCompleted) {
+                    result.complete(false)
+                }
+            }
+        }
+
+        return result.await()
+    }
+
+    private fun wrapText(text: String, maxChars: Int): List<String> {
+        val words = text.split(" ")
+        val lines = mutableListOf<String>()
+        var current = ""
+
+        for (word in words) {
+            val candidate = if (current.isBlank()) word else "$current $word"
+
+            if (candidate.length > maxChars) {
+                if (current.isNotBlank()) {
+                    lines.add(current)
+                }
+                current = word
+            } else {
+                current = candidate
+            }
+        }
+
+        if (current.isNotBlank()) {
+            lines.add(current)
+        }
+
+        return lines
+    }
+
+    private fun initiateRagnarokProtocol() {
+        val star = gs.stars[ps.activePlayerStar]!!
+
+        ps.blackHolesCreatedByPlayer++
+        ps.totalEnemyShipsDestroyed += star.enemyFleet.getTotalShipCount()
+
+        for (planet in star.planets.values) {
+            when (planet.ownerIndex) {
+                Allegiance.Player -> {
+                    ps.coloniesLost++
+                    ps.colonistsLost += planet.getTotalPopulation().toInt()
+                }
+
+                Allegiance.Enemy -> {
+                    ps.enemyPopulationKilled += planet.getTotalPopulation().toInt()
+                }
+
+                Allegiance.Unoccupied -> {}
+            }
+        }
+
+        star.type = StarType.BLACK_HOLE
+        star.planets.clear()
+        star.enemyFleet.clear()
     }
 
     private suspend fun movechosenShips(x: Int, y: Int) {

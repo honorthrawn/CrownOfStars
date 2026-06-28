@@ -4,3 +4,5 @@
 103|PLASMA_CANNON|Plasma Cannon|heavier damage|600|false|8|14
 104|PARTICLE_BEAM|Particle Beam|Reliable energy weapon|900|false|10|18
 105|ANTIMATTER_TORPEDO|Antimatter Torpedo|Devastating late weapon|1600|false|18|32
+106|SINGULARITY_LANCE|Singularity Lance|The last weapon|3000|false|50|100
+

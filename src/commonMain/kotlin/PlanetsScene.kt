@@ -62,8 +62,14 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
 
         val fileName = StarType.getImagePath(gs.stars[ps.activePlayerStar]!!.type)
         val starImage = image(resourcesVfs[fileName].readBitmap()) {
-            centerXOnStage()
-            alignBottomToBottomOf(background)
+            if (gs.stars[ps.activePlayerStar]!!.type == StarType.BLACK_HOLE) {
+                scaledWidth = 300.0
+                scaledHeight = 300.0
+                position((sceneWidth - scaledWidth) / 2.0, sceneHeight * 0.42)
+            } else {
+                centerXOnStage()
+                alignBottomToBottomOf(background)
+            }
         }
 
         val starTextColor = when (gs.stars[ps.activePlayerStar]!!.getAllegiance()) {
@@ -75,6 +81,14 @@ class PlanetsScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState
             centerXOn(starImage)
             alignTopToTopOf(starImage, 12.0)
         }
+
+        if (gs.stars[ps.activePlayerStar]!!.type == StarType.BLACK_HOLE) {
+            text("NO PLANETARY BODIES REMAIN", 34.00, Colors.GOLD, gameFont) {
+                centerXOnStage()
+                alignTopToBottomOf(starImage, 24.0)
+            }
+        }
+
         planetButtonStack.uiButton("BACK") {
             textColor = Colors.GOLD
             textFont = gameFont

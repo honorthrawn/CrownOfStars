@@ -107,6 +107,20 @@ class Fleet {
         return battleships.count()
     }
 
+    fun getTotalShipCount(): Int {
+        return terraformers.count() + colonyShips.count() + corvettes.count() +
+            cruisers.count() + battleships.count() + galleons.count()
+    }
+
+    fun clear() {
+        terraformers.clear()
+        colonyShips.clear()
+        corvettes.clear()
+        cruisers.clear()
+        battleships.clear()
+        galleons.clear()
+    }
+
     fun isWarshipsCanBombard(): Boolean {
         return corvettes.filterNot { it.hasBombed }.isNotEmpty() ||
             cruisers.filterNot { it.hasBombed }.isNotEmpty() ||

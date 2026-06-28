@@ -15,6 +15,8 @@ class EmpireState {
         playerEmpire.shipPoints = 100u
         enemyEmpire.organicPoints = 50u
         enemyEmpire.shipPoints = 100u
+        //FOR TESTING ONLY
+        playerEmpire.researchPoints = 10000u
 
         playerEmpire.popTagsStartingTechs(techTree)
         enemyEmpire.popTagsStartingTechs(techTree)

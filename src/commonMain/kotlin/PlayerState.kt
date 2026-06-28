@@ -5,6 +5,13 @@ enum class operationType {
     MOVINGFLEET
 }
 
+enum class CrownOutcome {
+    VOID,
+    STEWARD,
+    ASHEN,
+    MILITARY_DEFEAT
+}
+
 class PlayerState {
     var playerVictory = false
     var musicSceneContainer: SceneContainer? = null
@@ -61,25 +68,37 @@ class PlayerState {
         enemyShipsDestroyedLastBattle = 0
     }
 
-    suspend fun determineCrown() : String {
-        var retval = ""
-        if(playerVictory) {
-            if( blackHolesCreatedByPlayer > 0 ) {
-                retval = "ui/voidCrown.png"
-            } else if( coloniesLost + regimentsLost < enemyPopulationKilled ) {
-                retval = "ui/stewardCrown.png"
+    fun determineCrownOutcome(): CrownOutcome {
+        return if (playerVictory) {
+            if (blackHolesCreatedByPlayer > 0) {
+                CrownOutcome.VOID
+            } else if (coloniesLost + regimentsLost < enemyPopulationKilled) {
+                CrownOutcome.STEWARD
             } else {
-                retval = "ui/ashenCrown.png"
+                CrownOutcome.ASHEN
             }
         } else {
-            if(false) //TODO fill this in later if the enemy managed to turn SOL system into Black Hole
-            {
-
-            } else {
-                retval = "ui/militaryDefeat.png"
-            }
+            //TODO fill this in later if the enemy managed to turn SOL system into Black Hole
+            CrownOutcome.MILITARY_DEFEAT
         }
-        return retval
+    }
+
+    suspend fun determineCrown() : String {
+        return when (determineCrownOutcome()) {
+            CrownOutcome.VOID -> "ui/voidCrown.png"
+            CrownOutcome.STEWARD -> "ui/stewardCrown.png"
+            CrownOutcome.ASHEN -> "ui/ashenCrown.png"
+            CrownOutcome.MILITARY_DEFEAT -> "ui/militaryDefeat.png"
+        }
+    }
+
+    fun determineVictoryMessage(): String {
+        return when (determineCrownOutcome()) {
+            CrownOutcome.VOID -> "Through terrible power you won the Void Crown"
+            CrownOutcome.STEWARD -> "Through wisdom you won the Steward Crown"
+            CrownOutcome.ASHEN -> "Through ruin and sacrifice you won the Ashen Crown"
+            CrownOutcome.MILITARY_DEFEAT -> ""
+        }
     }
 
 }

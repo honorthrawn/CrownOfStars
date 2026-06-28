@@ -5,7 +5,8 @@ import kotlin.random.*
 enum class StarType {
     YELLOW,
     BLUE,
-    RED;
+    RED,
+    BLACK_HOLE;
 
     companion object {
         fun getImagePath(type: StarType) : String {
@@ -13,8 +14,13 @@ enum class StarType {
                 RED -> "stars/red_star.png"
                 BLUE ->  "stars/blue_star.png"
                 YELLOW ->  "stars/yellow_star.png"
+                BLACK_HOLE -> "stars/black_hole.png"
             }
             return retval
+        }
+
+        fun rollableTypes(): List<StarType> {
+            return listOf(YELLOW, BLUE, RED)
         }
     }
 }
@@ -32,7 +38,8 @@ data class Star(val name: String) {
     val numPlanets = 4
 
     fun roll() {
-        type = StarType.values()[Random.nextInt(0, StarType.values().count())]
+        val rollableTypes = StarType.rollableTypes()
+        type = rollableTypes[Random.nextInt(0, rollableTypes.count())]
 
         for( i in 1..numPlanets) {
             val planetRolled = Planet(name)
@@ -50,6 +57,10 @@ data class Star(val name: String) {
     }
 
     fun getAllegiance(): Allegiance {
+        //Black hole systems have no planets and cannot be occupied.   Fixing bug here
+        if(type == StarType.BLACK_HOLE) {
+            return Allegiance.Unoccupied
+        }
         //If any world in system is enemy held, count the system as enemy
         for( i in 1..numPlanets) {
             if(planets[i-1]!!.ownerIndex == Allegiance.Enemy) {
