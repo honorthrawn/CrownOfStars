@@ -1,21 +1,19 @@
-import rule.*
 
-class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: TechTree){
+class ComputerPlayerCore(
+    val gs: GalaxyState,
+    val es: EmpireState,
+    val techs: TechTree,
+    private val bonusCalculator: BonusCalculator
+) {
     val MIN_COLONIZED_WORLDS_FOR_DOMINANCE = 12
     val DOMINANCE_PERCENT = 70.0
     //Limited resources, can't really do everything all the time.   So different governors/ministers run randomly based on\
     //aggression level to determine what computer player will spend points on,
     private var laborInitialized = false
     private var governors = ComputerGovernors()
+    private var admiral = ComputerAdmiral(gs, bonusCalculator)
     private var laborGovernor = LaborGovernor()
     private var shipFactory = shipFactory()
-    private var popRule: Rule<Planet>
-    private var assignRule: Rule<Planet>
-    private var buildColonyShipRule: Rule<Empire>
-    private var buildCorvetteRule: Rule<Empire>
-    private var buildCruiserRule: Rule<Empire>
-    private var buildBattleshipRule: Rule<Empire>
-    private var buildBaseRule: Rule<Empire>
     private lateinit var assessment: EmpireAssessment
     private lateinit var colonyCosts: shipCosts
     private lateinit var corvetteCosts: shipCosts
@@ -23,59 +21,8 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
     private lateinit var battleshipCosts: shipCosts
     private lateinit var galleonCosts: shipCosts
 
-    init {
-        buildCorvetteRule = rule("buildCorvettesRule") {
-            name = "buildCorvettesRule"
-            description = "start cranking out warships"
-            condition = { canbuildShip(shipType.CORVETTE_ENEMY, it)}
-            action = { buildShip(shipType.CORVETTE_ENEMY) }
-        }
-
-        buildCruiserRule = rule("buildCruisersRule") {
-            name = "buildCruisersRule"
-            description = "build cruiser"
-            condition = { canbuildShip(shipType.CRUISER_ENEMY, it)}
-            action = { buildShip(shipType.CRUISER_ENEMY) }
-        }
-
-        buildBattleshipRule = rule("buildBattleShipsRule") {
-            name = "buildBattleShipsRule"
-            description = "build battleships"
-            condition = { canbuildShip(shipType.BATTLESHIP_ENEMY, it)}
-            action = { buildShip(shipType.BATTLESHIP_ENEMY) }
-        }
-
-
-        popRule = rule("populationAddRule") {
-            name = "populationAddRule"
-            description = "This is the rule for adding population"
-            condition = { es.empires[Allegiance.Enemy.ordinal]!!.organicPoints >= 50u && it.canGrowPopulation() }
-            action = {
-                growPopulation(it)
-            }
-        }
-
-        buildColonyShipRule = rule("buildColonyShipRule") {
-            name = "buildColonyShipRule"
-            description = "This is the rule for building colony ship"
-            condition = { canbuildShip(shipType.COLONY_ENEMY, it) }
-            action = { buildColonyShip() }
-        }
-
-        assignRule = rule("assignPopulationRule") {
-            name = "assignPopulationRule"
-            description = "Rule to assign/reassign workers according to weights"
-            condition = { it.ownerIndex == Allegiance.Enemy  }
-            action = { assignPopulation(it, assessment.posture) }
-        }
-
-        buildBaseRule = rule("buildDefenseBaseRule") {
-            name = "buildDefenseBaseRule"
-            description = "Rule to build base if there is enough resources"
-            condition = { es.empires[Allegiance.Enemy.ordinal]!!.defensePoints >= 50u }
-            action = { buildDefenseBase() }
-        }
-    }
+    private val enemyEmpire: Empire
+        get() = es.empires[Allegiance.Enemy.ordinal]!!
 
     private fun buildShip(type: shipType) {
         println("BUILDING A WARSHIP")
@@ -90,10 +37,10 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             shipType.BATTLESHIP_HUMAN -> println("SHOULD NEVER BE HERE")
             shipType.GALLEON_HUMAN -> println("SHOULD NEVER BE HERE")
             shipType.COLONY_ENEMY -> println("COLONY SHIPS SHOULD BE BUILT BY OTHER FUNCTION")
-            shipType.CORVETTE_ENEMY -> es.empires[Allegiance.Enemy.ordinal]!!.buyShip(corvetteCosts)
-            shipType.CRUISER_ENEMY -> es.empires[Allegiance.Enemy.ordinal]!!.buyShip(cruiserCosts)
-            shipType.BATTLESHIP_ENEMY -> es.empires[Allegiance.Enemy.ordinal]!!.buyShip(battleshipCosts)
-            shipType.GALLEON_ENEMY -> es.empires[Allegiance.Enemy.ordinal]!!.buyShip(galleonCosts)
+            shipType.CORVETTE_ENEMY -> enemyEmpire.buyShip(corvetteCosts)
+            shipType.CRUISER_ENEMY -> enemyEmpire.buyShip(cruiserCosts)
+            shipType.BATTLESHIP_ENEMY -> enemyEmpire.buyShip(battleshipCosts)
+            shipType.GALLEON_ENEMY -> enemyEmpire.buyShip(galleonCosts)
             }
 
         val musterStar = gs.stars.values.last { star: Star -> star.getAllegiance() == Allegiance.Enemy }
@@ -107,12 +54,15 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
 
     private fun growPopulation(planet: Planet) {
         println("GROWING POPS")
-        es.empires[Allegiance.Enemy.ordinal]!!.addPopulation()
+        enemyEmpire.addPopulation()
         planet.addPopulation(1u)
     }
 
-    private fun canbuildShip(type: shipType, empire: Empire) : Boolean {
-        var retval = false
+    private fun canGrowPopulation(planet: Planet): Boolean {
+        return enemyEmpire.organicPoints >= 50u && planet.canGrowPopulation()
+    }
+
+    private fun canBuildShip(type: shipType, empire: Empire) : Boolean {
         val costToBuild: shipCosts = when(type) {
             shipType.COLONY_ENEMY -> colonyCosts
             shipType.CORVETTE_ENEMY -> corvetteCosts
@@ -127,17 +77,15 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             shipType.BATTLESHIP_HUMAN -> colonyCosts
             shipType.GALLEON_HUMAN -> colonyCosts
         }
-        if(empire.shipPoints >= costToBuild.metal && empire.organicPoints >= costToBuild.organics) {
-            retval = true
-        }
-        return retval
+
+        return empire.shipPoints >= costToBuild.metal && empire.organicPoints >= costToBuild.organics
     }
 
-     private fun buildColonyShip() {
+    private fun buildColonyShip() {
         println("BUILDING A COLONY SHIP")
         val aiStars = gs.stars.values.filter { star: Star -> star.getAllegiance() == Allegiance.Enemy }
         if(aiStars.isNotEmpty()) {
-            es.empires[Allegiance.Enemy.ordinal]!!.buyShip(colonyCosts)
+            enemyEmpire.buyShip(colonyCosts)
             val newColonyShip = shipFactory.getShip(shipType.COLONY_ENEMY)
             aiStars[0].enemyFleet.add(newColonyShip)
         }
@@ -152,147 +100,90 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
         galleonCosts = getCosts(shipType.GALLEON_ENEMY)
     }
 
-    private fun findBestColonizationTarget(fromStar: Star): Star? {
-        return gs.stars.values
-            .filter { star ->
-                star !== fromStar &&
-                    star.planets.values.any { planet ->
-                        planet.ownerIndex == Allegiance.Unoccupied
-                    }
-            }
-            .maxByOrNull { star ->
-                star.planets.values
-                    .filter { it.ownerIndex == Allegiance.Unoccupied }
-                    .maxOfOrNull { it.getColonyValue() } ?: Int.MIN_VALUE
-            }
-    }
-
-    private fun moveColonyShip(startStar: Star) {
-        println("MOVING A COLONY SHIP")
-        //first see if the star the ship is at has uncolonized worlds
-        val unsettledPlanets = startStar.planets.values.filter {
-            planet: Planet -> planet.ownerIndex == Allegiance.Unoccupied }
-        if(unsettledPlanets.isNotEmpty()) {
-            println("ESTABLISHING COLONY IN SYSTEM")
-            val newColony = unsettledPlanets.maxBy { it.getColonyValue() }
-            newColony.ownerIndex = Allegiance.Enemy
-            newColony.farmers = 1u
-            startStar.enemyFleet.destroyShip(shipType.COLONY_ENEMY)
-        } else {
-            println("COLONY SHIP MOVING")
-            val destination = findBestColonizationTarget(startStar)
-            if (destination == null) {
-                println("No colonization target found")
-                return
-            }
-
-            val shipMoving = startStar.enemyFleet.removeShipFromFleetForMove(shipType.COLONY_ENEMY)
-            if( shipMoving != null) {
-                shipMoving.hasMoved = true
-                destination.enemyFleet.add(shipMoving)
-            }
+    private suspend fun initializeLaborGovernor() {
+        if (!laborInitialized) {
+            laborGovernor.init()
+            laborInitialized = true
         }
     }
 
-    fun runGrowthRules() {
+    fun runGrowth() {
         //Add population if we can & assign workers
         val allStars = gs.stars.values
         for( star in allStars) {
             val aiPlanets = star.planets.values.filter { planet: Planet -> planet.ownerIndex == Allegiance.Enemy }
             for (planet in aiPlanets) {
-                popRule.fire(planet)
+                if (canGrowPopulation(planet)) {
+                    growPopulation(planet)
+                }
             }
         }
     }
 
-      fun runExpansionRules(maxTotalColonyShips: Int) {
+    fun runExpansion(maxTotalColonyShips: Int) {
         if (assessment.colonyShipCount >= maxTotalColonyShips) return
 
         var shipsBuilt = 0
-        var builtColony = buildColonyShipRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-
-        while (builtColony) {
+        while (
+            assessment.colonyShipCount + shipsBuilt < maxTotalColonyShips &&
+            canBuildShip(shipType.COLONY_ENEMY, enemyEmpire)
+        ) {
+            buildColonyShip()
             shipsBuilt += 1
-
-            if (assessment.colonyShipCount + shipsBuilt >= maxTotalColonyShips) {
-                break
-            }
-
-            builtColony = buildColonyShipRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
         }
-      }
+    }
 
-    fun runLaborRules() {
+    fun runLabor() {
         val allStars = gs.stars.values
         for( star in allStars) {
             val aiPlanets = star.planets.values.filter { planet: Planet -> planet.ownerIndex == Allegiance.Enemy }
             for (planet in aiPlanets) {
-                assignRule.fire(planet)
+                assignPopulation(planet, assessment.posture)
             }
         }
     }
 
-    fun runResearchRules() {
+    fun runResearch() {
         println("COMPUTER PLAYER BUYS TECH")
         val choice = getComputerResearchChoice()
         if(choice == null) {
             println("COMPUTER PLAYER HAS NO TECH TO BUY")
         } else {
-            if(es.empires[Allegiance.Enemy.ordinal]!!.canBuyTech(choice)) {
-                es.empires[Allegiance.Enemy.ordinal]!!.buyTech(choice)
+            if(enemyEmpire.canBuyTech(choice)) {
+                enemyEmpire.buyTech(choice)
             }
         }
     }
 
     fun getComputerResearchChoice() : Tech? {
         //FOR NOW, just going to buy the cheapest advancement
-        val undiscoveredTechs = techs.getUndiscoveredTechs(es.empires[Allegiance.Enemy.ordinal]!!.techTags)
+        val undiscoveredTechs = techs.getUndiscoveredTechs(enemyEmpire.techTags)
         return(undiscoveredTechs.minWithOrNull( compareBy<Tech> { it.cost } ))
     }
 
-    fun runShipBuilderRules(maxShipsPerType: Int) {
+    fun runShipBuilders(maxShipsPerType: Int) {
         println("COMPUTER PLAYER BUILDING SHIPS")
-        var shipsBuilt = 0
-        var builtBB = buildBattleshipRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        while( builtBB ) {
-            shipsBuilt += 1
-            if(shipsBuilt == maxShipsPerType) {
-                break;
-            }
-            builtBB = buildBattleshipRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        }
+        val shipTypes = listOf(
+            shipType.BATTLESHIP_ENEMY,
+            shipType.CRUISER_ENEMY,
+            shipType.CORVETTE_ENEMY
+        )
 
-        shipsBuilt = 0
-        var builtCruiser = buildCruiserRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        while( builtCruiser ) {
-            shipsBuilt += 1
-            if(shipsBuilt == maxShipsPerType) {
-                break;
+        for (type in shipTypes) {
+            var shipsBuilt = 0
+            while (shipsBuilt < maxShipsPerType && canBuildShip(type, enemyEmpire)) {
+                buildShip(type)
+                shipsBuilt += 1
             }
-            builtCruiser = buildCruiserRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        }
-
-        shipsBuilt = 0
-        var builtCorvette = buildCorvetteRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        while( builtCorvette ) {
-            shipsBuilt += 1
-            if(shipsBuilt == maxShipsPerType) {
-                break;
-            }
-            builtCorvette = buildCorvetteRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
         }
     }
 
-    fun runBaseBuilderRules(maxBases: Int) {
+    fun runBaseBuilders(maxBases: Int) {
         println("COMPUTER PLAYER BUILDING BASES")
         var basesBuilt = 0
-        var builtDefBase = buildBaseRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
-        while(builtDefBase) {
+        while (basesBuilt < maxBases && enemyEmpire.defensePoints >= 50u) {
+            buildDefenseBase()
             basesBuilt += 1
-            if(basesBuilt == maxBases) {
-                break;
-            }
-            builtDefBase = buildBaseRule.fire(es.empires[Allegiance.Enemy.ordinal]!!)
         }
     }
 
@@ -303,13 +194,13 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
         val allStars = gs.stars.values
         val aiPlanets = mutableListOf<Planet>()
         for( star in allStars ) {
-            aiPlanets.addAll(star.planets.values.filter { planet: Planet -> planet.ownerIndex == Allegiance.Enemy });
+            aiPlanets.addAll(star.planets.values.filter { planet: Planet -> planet.ownerIndex == Allegiance.Enemy })
         }
         val fewest = aiPlanets.minWithOrNull(compareBy<Planet> { it.defenseBases }
             .thenByDescending { it.getTotalPopulation() } )
         //Build the base and deduct resources:
         if(fewest != null) {
-            if(es.empires[Allegiance.Enemy.ordinal]!!.buildBase()) {
+            if(enemyEmpire.buildBase()) {
                 fewest.addBase(1u)
             }
         }
@@ -325,69 +216,52 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             setShipCosts()
         }
 
-        if (!laborInitialized) {
-            laborGovernor.init()
-            laborInitialized = true
-        }
-        println("[AI] HAS: ORGANICS: ${es.empires[Allegiance.Enemy.ordinal]!!.organicPoints} METAL:  ${es.empires[Allegiance.Enemy.ordinal]!!.shipPoints}")
+        initializeLaborGovernor()
 
-        runMandatoryRules()
+        println("[AI] HAS: ORGANICS: ${enemyEmpire.organicPoints} METAL:  ${enemyEmpire.shipPoints}")
+
+        runMandatoryPriorities()
 
         assessment = assessEmpire()
-        runPriorityRules()
+        runStrategicPriorities()
 
         assessment = assessEmpire()
-        evaluateShipOrders()
-    }
-
-    fun runMandatoryRules() {
-        runLaborRules()
-        runResearchRules()
-    }
-
-    fun runPriorityRules() {
-        when (assessment.posture) {
-            StrategicPosture.EXPAND -> {
-                runExpansionRules(2)
-                runGrowthRules()
-            }
-
-            StrategicPosture.BALANCED -> {
-                runGrowthRules()
-                runShipBuilderRules(1)
-            }
-
-            StrategicPosture.AGGRESSIVE -> {
-                runShipBuilderRules(2)
-                runBaseBuilderRules(1)
-            }
-
-            StrategicPosture.TURTLE -> {
-                runBaseBuilderRules(2)
-                runShipBuilderRules(1)
-                runGrowthRules()
-            }
-        }
-    }
-
-    fun evaluateShipOrders() {
         println("COMPUTER ADMIRAL RUNNING")
-
-        val starsWithUnmovedColonyShips = gs.stars.values
-            .filter { star ->
-                star.enemyFleet.isColonyAvailableToMove()
-            }
-            .toList()
-
-        for (star in starsWithUnmovedColonyShips) {
-            println("MOVING COLONY SHIPS")
-            moveColonyShip(star)
-        }
-
+        admiral.issueShipOrders()
         println("COMPUTER ADMIRAL DONE")
     }
 
-    private fun assessEmpire(): EmpireAssessment {
+    fun runMandatoryPriorities() {
+        runLabor()
+        runResearch()
+    }
+
+    fun runStrategicPriorities() {
+        when (assessment.posture) {
+            StrategicPosture.EXPAND -> {
+                runExpansion(2)
+                runGrowth()
+            }
+
+            StrategicPosture.BALANCED -> {
+                runGrowth()
+                runShipBuilders(1)
+            }
+
+            StrategicPosture.AGGRESSIVE -> {
+                runShipBuilders(2)
+                runBaseBuilders(1)
+            }
+
+            StrategicPosture.TURTLE -> {
+                runBaseBuilders(2)
+                runShipBuilders(1)
+                runGrowth()
+            }
+        }
+    }
+
+   private fun assessEmpire(): EmpireAssessment {
         val allStars = gs.stars.values
 
         val computerWorlds = mutableListOf<Planet>()
@@ -459,7 +333,7 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
     fun checkForVictory(): Allegiance? {
         val assessment = assessEmpire()
 
-        //Rule 1: No colonies/planets left, you loose.
+        // Victory condition 1: No colonies/planets left, you loose.
         if(assessment.playerWorldCount == 0) {
             return Allegiance.Enemy
         }
@@ -467,7 +341,7 @@ class ComputerPlayerCore(val gs: GalaxyState, val es: EmpireState, val techs: Te
             return Allegiance.Player
         }
 
-        //Rule 2: Dominance Victory
+        // Victory condition 2: Dominance Victory
         val totalColonized = assessment.playerWorldCount + assessment.computerWorldCount
 
         if (totalColonized < MIN_COLONIZED_WORLDS_FOR_DOMINANCE) {

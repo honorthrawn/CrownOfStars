@@ -3,6 +3,7 @@ import com.soywiz.korio.file.std.*
 import com.soywiz.korio.lang.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import kotlin.math.*
 
 @Serializable
 class GalaxyState {
@@ -62,6 +63,14 @@ class GalaxyState {
         stars[nI]!!.enemyFleet.add(factory.getShip(shipType.CORVETTE_ENEMY))
         stars[nI]!!.enemyFleet.add(factory.getShip(shipType.CORVETTE_ENEMY))
     }
+
+    fun gridDistance(startStar: Star, destination: Star) : Int {
+        return sqrt(
+            ((startStar.xloc - destination.xloc) * (startStar.xloc - destination.xloc) +
+                    (startStar.yloc - destination.yloc) * (startStar.yloc - destination.yloc)).toDouble()
+        ).roundToInt()
+    }
+
 
     fun nextTurn() {
         for (star in stars.values) {

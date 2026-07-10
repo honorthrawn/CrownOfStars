@@ -114,4 +114,35 @@ data class Star(val name: String) {
         //If no player or enemy count as unoccupied
         return Allegiance.Unoccupied
     }
+
+    fun hasEnemyColony() : Boolean {
+        if(type == StarType.BLACK_HOLE) {
+            return false
+        }
+        //If any world in system is enemy held, count the system as enemy
+        for( i in 1..numPlanets) {
+            if(planets[i-1]!!.ownerIndex == Allegiance.Enemy) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun hasPlayerColony() : Boolean {
+        if(type == StarType.BLACK_HOLE) {
+            return false
+        }
+        //If any world in system is enemy held, count the system as enemy
+        for( i in 1..numPlanets) {
+            if(planets[i-1]!!.ownerIndex == Allegiance.Player) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun hasCombat(): Boolean {
+        return playerFleet.isPresent() && enemyFleet.isPresent()
+    }
+
 }

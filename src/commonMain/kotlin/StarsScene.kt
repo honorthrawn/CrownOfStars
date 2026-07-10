@@ -12,7 +12,8 @@ class StarsScene(
     val es: EmpireState,
     val ps: PlayerState,
     val ai: ComputerPlayerCore,
-    val cps: ComputerPlayerState
+    val cps: ComputerPlayerState,
+    val bc: BonusCalculator
 ) : BasicScene() {
     private data class RagnarokAdvanceResult(
         val collapsedStarIndex: Int?,
@@ -159,6 +160,14 @@ class StarsScene(
     private suspend fun nextTurn() {
         ai.setShipCosts()
         ai.takeTurn()
+        val combatStars = gs.stars.values.filter { it.hasCombat() }
+        for( star in combatStars) {
+            //I think I actually got my x and y flipped around building the grid -- but easier to change here
+            //than possibly break other things
+            ps.activePlayerStar = star.yloc * 10 + star.xloc
+            cps.activeBattleStar = star.yloc * 10 + star.xloc
+            sceneContainer.changeTo<FleetCombatScene>()
+        }
         es.addProduction(gs)
         gs.nextTurn()
         val ragnarokResult = advanceRagnarokProtocols()
@@ -501,6 +510,15 @@ class StarsScene(
         val origin = ps.activePlayerStar
 
         // todo: range/supply validation goes here
+        val destStar = gs.stars[destination]!!
+        val originStar = gs.stars[origin]!!
+        val distance = gs.gridDistance(originStar, destStar)
+        val speed = bc.getSpeed(Allegiance.Player)
+        if(distance > speed) {
+            showNoGo("You can only move $speed sectors at a time")
+            ps.reset()
+            return
+        }
 
         moveShips(origin, destination, shipType.TERRAFORMATTER_HUMAN, ps.chosenTerraformers)
         moveShips(origin, destination, shipType.COLONY_HUMAN, ps.chosenColony)
@@ -511,11 +529,8 @@ class StarsScene(
 
        ps.reset()
 
-        val destStar = gs.stars[destination]!!
-
         if (
-            destStar.playerFleet?.isPresent() == true &&
-            destStar.enemyFleet?.isPresent() == true
+         destStar.hasCombat()
         ) {
             ps.activePlayerStar = destination
             cps.activeBattleStar = destination

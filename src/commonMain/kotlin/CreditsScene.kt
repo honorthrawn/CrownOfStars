@@ -19,7 +19,7 @@ class CreditsScene : BasicScene() {
             "Built with KorGE" to Colors.CYAN,
             "" to Colors.WHITE,
             "Programming Support" to Colors.GOLD,
-            "ChatGPT" to Colors.CYAN,
+            "ChatGPT and Codex" to Colors.CYAN,
             "Art Assets" to Colors.GOLD,
             "NightCafe and ChatGPT" to Colors.CYAN,
             "Music" to Colors.GOLD,

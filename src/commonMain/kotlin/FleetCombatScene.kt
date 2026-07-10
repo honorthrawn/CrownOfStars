@@ -7,7 +7,14 @@ import com.soywiz.korim.format.*
 import com.soywiz.korio.file.std.*
 import kotlin.random.*
 
-class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerState, val cp: ComputerPlayerCombat, val techTree: TechTree) : BasicScene() {
+class FleetCombatScene(
+    val gs: GalaxyState,
+    val es: EmpireState,
+    val ps: PlayerState,
+    val cp: ComputerPlayerCombat,
+    val techTree: TechTree,
+    private val bonusCalculator: BonusCalculator
+) : BasicScene() {
 
     private var terraformerSlot: Container? = null
     private var colonyShipSlot: Container? = null
@@ -752,7 +759,6 @@ class FleetCombatScene(val gs: GalaxyState, val es: EmpireState, val ps: PlayerS
     }
 
     suspend fun setupBonuses() {
-        val bonusCalculator = BonusCalculator(es, techTree)
         playerInitiative = bonusCalculator.getInitiativeBonus(Allegiance.Player)
         enemyInitiative = bonusCalculator.getInitiativeBonus(Allegiance.Enemy)
         playerAccuray = bonusCalculator.getAccuracyBonus(Allegiance.Player)

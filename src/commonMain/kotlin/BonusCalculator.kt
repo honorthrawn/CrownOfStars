@@ -84,4 +84,21 @@ class BonusCalculator(val es: EmpireState, val techTree: TechTree) {
         }
         return soak
     }
+
+    suspend fun getSpeed(side: Allegiance) : Int {
+        val techList = es.empires[side.ordinal]?.techTags
+        var speed = -1
+        if (techList != null) {
+            for (techid in techList) {
+                val tech = techTree.findTech(techid, TechRealm.PROPULSION)
+                if (tech != null) {
+                    val driveTech = tech as PropulsionTech
+                    if (driveTech.speed > speed) {
+                        speed = driveTech.speed
+                    }
+                }
+            }
+        }
+        return speed
+    }
 }
