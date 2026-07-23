@@ -11,6 +11,8 @@ class ComputerAdmiral(val galaxy: GalaxyState, val calculator: BonusCalculator) 
 
     var computerFleetSpeed = 0
 
+    private fun fleetMoveRange(): Int = computerFleetSpeed.coerceAtLeast(0)
+
     suspend fun issueShipOrders() {
         computerFleetSpeed = calculator.getSpeed(Allegiance.Enemy)
         moveColonyShips()
@@ -195,13 +197,14 @@ class ComputerAdmiral(val galaxy: GalaxyState, val calculator: BonusCalculator) 
     fleet: Fleet,
     galaxy: GalaxyState
 ): Star {
+    val moveRange = fleetMoveRange()
     val reachable = galaxy.stars.values.filter { candidate ->
-        galaxy.gridDistance(from, candidate) <= computerFleetSpeed
+        galaxy.gridDistance(from, candidate) <= moveRange
     }
 
-    return reachable.maxBy { candidate ->
+    return reachable.maxByOrNull { candidate ->
         scoreStepTowardTarget(from, target, candidate, fleet)
-    }
+    } ?: from
 }
 
     fun enemyColonyThreatScore(star: Star): Int {
@@ -226,6 +229,12 @@ class ComputerAdmiral(val galaxy: GalaxyState, val calculator: BonusCalculator) 
         }
 
     fun moveComputerFleet(currentStar: Star, destination: Star, fleet: Fleet ) {
+        val distance = galaxy.gridDistance(currentStar, destination)
+        if(distance > fleetMoveRange()) {
+            println("Computer fleet move blocked: distance $distance exceeds speed ${fleetMoveRange()}")
+            return
+        }
+
         var corvettesToMove = fleet.getMovableCorvetteCount()
         var cruisersToMove = fleet.getMovableCruiserCount()
         var battleshipsToMove = fleet.getMovableBattleShipCount()
@@ -299,7 +308,7 @@ class ComputerAdmiral(val galaxy: GalaxyState, val calculator: BonusCalculator) 
         return galaxy.stars.values
             .filter { star ->
                 star !== fromStar &&
-                    galaxy.gridDistance(fromStar, star) <= computerFleetSpeed &&
+                    galaxy.gridDistance(fromStar, star) <= fleetMoveRange() &&
                     star.planets.values.any { planet ->
                         planet.ownerIndex == Allegiance.Unoccupied
                     }
@@ -311,4 +320,3 @@ class ComputerAdmiral(val galaxy: GalaxyState, val calculator: BonusCalculator) 
             }
     }
 }
-

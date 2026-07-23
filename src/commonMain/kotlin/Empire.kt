@@ -79,6 +79,18 @@ data class Empire(val id: Allegiance) {
                 techTags.add(weapon.id)
             }
         }
+
+        for( drive in techTree.propulsionTree) {
+            if(drive.starting) {
+                techTags.add(drive.id)
+            }
+        }
+
+        for( defense in techTree.defenseTree) {
+            if(defense.starting) {
+                techTags.add(defense.id)
+            }
+        }
     }
 
     fun buyTech(tech: Tech) : Boolean {
