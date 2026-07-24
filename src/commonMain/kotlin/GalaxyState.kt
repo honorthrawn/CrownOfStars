@@ -26,6 +26,7 @@ class GalaxyState {
         }
 
         // Player's starting world
+        stars[0]!!.exploredByPlayer = true
         stars[0]!!.planets[2]!!.type = PlanetType.TERRAN
         stars[0]!!.planets[2]!!.ownerIndex = Allegiance.Player
         stars[0]!!.planets[2]!!.farmers = 5u

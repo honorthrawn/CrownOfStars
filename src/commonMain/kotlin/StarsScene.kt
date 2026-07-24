@@ -257,7 +257,12 @@ class StarsScene(
                         dialog.removeFromParent()
                         ps.reset()
                         ps.activePlayerStar = x * 10 + y
-                        sceneContainer.changeTo<PlanetsScene>()
+                        val star = gs.stars[ps.activePlayerStar]!!
+                        if(star.exploredByPlayer) {
+                           sceneContainer.changeTo<PlanetsScene>()
+                        } else {
+                           sceneContainer.changeTo<UnexploredScene>()
+                        }
                     }
                 }
 
@@ -551,6 +556,7 @@ class StarsScene(
 
                 // Best if destination playerFleet is guaranteed non-null.
                 gs.stars[destination]!!.playerFleet!!.add(shipMoving)
+                gs.stars[destination]!!.exploredByPlayer = true
             }
         }
     }

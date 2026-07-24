@@ -42,8 +42,9 @@ data class Star(val name: String) {
     //Location in galaxy, used to help ComputerPlayerCore and such
     var xloc = 0
     var yloc = 0
-
     val numPlanets = 4
+    var exploredByPlayer = false
+
 
     fun roll() {
         val rollableTypes = StarType.rollableTypes()
